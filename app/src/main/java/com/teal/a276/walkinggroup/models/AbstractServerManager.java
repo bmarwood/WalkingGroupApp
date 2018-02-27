@@ -1,13 +1,16 @@
 package com.teal.a276.walkinggroup.models;
 
+import java.io.IOException;
+
 /**
  * Created by scott on 26/02/18.
  */
 
-/* TODO: placeholder so that git can track the models package.
-   You can replace this file once you add another model, or leave it as it will get updated once the
-   ServerManager takes shape.
- */
-abstract class AbstractServerManager {
-
+interface AbstractServerManager {
+     boolean authUser() throws IOException;
+     String getUser(String userId);
+     String getGroup();
+     void addUserToGroup(String userId, String groupId);
+     String getMonitorForUser(String userId);
+     void monitorUser(String monitorId, String userId);
 }
