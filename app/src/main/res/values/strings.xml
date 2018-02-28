@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Walking Group</string>
+    <string name="button">Button</string>
+    <string name="join_groups">Join Groups</string>
+    <string name="joined_groups">Joined Groups</string>
+    <string name="add_new_group">Add New Group</string>
+    <string name="add_group">Add Group</string>
+    <string name="group_name">Group Name:</string>
+    <string name="meeting_location">Meeting Location:</string>
+    <string name="destination">Destination:</string>
+    <string name="create_group">Create Group</string>
 </resources>

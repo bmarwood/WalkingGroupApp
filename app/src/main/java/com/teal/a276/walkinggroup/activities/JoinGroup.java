@@ -1,37 +1,44 @@
 package com.teal.a276.walkinggroup.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 
 import com.teal.a276.walkinggroup.R;
 
-public class Welcome extends AppCompatActivity {
+public class JoinGroup extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_join_group);
 
 
-        setupTempButton();
+
+        setupCreateNewGroupButton();
     }
 
-
-    private void setupTempButton() {
-        Button btn = (Button) findViewById(R.id.button);
+    private void setupCreateNewGroupButton() {
+        Button btn = (Button) findViewById(R.id.addNewGroupBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = JoinGroup.makeIntent(Welcome.this);
+                Intent intent = AddNewGroup.makeIntent(JoinGroup.this);
                 startActivity(intent);
             }
         });
     }
+
+
+    public static Intent makeIntent(Context context){
+       return new Intent(context, JoinGroup.class);
+    }
+
+
+
 }
-
-
-
-
