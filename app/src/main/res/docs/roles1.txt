@@ -1,0 +1,8 @@
+ITERATION 1
+
+Scrum master: Jamie
+Project owner: Matt
+Repository manager: Scott
+Team member: Brian
+
+
