@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.teal.a276.walkinggroup.activities.Monitor">
+
+    <TextView
+        android:id="@+id/monitoredByTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="142dp"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/monitored_by"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/monitoredByTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/monitoringTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="142dp"
+        android:layout_marginStart="143dp"
+        android:text="@string/monitoring"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/monitoringListView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ListView
+        android:id="@+id/monitoredByTextView"
+        android:layout_width="260dp"
+        android:layout_height="180dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="62dp"
+        android:layout_marginStart="62dp"
+        app:layout_constraintBottom_toTopOf="@+id/monitoringTv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ListView
+        android:id="@+id/monitoringListView"
+        android:layout_width="260dp"
+        android:layout_height="180dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="62dp"
+        android:layout_marginStart="62dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</android.support.constraint.ConstraintLayout>

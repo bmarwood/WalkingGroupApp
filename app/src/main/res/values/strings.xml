@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Walking Group</string>
+    <string name="monitored_by">Monitored By</string>
+    <string name="monitoring">Monitoring</string>
 </resources>
