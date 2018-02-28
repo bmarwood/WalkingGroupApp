@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Walking Group</string>
+    <string name="create_account">Create Account</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="create">Create</string>
+    <string name="valid_input_yes">Valid Input: Yes</string>
 </resources>
