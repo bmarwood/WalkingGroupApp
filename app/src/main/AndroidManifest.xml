@@ -18,6 +18,7 @@
         </activity>
         <activity android:name=".activities.JoinGroup" />
         <activity android:name=".activities.AddNewGroup"></activity>
+        <activity android:name=".activities.Monitor"></activity>
     </application>
 
 </manifest>

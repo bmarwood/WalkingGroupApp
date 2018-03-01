@@ -16,11 +16,12 @@ public class Welcome extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
 
-        setupTempButton();
+        setupJoinGroupsButton();
+        setupMonitoringButton();
     }
 
 
-    private void setupTempButton() {
+    private void setupJoinGroupsButton() {
         Button btn = (Button) findViewById(R.id.button);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,8 +31,16 @@ public class Welcome extends AppCompatActivity {
             }
         });
     }
+
+    private void setupMonitoringButton() {
+        Button btn = (Button) findViewById(R.id.tempButton);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = Monitor.makeIntent(Welcome.this);
+                startActivity(intent);
+            }
+        });
+    }
+
 }
-
-
-
-

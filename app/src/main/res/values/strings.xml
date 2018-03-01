@@ -9,4 +9,6 @@
     <string name="meeting_location">Meeting Location:</string>
     <string name="destination">Destination:</string>
     <string name="create_group">Create Group</string>
+    <string name="monitored_by">Monitored By</string>
+    <string name="monitoring">Monitoring</string>
 </resources>
