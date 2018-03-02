@@ -2,6 +2,7 @@ package com.teal.a276.walkinggroup.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -16,8 +17,15 @@ import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,11 +48,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final int REQUEST_CHECK_SETTINGS = 2;
+
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
-
-
+    private LocationRequest mLocationRequest;
+    private boolean mLocationUpdateState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +73,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        createLocationRequest();
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-//        LatLng myPlace = new LatLng(40.73, -73.99);  // New York
-//        mMap.addMarker(new MarkerOptions().position(myPlace).title("My Favorite City"));
-//        // Supports zoom levels 0-20
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPlace, 12));
 
         // Add zoom controls /  make marker clickable
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -141,7 +149,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String titleStr = getAddress(location);
         markerOptions.title(titleStr);
 
-//        // Create a marker with a custom icon
+        // Create a marker with a custom icon
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource
                 (getResources(), R.mipmap.ic_user_location)));
 
@@ -170,20 +178,106 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return addressText;
     }
 
+    // Request permission and check for location updates
+    protected void startLocationUpdates() {
+        // If permission is not granted request it now and return
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+            return;
+        }
+        //If there is permission, request for location updates.
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,
+                this);
+    }
 
+    // Handles any changes to be made based on the current state of the user’s location settings
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        // Specifies the rate at which your app will like to receive updates
+        mLocationRequest.setInterval(10000);
+        // Specifies the fastest rate at which the app can handle updates
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
 
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
+                        builder.build());
 
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(@NonNull LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                switch (status.getStatusCode()) {
+                    // A SUCCESS status means all is well and you can go ahead and initiate a location request
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        mLocationUpdateState = true;
+                        startLocationUpdates();
+                        break;
+                    // A RESOLUTION_REQUIRED status means the location settings have some issues which can be fixed
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        try {
+                            status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                        }
+                        break;
+                    // A SETTINGS_CHANGE_UNAVAILABLE status means the location settings have some issues that you can’t fix
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        break;
+                }
+            }
+        });
+    }
 
+    // Start the update request if it has a RESULT_OK result for a REQUEST_CHECK_SETTINGS request.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            if (resultCode == RESULT_OK) {
+                mLocationUpdateState = true;
+                startLocationUpdates();
+            }
+        }
+    }
+
+    // Stop location update request on pause
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    // Restart the location update request
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mGoogleApiClient.isConnected() && !mLocationUpdateState) {
+            startLocationUpdates();
+        }
+    }
 
     @Override
     public void onLocationChanged(Location location) {
-
+        // Update mLastLocation with the new location and update the map
+        mLastLocation = location;
+        if (null != mLastLocation) {
+            placeMarkerOnMap(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+        }
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         setUpMap();
+        // Start location updates if user's location settings are turned on.
+        if (mLocationUpdateState) {
+            startLocationUpdates();
+        }
     }
 
     @Override
