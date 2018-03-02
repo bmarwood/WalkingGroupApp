@@ -22,7 +22,7 @@ public class Welcome extends AppCompatActivity {
 
 
     private void setupJoinGroupsButton() {
-        Button btn = (Button) findViewById(R.id.button);
+        Button btn = (Button) findViewById(R.id.tempGroupsButton);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -33,7 +33,7 @@ public class Welcome extends AppCompatActivity {
     }
 
     private void setupMonitoringButton() {
-        Button btn = (Button) findViewById(R.id.tempButton);
+        Button btn = (Button) findViewById(R.id.tempMonitorButton);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

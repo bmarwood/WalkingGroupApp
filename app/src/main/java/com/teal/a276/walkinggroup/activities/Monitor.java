@@ -12,7 +12,7 @@ import com.teal.a276.walkinggroup.models.GroupManager;
 
 public class Monitor extends AppCompatActivity {
 
-
+    //use singleton, change later on
     GroupManager groups = new GroupManager();
 
     @Override
