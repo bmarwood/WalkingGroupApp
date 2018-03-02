@@ -21,4 +21,11 @@
     <string name="sign_in">Sign In</string>
     <string name="not_a_member_sign_up_here">Not a Member? Sign Up Here</string>
     <string name="create_account">Create Account</string>
+    <string name="create_account">Create Account</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="create">Create</string>
+    <string name="valid_input_yes">Valid Input: Yes</string>
 </resources>
