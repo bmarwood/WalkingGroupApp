@@ -3,11 +3,15 @@ package com.teal.a276.walkinggroup.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+
 import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -18,11 +22,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationListener;
+
 import com.teal.a276.walkinggroup.R;
+
+import java.io.IOException;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -103,8 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(true);
 
         // Set map type
-        // TODO: Causes problems with custom icon
-//        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
         // Determines the availability of location data on the device
@@ -129,10 +137,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Create a MarkerOptions object and sets the user’s current location as the position for the marker
         MarkerOptions markerOptions = new MarkerOptions().position(location);
 
+//        // Add address to marker
+        String titleStr = getAddress(location);
+        markerOptions.title(titleStr);
+
+//        // Create a marker with a custom icon
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource
+                (getResources(), R.mipmap.ic_user_location)));
+
         // Add the marker to the map
         mMap.addMarker(markerOptions);
+    }
 
-
+    private String getAddress( LatLng latLng ) {
+        // Creates a Geocoder object to turn a latitude and longitude coordinate into an address
+        Geocoder geocoder = new Geocoder( this );
+        String addressText = "";
+        List<Address> addresses = null;
+        Address address = null;
+        try {
+            // Asks the geocoder to get the address from the location passed to the method.
+            addresses = geocoder.getFromLocation( latLng.latitude, latLng.longitude, 1 );
+            // If the response contains any address, then append it to a string and return.
+            if (null != addresses && !addresses.isEmpty()) {
+                address = addresses.get(0);
+                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                    addressText += (i == 0)?address.getAddressLine(i):("\n" + address.getAddressLine(i));
+                }
+            }
+        } catch (IOException e ) {
+        }
+        return addressText;
     }
 
 
