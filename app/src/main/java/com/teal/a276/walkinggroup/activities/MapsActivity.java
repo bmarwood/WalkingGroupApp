@@ -50,11 +50,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
 
-    private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
-    private LocationRequest mLocationRequest;
-    private boolean mLocationUpdateState;
+
+    // TODO: Populate markers array from existing groups
+//    ArrayList<MarkerData> markersArray = new ArrayList<MarkerData>();
+
+//    public void populateMarkerArrayList (ArrayList<MarkerData> markersArray) {
+//
+//    }
+
+
+    private GoogleMap map;
+    private GoogleApiClient googleApiClient;
+    private Location lastLocation;
+    private LocationRequest locationRequest;
+    private boolean locationUpdateState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +75,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         // Instantiates the googleApiClient field if it’s null
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
@@ -80,11 +89,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        map = googleMap;
 
         // Add zoom controls /  make marker clickable
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setOnMarkerClickListener(this);
+        map.getUiSettings().setZoomControlsEnabled(true);
+        map.setOnMarkerClickListener(this);
     }
 
     public static Intent makeIntent(Context context) {
@@ -96,15 +105,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onStart() {
         super.onStart();
         // Initiates a background connection of the client to Google Play services.
-        mGoogleApiClient.connect();
+        googleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         // Closes the connection to Google Play services if the client is not null and is connected
-        if( mGoogleApiClient != null && mGoogleApiClient.isConnected() ) {
-            mGoogleApiClient.disconnect();
+        if( googleApiClient != null && googleApiClient.isConnected() ) {
+            googleApiClient.disconnect();
         }
     }
 
@@ -117,35 +126,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         // Enables the my-location layer which draws a light blue dot on the user’s location
-        mMap.setMyLocationEnabled(true);
+        map.setMyLocationEnabled(true);
 
         // Set map type
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
         // Determines the availability of location data on the device
         LocationAvailability locationAvailability =
-                LocationServices.FusedLocationApi.getLocationAvailability(mGoogleApiClient);
+                LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient);
         if (null != locationAvailability && locationAvailability.isLocationAvailable()) {
             // Gives you the most recent location currently available
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             // Move the camera to the user’s current location
-            if (mLastLocation != null) {
-                LatLng currentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation
+            if (lastLocation != null) {
+                LatLng currentLocation = new LatLng(lastLocation.getLatitude(), lastLocation
                         .getLongitude());
                 // Add pin at user's location
                 placeMarkerOnMap(currentLocation);
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12));
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12));
             }
         }
     }
 
     protected void placeMarkerOnMap(LatLng location) {
 
+        map.clear();
+
         // Create a MarkerOptions object and sets the user’s current location as the position for the marker
         MarkerOptions markerOptions = new MarkerOptions().position(location);
 
-//        // Add address to marker
+        // Add address to marker
         String titleStr = getAddress(location);
         markerOptions.title(titleStr);
 
@@ -154,13 +165,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 (getResources(), R.mipmap.ic_user_location)));
 
         // Add the marker to the map
-        mMap.addMarker(markerOptions);
+        map.addMarker(markerOptions);
+
     }
 
     private String getAddress( LatLng latLng ) {
         // Creates a Geocoder object to turn a latitude and longitude coordinate into an address
         Geocoder geocoder = new Geocoder( this );
-        String addressText = "";
+        StringBuilder addressText = new StringBuilder();
         List<Address> addresses = null;
         Address address = null;
         try {
@@ -169,13 +181,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // If the response contains any address, then append it to a string and return.
             if (null != addresses && !addresses.isEmpty()) {
                 address = addresses.get(0);
-                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                    addressText += (i == 0)?address.getAddressLine(i):("\n" + address.getAddressLine(i));
-                }
+
+                // TODO: find out if this is required with updated location
+//                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+//                    addressText += (i == 0)?address.getAddressLine(i):("\n" + address.getAddressLine(i));
+//                }
+
+                    addressText = addressText.append(address.getAddressLine(0));
             }
         } catch (IOException e ) {
         }
-        return addressText;
+        return addressText.toString();
     }
 
     // Request permission and check for location updates
@@ -189,24 +205,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         //If there is permission, request for location updates.
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,
                 this);
     }
 
     // Handles any changes to be made based on the current state of the user’s location settings
     protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
+        locationRequest = new LocationRequest();
         // Specifies the rate at which your app will like to receive updates
-        mLocationRequest.setInterval(10000);
+        locationRequest.setInterval(10000);
         // Specifies the fastest rate at which the app can handle updates
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
+                .addLocationRequest(locationRequest);
 
         PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
+                LocationServices.SettingsApi.checkLocationSettings(googleApiClient,
                         builder.build());
 
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
@@ -216,7 +232,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 switch (status.getStatusCode()) {
                     // A SUCCESS status means all is well and you can go ahead and initiate a location request
                     case LocationSettingsStatusCodes.SUCCESS:
-                        mLocationUpdateState = true;
+                        locationUpdateState = true;
                         startLocationUpdates();
                         break;
                     // A RESOLUTION_REQUIRED status means the location settings have some issues which can be fixed
@@ -240,7 +256,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CHECK_SETTINGS) {
             if (resultCode == RESULT_OK) {
-                mLocationUpdateState = true;
+                locationUpdateState = true;
                 startLocationUpdates();
             }
         }
@@ -250,24 +266,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
     }
 
     // Restart the location update request
     @Override
     public void onResume() {
         super.onResume();
-        if (mGoogleApiClient.isConnected() && !mLocationUpdateState) {
+        if (googleApiClient.isConnected() && !locationUpdateState) {
             startLocationUpdates();
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        // Update mLastLocation with the new location and update the map
-        mLastLocation = location;
-        if (null != mLastLocation) {
-            placeMarkerOnMap(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+        // Update lastLocation with the new location and update the map
+        lastLocation = location;
+        if (null != lastLocation) {
+            placeMarkerOnMap(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
         }
     }
 
@@ -275,7 +291,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnected(@Nullable Bundle bundle) {
         setUpMap();
         // Start location updates if user's location settings are turned on.
-        if (mLocationUpdateState) {
+        if (locationUpdateState) {
             startLocationUpdates();
         }
     }
