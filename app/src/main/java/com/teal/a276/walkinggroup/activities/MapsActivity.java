@@ -52,11 +52,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     // TODO: Populate markers array from existing groups
-//    ArrayList<MarkerData> markersArray = new ArrayList<MarkerData>();
-
-//    public void populateMarkerArrayList (ArrayList<MarkerData> markersArray) {
+//    ArrayList<MarkerData> markersArray;
+//
+//    private void populateMarkerArrayList () {
+//    }
+//
+//    private void placeGroupMarkersOnMap(ArrayList<MarkerData> markersArray){
 //
 //    }
+
+
+
 
 
     private GoogleMap map;
@@ -142,13 +148,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng currentLocation = new LatLng(lastLocation.getLatitude(), lastLocation
                         .getLongitude());
                 // Add pin at user's location
-                placeMarkerOnMap(currentLocation);
+                placeUserMarkerOnMap(currentLocation);
+
+
+
+                //TODO: Add pins at groups locations
+//                placeGroupMarkersOnMap();
+
+
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
             }
         }
     }
 
-    protected void placeMarkerOnMap(LatLng location) {
+    protected void placeUserMarkerOnMap(LatLng location) {
 
         map.clear();
 
@@ -182,12 +195,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // If the response contains any address, then append it to a string and return.
             if (null != addresses && !addresses.isEmpty()) {
                 address = addresses.get(0);
-
-                // TODO: find out if this is required with updated location
-//                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-//                    addressText += (i == 0)?address.getAddressLine(i):("\n" + address.getAddressLine(i));
-//                }
-
                 addressText = addressText.append(address.getAddressLine(0));
             }
         } catch (IOException e) {
@@ -284,7 +291,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Update lastLocation with the new location and update the map
         lastLocation = location;
         if (null != lastLocation) {
-            placeMarkerOnMap(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
+            placeUserMarkerOnMap(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
         }
     }
 
