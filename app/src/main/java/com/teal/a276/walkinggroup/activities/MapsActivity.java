@@ -84,7 +84,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         createLocationRequest();
-
     }
 
     @Override
@@ -112,7 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onStop() {
         super.onStop();
         // Closes the connection to Google Play services if the client is not null and is connected
-        if( googleApiClient != null && googleApiClient.isConnected() ) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
         }
     }
@@ -144,7 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .getLongitude());
                 // Add pin at user's location
                 placeMarkerOnMap(currentLocation);
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12));
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
             }
         }
     }
@@ -155,6 +154,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Create a MarkerOptions object and sets the user’s current location as the position for the marker
         MarkerOptions markerOptions = new MarkerOptions().position(location);
+
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16));
 
         // Add address to marker
         String titleStr = getAddress(location);
@@ -169,15 +170,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private String getAddress( LatLng latLng ) {
+    private String getAddress(LatLng latLng) {
         // Creates a Geocoder object to turn a latitude and longitude coordinate into an address
-        Geocoder geocoder = new Geocoder( this );
+        Geocoder geocoder = new Geocoder(this);
         StringBuilder addressText = new StringBuilder();
         List<Address> addresses = null;
         Address address = null;
         try {
             // Asks the geocoder to get the address from the location passed to the method.
-            addresses = geocoder.getFromLocation( latLng.latitude, latLng.longitude, 1 );
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
             // If the response contains any address, then append it to a string and return.
             if (null != addresses && !addresses.isEmpty()) {
                 address = addresses.get(0);
@@ -187,9 +188,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                    addressText += (i == 0)?address.getAddressLine(i):("\n" + address.getAddressLine(i));
 //                }
 
-                    addressText = addressText.append(address.getAddressLine(0));
+                addressText = addressText.append(address.getAddressLine(0));
             }
-        } catch (IOException e ) {
+        } catch (IOException e) {
         }
         return addressText.toString();
     }
@@ -198,7 +199,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void startLocationUpdates() {
         // If permission is not granted request it now and return
         if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
