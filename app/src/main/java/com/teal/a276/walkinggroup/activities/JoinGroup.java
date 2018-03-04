@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -35,12 +36,13 @@ public class JoinGroup extends AppCompatActivity {
         setupCreateNewGroupButton();
         populateJoinGroupsListView();
         populateJoinedGroupsListView();
-
+        registerJoinGroupClickCallback();
 
     }
 
+
     private void populateJoinGroupsListView() {
-        String[] joinGroupsItems = groupManager.getGroupDescriptions();
+        String[] joinGroupsItems = groupManager.getJoinGroupDescriptions();
 
         //Array Adapter
         ArrayAdapter<String> joinGroupsAdapter = new ArrayAdapter<String>(
@@ -54,7 +56,7 @@ public class JoinGroup extends AppCompatActivity {
 
 
     private void populateJoinedGroupsListView() {
-        String[] joinedGroupItems = groupManager.getGroupDescriptions();
+        String[] joinedGroupItems = groupManager.getJoinedGroupDescriptions();
 
         //Array Adapter
         ArrayAdapter<String> joinedGroupsAdapter = new ArrayAdapter<String>(
@@ -94,6 +96,36 @@ public class JoinGroup extends AppCompatActivity {
          }
     }
 
+//added 3/3, to be completed.
+    private void registerJoinGroupClickCallback() {
+        ListView list = (ListView) findViewById(R.id.joinGroupsListView);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                //Group group = new Group("", "", "");
+                Group group;
+                group = groupManager.getGroup(position);
+                String groupName = group.getGroupName();
+                String meetingLocation = group.getMeetingLocation();
+                String destination = group.getDestination();
+                group = new Group(groupName,  meetingLocation, destination);
+
+
+                //if already in group, then do not add
+
+                if(groupManager.checkGroups(group)==false) {
+                    groupManager.addJoinedGroup(group);
+                    populateJoinedGroupsListView();
+                }
+
+
+//                groupManager.addJoinedGroup(group);
+//                populateJoinedGroupsListView();
+            }
+        });
+    }
 
 
     public static Intent makeIntent(Context context){
