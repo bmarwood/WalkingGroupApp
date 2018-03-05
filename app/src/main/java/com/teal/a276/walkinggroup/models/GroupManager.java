@@ -14,6 +14,8 @@ public class GroupManager {
     private List<Group> groups = new ArrayList<>();
     private List<Group> joinedGroups = new ArrayList<>();
 
+    //check if already in group
+    boolean checkInGroup = false;
 
     public void addGroup(Group group){
         groups.add(group);
@@ -56,16 +58,12 @@ public class GroupManager {
     }
 
 
-    public boolean checkGroups(Group group){
-        //already in the group
-        if(joinedGroups.contains(group)){
+    public boolean checkIfUserInGroup(){
+        if(joinedGroups.size() >0) {
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
-
 
 
     public String[] getJoinGroupDescriptions(){

@@ -103,26 +103,29 @@ public class JoinGroup extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                //if user already in a group, do not add to new group
+                //Theoretically the user should only be in one walking group.
+                if(!groupManager.checkIfUserInGroup()) {
 
-                //Group group = new Group("", "", "");
-                Group group;
-                group = groupManager.getGroup(position);
-                String groupName = group.getGroupName();
-                String meetingLocation = group.getMeetingLocation();
-                String destination = group.getDestination();
-                group = new Group(groupName,  meetingLocation, destination);
+                    Group group;
+                    group = groupManager.getGroup(position);
+                    String groupName = group.getGroupName();
+                    String meetingLocation = group.getMeetingLocation();
+                    String destination = group.getDestination();
+                    group = new Group(groupName,  meetingLocation, destination);
 
-
-                //if already in group, then do not add
-
-                if(groupManager.checkGroups(group)==false) {
                     groupManager.addJoinedGroup(group);
                     populateJoinedGroupsListView();
                 }
 
+                //Group group;
+                //group = groupManager.getGroup(position);
+                //String groupName = group.getGroupName();
+                //String meetingLocation = group.getMeetingLocation();
+                //String destination = group.getDestination();
+                //group = new Group(groupName,  meetingLocation, destination);
 
-//                groupManager.addJoinedGroup(group);
-//                populateJoinedGroupsListView();
+
             }
         });
     }
