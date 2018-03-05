@@ -1,7 +1,9 @@
 package com.teal.a276.walkinggroup.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,15 +15,15 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.models.GroupManager;
 import com.teal.a276.walkinggroup.models.Group;
-
-//DO NOT IMPORT THIS, OR REFACTOR THE GROUP CLASS LATER!!
-//import java.security.acl.Group;
+import com.teal.a276.walkinggroup.models.GroupManager;
 
 import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_DESTINATION;
 import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_GROUPNAME;
 import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_MEETINGLOCATION_;
+
+//DO NOT IMPORT THIS, OR REFACTOR THE GROUP CLASS LATER!!
+//import java.security.acl.Group;
 
 public class JoinGroup extends AppCompatActivity {
 
@@ -104,29 +106,34 @@ public class JoinGroup extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //if user already in a group, do not add to new group
-                //Theoretically the user should only be in one walking group.
-                if(!groupManager.checkIfUserInGroup()) {
 
-                    Group group;
-                    group = groupManager.getGroup(position);
-                    String groupName = group.getGroupName();
-                    String meetingLocation = group.getMeetingLocation();
-                    String destination = group.getDestination();
-                    group = new Group(groupName, meetingLocation, destination);
+                Group group = groupManager.getGroup(position);
+                String displayGroupName = group.getGroupName();
 
-                    groupManager.addJoinedGroup(group);
-                    populateJoinedGroupsListView();
-                }
+                //TODO: Implement alert dialogue
+                AlertDialog.Builder adb = new AlertDialog.Builder(JoinGroup.this);
+                adb.setTitle("Join?");
+                adb.setMessage("Are you sure you want to join " + displayGroupName + "?");
+                final int joinPosition = position;
+                adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Join", new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                //Group group;
-                //group = groupManager.getGroup(position);
-                //String groupName = group.getGroupName();
-                //String meetingLocation = group.getMeetingLocation();
-                //String destination = group.getDestination();
-                //group = new Group(groupName,  meetingLocation, destination);
+                        if (!groupManager.checkIfUserInGroup()) {
+                            Group group;
+                            group = groupManager.getGroup(joinPosition);
 
+                            //String groupName = group.getGroupName();
+                            //String meetingLocation = group.getMeetingLocation();
+                            //String destination = group.getDestination();
+                            //group = new Group(groupName, meetingLocation, destination);
 
+                            groupManager.addJoinedGroup(group);
+                            populateJoinedGroupsListView();
+                        }
+                    }});
+                   adb.show();
             }
         });
     }
@@ -138,21 +145,38 @@ public class JoinGroup extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Group group;
-                group = groupManager.getGroup(position);
-                String groupName = group.getGroupName();
-                String meetingLocation = group.getMeetingLocation();
-                String destination = group.getDestination();
-                group = new Group(groupName, meetingLocation, destination);
+                Group group = groupManager.getGroup(position);
+                String displayGroupName = group.getGroupName();
+                AlertDialog.Builder adb = new AlertDialog.Builder(JoinGroup.this);
+                adb.setTitle("Remove?");
+                adb.setMessage("Are you sure you want to be removed from " + displayGroupName + "?");
+                final int removePosition = position;
+                adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Remove", new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Group group = groupManager.getGroup(removePosition);
+                        groupManager.removeGroup(group);
+                        populateJoinedGroupsListView();
+
+                    }
+                });
+                adb.show();
 
 
+                //Group group;
+                //group = groupManager.getGroup(position);
 
-                groupManager.removeGroup(group);
+                //String groupName = group.getGroupName();
+                //String meetingLocation = group.getMeetingLocation();
+                //String destination = group.getDestination();
+                //group = new Group(groupName, meetingLocation, destination);
 
-
-                populateJoinedGroupsListView();
-            }
-        });
+                //groupManager.removeGroup(group);
+                //populateJoinedGroupsListView();
+            //}
+        }});
 
 
     }

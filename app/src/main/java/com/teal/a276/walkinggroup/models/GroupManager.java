@@ -76,8 +76,6 @@ public class GroupManager {
         String[] descriptions = new String[countGroups()];
 
         for(int i=0;i<countGroups();i++){
-            //User user = getUser(i);
-            //descriptions[i] = user.getUserName() + " - " + user.getUserEmail();
             Group group = getGroup(i);
             descriptions[i] = "Name :" + group.getGroupName() + "\nMeeting Location: " +
                     group.getMeetingLocation() + "\nDestination: " + group.getDestination();
@@ -89,8 +87,6 @@ public class GroupManager {
         String[] descriptions = new String[countJoinedGroups()];
 
         for(int i=0;i<countJoinedGroups();i++){
-            //User user = getUser(i);
-            //descriptions[i] = user.getUserName() + " - " + user.getUserEmail();
             Group group = getJoinedGroup(i);
             descriptions[i] = "Name :" + group.getGroupName() + "\nMeeting Location: " +
                     group.getMeetingLocation() + "\nDestination: " + group.getDestination();

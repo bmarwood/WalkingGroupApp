@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
 
@@ -43,12 +44,17 @@ public class AddNewGroup extends AppCompatActivity {
                  EditText destinationVal = (EditText)findViewById(R.id.destinationEdit);
                  String destinationValStr = destinationVal.getText().toString();
 
-                 Intent intent = new Intent();
-                 intent.putExtra(EXTRA_GROUPNAME, nameValStr);
-                 intent.putExtra(EXTRA_MEETINGLOCATION_, meetingValStr);
-                 intent.putExtra(EXTRA_DESTINATION, destinationValStr);
-                 setResult(Activity.RESULT_OK, intent);
-                 finish();
+                 //Check if any text fields are empty
+                 if(nameValStr.equals("")||meetingValStr.equals("")||destinationValStr.equals("")){
+                     Toast.makeText(AddNewGroup.this, "One or more fields empty, please check again.", Toast.LENGTH_SHORT).show();
+                 } else {
+                     Intent intent = new Intent();
+                     intent.putExtra(EXTRA_GROUPNAME, nameValStr);
+                     intent.putExtra(EXTRA_MEETINGLOCATION_, meetingValStr);
+                     intent.putExtra(EXTRA_DESTINATION, destinationValStr);
+                     setResult(Activity.RESULT_OK, intent);
+                     finish();
+                 }
              }
          });
     }
