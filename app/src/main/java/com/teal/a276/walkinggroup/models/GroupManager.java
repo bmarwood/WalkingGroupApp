@@ -66,6 +66,12 @@ public class GroupManager {
     }
 
 
+
+    public void removeGroup(Group group){
+        joinedGroups.clear();
+    }
+
+
     public String[] getJoinGroupDescriptions(){
         String[] descriptions = new String[countGroups()];
 
