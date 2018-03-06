@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activities.Welcome">
+        <activity android:name=".activities.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,10 +37,9 @@
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps">
-        </activity>
+        </activity>`
 
-        <activity android:name=".activities.Login" />
-        <activity android:name=".CreateAccount"></activity>
+        <activity android:name=".activities.CreateAccount" />
     </application>
 
 </manifest>

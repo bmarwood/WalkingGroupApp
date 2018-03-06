@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:fontFamily="casual"
+        android:fontFamily="sans-serif"
         android:text="@string/login"
         android:textAlignment="center"
         android:textSize="30sp"
@@ -94,6 +94,7 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/passwordTxt"
         app:layout_constraintStart_toEndOf="@+id/passwordTxt"
         app:layout_constraintTop_toTopOf="@+id/signInBtn" />
