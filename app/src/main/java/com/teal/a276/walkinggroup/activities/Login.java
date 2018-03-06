@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.models.LoginModel;
 
 public class Login extends AppCompatActivity {
 
@@ -18,7 +20,34 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setUpLoginButton();
         setupCreateAccountButton();
+    }
+
+    private void setUpLoginButton() {
+        Button btn = (Button) findViewById(R.id.signInBtn);
+        final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBar);
+
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)  {
+                String email = ((EditText) findViewById(R.id.emailEditText)).toString();
+                String password = ((EditText) findViewById(R.id.passwordEditText)).toString();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        spinner.setVisibility(View.VISIBLE);
+                    }
+                });
+                if(LoginModel.checkInputs(email, password)){
+                    Intent intent = MapsActivity.makeIntent(Login.this);
+                    startActivity(intent);
+                    finish();
+                }
+
+            }
+        });
     }
 
     private void setupCreateAccountButton() {
@@ -28,6 +57,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = CreateAccount.makeIntent(Login.this);
                 startActivity(intent);
+                finish();
             }
         });
     }
