@@ -18,6 +18,18 @@ public class Welcome extends AppCompatActivity {
 
         setupJoinGroupsButton();
         setupMonitoringButton();
+        setupMapsButton();
+    }
+
+    private void setupMapsButton() {
+        Button btn = (Button) findViewById(R.id.mapBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = MapsActivity.makeIntent(Welcome.this);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -42,5 +54,4 @@ public class Welcome extends AppCompatActivity {
             }
         });
     }
-
 }

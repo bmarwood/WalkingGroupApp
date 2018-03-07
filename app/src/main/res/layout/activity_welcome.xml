@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="66dp"
         android:layout_marginTop="107dp"
-        android:text="Groups"
+        android:text="@string/groups"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,9 +32,21 @@
         android:layout_marginEnd="76dp"
         android:layout_marginStart="66dp"
         android:layout_marginTop="107dp"
-        android:text="Monitor"
+        android:text="@string/monitor"
         app:layout_constraintEnd_toStartOf="@+id/tempGroupsButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/mapBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="113dp"
+        android:layout_marginEnd="148dp"
+        android:layout_marginStart="148dp"
+        android:text="@string/map"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

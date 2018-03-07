@@ -93,7 +93,7 @@ public class JoinGroup extends AppCompatActivity {
                      String destination = intent.getStringExtra(EXTRA_DESTINATION);
 
                      Group group = new Group(groupName, meetingLocation, destination);
-                     groupManager.addGroup(group);
+                     groupManager.addJoinGroup(group);
                      populateJoinGroupsListView();
                  }
          }
@@ -107,7 +107,7 @@ public class JoinGroup extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 
-                Group group = groupManager.getGroup(position);
+                Group group = groupManager.getJoinGroup(position);
                 String displayGroupName = group.getGroupName();
 
                 //Before dialog opens, check if the group is already joined
@@ -127,7 +127,7 @@ public class JoinGroup extends AppCompatActivity {
 
 
                             Group group;
-                            group = groupManager.getGroup(joinPosition);
+                            group = groupManager.getJoinGroup(joinPosition);
 
                             groupManager.addJoinedGroup(group);
                             populateJoinedGroupsListView();
@@ -145,7 +145,7 @@ public class JoinGroup extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Group group = groupManager.getGroup(position);
+                Group group = groupManager.getJoinGroup(position);
                 String displayGroupName = group.getGroupName();
                 AlertDialog.Builder adb = new AlertDialog.Builder(JoinGroup.this);
                 adb.setTitle("Remove?");
@@ -156,7 +156,7 @@ public class JoinGroup extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Group group = groupManager.getGroup(removePosition);
+                        Group group = groupManager.getJoinGroup(removePosition);
                         groupManager.removeFromJoinedGroups(group);
                         populateJoinedGroupsListView();
 

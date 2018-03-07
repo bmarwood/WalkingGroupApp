@@ -15,7 +15,7 @@ public class GroupManager {
     private List<Group> joinedGroups = new ArrayList<>();
 
 
-    public void addGroup(Group group){
+    public void addJoinGroup(Group group){
         groups.add(group);
     }
     public void addJoinedGroup(Group group){
@@ -24,7 +24,7 @@ public class GroupManager {
 
 
 
-    public int countGroups(){
+    public int countJoinGroups(){
         return groups.size();
     }
     public int countJoinedGroups(){
@@ -33,19 +33,26 @@ public class GroupManager {
 
 
 
-    public Group getGroup(int index){
+    public Group getJoinGroup(int index){
         validateIndexWithException(index);
         return groups.get(index);
     }
     public Group getJoinedGroup(int index){
-        validateIndexWithException(index);
+        validateIndexWithExceptionJoined(index);
         return joinedGroups.get(index);
     }
 
 
-
+    //This Function only counts join Groups, NOT JoinedGroups
     private void validateIndexWithException(int index) {
-        if(index < 0 || index >= countGroups()){
+        if(index < 0 || index >= countJoinGroups()){
+            throw new IllegalArgumentException();
+        }
+    }
+
+
+    private void validateIndexWithExceptionJoined(int index){
+        if(index < 0 || index >= countJoinedGroups()){
             throw new IllegalArgumentException();
         }
     }
@@ -73,10 +80,10 @@ public class GroupManager {
 
 
     public String[] getJoinGroupDescriptions(){
-        String[] descriptions = new String[countGroups()];
+        String[] descriptions = new String[countJoinGroups()];
 
-        for(int i=0;i<countGroups();i++){
-            Group group = getGroup(i);
+        for(int i = 0; i< countJoinGroups(); i++){
+            Group group = getJoinGroup(i);
             descriptions[i] = "Name :" + group.getGroupName() + "\nMeeting Location: " +
                     group.getMeetingLocation() + "\nDestination: " + group.getDestination();
         }

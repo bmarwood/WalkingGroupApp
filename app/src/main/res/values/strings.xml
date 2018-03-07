@@ -2,7 +2,6 @@
     <string name="app_name">Walking Group</string>
     <string name="button">Button</string>
     <string name="join_groups">Join Groups</string>
-    <string name="joined_groups">Joined Groups</string>
     <string name="add_new_group">Add New Group</string>
     <string name="add_group">Add Group</string>
     <string name="group_name">Group Name:</string>
@@ -12,4 +11,9 @@
     <string name="monitored_by">Monitored By</string>
     <string name="monitoring">Monitoring</string>
     <string name="title_activity_maps">Map</string>
+    <string name="join_group">Join Group</string>
+    <string name="joined_groups">Joined Groups</string>
+    <string name="groups">Groups</string>
+    <string name="monitor">Monitor</string>
+    <string name="map">map</string>
 </resources>
