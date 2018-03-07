@@ -1,6 +1,5 @@
 package com.teal.a276.walkinggroup.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.models.LoginModel;
+import com.teal.a276.walkinggroup.models.UserModel;
 
 public class Login extends AppCompatActivity {
 
@@ -32,15 +31,17 @@ public class Login extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)  {
-                String email = ((EditText) findViewById(R.id.emailEditText)).toString();
-                String password = ((EditText) findViewById(R.id.passwordEditText)).toString();
+                String email = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
+                String password = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         spinner.setVisibility(View.VISIBLE);
                     }
                 });
-                if(LoginModel.checkInputs(email, password)){
+                Toast.makeText(getApplicationContext(),"password is " + email + password + UserModel.checkInputs(email, password),Toast.LENGTH_SHORT).show();
+
+                if(UserModel.checkInputs(email, password)){
                     Intent intent = MapsActivity.makeIntent(Login.this);
                     startActivity(intent);
                     finish();
