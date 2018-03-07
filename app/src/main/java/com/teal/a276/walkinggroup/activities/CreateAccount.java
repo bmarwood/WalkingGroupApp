@@ -66,6 +66,7 @@ public class CreateAccount extends AppCompatActivity {
                     errorsForUser.setVisibility(View.VISIBLE);
                 }else{
                     //TODO: call to actually make account
+
                     Intent intent = MapsActivity.makeIntent(CreateAccount.this);
                     startActivity(intent);
                     finish();
