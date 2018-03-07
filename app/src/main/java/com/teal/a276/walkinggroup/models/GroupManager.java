@@ -14,17 +14,13 @@ public class GroupManager {
     private List<Group> groups = new ArrayList<>();
     private List<Group> joinedGroups = new ArrayList<>();
 
-    //check if already in group
-    boolean checkInGroup = false;
 
     public void addGroup(Group group){
         groups.add(group);
     }
-
     public void addJoinedGroup(Group group){
         joinedGroups.add(group);
     }
-
 
 
 
@@ -34,8 +30,6 @@ public class GroupManager {
     public int countJoinedGroups(){
         return joinedGroups.size();
     }
-
-
 
 
 
@@ -50,7 +44,6 @@ public class GroupManager {
 
 
 
-
     private void validateIndexWithException(int index) {
         if(index < 0 || index >= countGroups()){
             throw new IllegalArgumentException();
@@ -58,12 +51,22 @@ public class GroupManager {
     }
 
 
+
     public boolean checkIfUserInGroup(){
-        if(joinedGroups.size() >0) {
-            return true;
-        }
-        return false;
+        return joinedGroups.size() > 0;
+        //if(joinedGroups.size() >0) {
+        //    return true;
+        //}
+        //return false;
     }
+
+    //Prevents the user from joining the same group if the user
+    //is already in the group.
+    public boolean checkIfUserAlreadyInSameGroup(Group group){
+        return (joinedGroups.contains(group));
+    }
+
+
 
 
 
