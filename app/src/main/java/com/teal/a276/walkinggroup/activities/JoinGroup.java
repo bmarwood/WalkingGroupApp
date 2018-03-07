@@ -111,11 +111,11 @@ public class JoinGroup extends AppCompatActivity {
                 String displayGroupName = group.getGroupName();
 
                 //Before dialog opens, check if the group is already joined
-                if(groupManager.checkIfUserAlreadyInSameGroup(group)||groupManager.checkIfUserInGroup()){
+                if(groupManager.checkIfUserAlreadyInSameGroup(group)){
+                    //if(groupManager.checkIfUserAlreadyInSameGroup(group)||groupManager.checkIfUserInGroup()){
                     return;
                 }
 
-                //TODO: Implement alert dialogue
                 AlertDialog.Builder adb = new AlertDialog.Builder(JoinGroup.this);
                 adb.setTitle("Join?");
                 adb.setMessage("Are you sure you want to join " + displayGroupName + "?");
@@ -125,13 +125,13 @@ public class JoinGroup extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if (!groupManager.checkIfUserInGroup()) {
+
                             Group group;
                             group = groupManager.getGroup(joinPosition);
 
                             groupManager.addJoinedGroup(group);
                             populateJoinedGroupsListView();
-                        }
+
                     }});
                    adb.show();
             }
@@ -157,7 +157,7 @@ public class JoinGroup extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         Group group = groupManager.getGroup(removePosition);
-                        groupManager.removeGroup(group);
+                        groupManager.removeFromJoinedGroups(group);
                         populateJoinedGroupsListView();
 
                     }

@@ -45,7 +45,7 @@ public class AddNewGroup extends AppCompatActivity {
                  String destinationValStr = destinationVal.getText().toString();
 
                  //Check if any text fields are empty
-                 if(nameValStr.equals("")||meetingValStr.equals("")||destinationValStr.equals("")){
+                 if(nameValStr.equals("")|meetingValStr.equals("")|destinationValStr.equals("")){
                      Toast.makeText(AddNewGroup.this, "One or more fields empty, please check again.", Toast.LENGTH_SHORT).show();
                  } else {
                      Intent intent = new Intent();

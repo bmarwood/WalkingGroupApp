@@ -51,14 +51,13 @@ public class GroupManager {
     }
 
 
-
-    public boolean checkIfUserInGroup(){
-        return joinedGroups.size() > 0;
-        //if(joinedGroups.size() >0) {
-        //    return true;
-        //}
-        //return false;
-    }
+    //public boolean checkIfUserInGroup(){
+    //    return joinedGroups.size() > 0;
+    //    //if(joinedGroups.size() >0) {
+    //    //    return true;
+    //    //}
+    //    //return false;
+    //j
 
     //Prevents the user from joining the same group if the user
     //is already in the group.
@@ -67,11 +66,9 @@ public class GroupManager {
     }
 
 
-
-
-
-    public void removeGroup(Group group){
-        joinedGroups.clear();
+    public void removeFromJoinedGroups(Group group){
+        joinedGroups.remove(group);
+//        joinedGroups.clear();
     }
 
 
