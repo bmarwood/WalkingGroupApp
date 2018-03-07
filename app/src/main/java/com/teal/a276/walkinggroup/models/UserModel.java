@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Brian on 3/5/2018.
+ * Model holds Current User info and communicated with server manager
  */
 
 public class UserModel {
@@ -23,9 +23,7 @@ public class UserModel {
     private static String userPassword = "2";
 
     public static boolean checkInputs(String email, String password) {
-        if (email.equals(userEmail) && password.equals(userPassword)) {
-            return true;
-        } else return false;
+        return email.equals(userEmail) && password.equals(userPassword);
     }
 
     public static String getId() {
@@ -52,23 +50,28 @@ public class UserModel {
         UserModel.userPassword = userPassword;
     }
 
+    public static String getName() {
+        return name;
+    }
+
+    public static void setName(String name) {
+        UserModel.name = name;
+    }
+
     public static ArrayList<String> checkCreateInputs(String firstName, String lastName, String email, String password) {
-        ArrayList<String> returnErrorMessages = new ArrayList<String>();
+        ArrayList<String> returnErrorMessages = new ArrayList<>();
 
         if (firstName.length() == 0) {
             returnErrorMessages.add("First Name must be inputted");
         }
         if (lastName.length() == 0) {
             returnErrorMessages.add("Last Name must be inputted");
-
         }
         if (email.length() == 0) {
             returnErrorMessages.add("Email must be inputted");
-
         }
         if(password.length() == 0) {
             returnErrorMessages.add("password must be inputted");
-
         }
         if(email.length() > 0) {
             Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
@@ -80,13 +83,6 @@ public class UserModel {
         return returnErrorMessages;
     }
 
-    public static String getName() {
-        return name;
-    }
-
-    public static void setName(String name) {
-        UserModel.name = name;
-    }
 
     public static void setAccountInfo(String name, String email, String password) {
         setUserEmail(email);
