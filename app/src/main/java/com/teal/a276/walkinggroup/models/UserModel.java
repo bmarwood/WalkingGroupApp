@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
  */
 
 public class UserModel {
+    private static String id;
+    private static String name;
     private static String userEmail = "1";
     private static String userPassword = "2";
 
@@ -24,6 +26,30 @@ public class UserModel {
         if (email.equals(userEmail) && password.equals(userPassword)) {
             return true;
         } else return false;
+    }
+
+    public static String getId() {
+        return id;
+    }
+
+    public static void setId(String id) {
+        UserModel.id = id;
+    }
+
+    public static String getUserEmail() {
+        return userEmail;
+    }
+
+    public static void setUserEmail(String userEmail) {
+        UserModel.userEmail = userEmail;
+    }
+
+    public static String getUserPassword() {
+        return userPassword;
+    }
+
+    public static void setUserPassword(String userPassword) {
+        UserModel.userPassword = userPassword;
     }
 
     public static ArrayList<String> checkCreateInputs(String firstName, String lastName, String email, String password) {
@@ -52,6 +78,20 @@ public class UserModel {
             }
         }
         return returnErrorMessages;
+    }
+
+    public static String getName() {
+        return name;
+    }
+
+    public static void setName(String name) {
+        UserModel.name = name;
+    }
+
+    public static void setAccountInfo(String name, String email, String password) {
+        setUserEmail(email);
+        setUserPassword(password);
+        setName(name);
     }
     //TODO: interact with server to check if email and string are correct
 

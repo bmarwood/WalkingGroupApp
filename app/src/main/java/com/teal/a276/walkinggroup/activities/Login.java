@@ -2,12 +2,14 @@ package com.teal.a276.walkinggroup.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
@@ -31,6 +33,8 @@ public class Login extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)  {
+                TextView errorsForUser = (TextView) findViewById(R.id.errorInput);
+                errorsForUser.setVisibility(View.INVISIBLE);
                 String email = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
                 String password = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
                 runOnUiThread(new Runnable() {
@@ -39,12 +43,21 @@ public class Login extends AppCompatActivity {
                         spinner.setVisibility(View.VISIBLE);
                     }
                 });
-                Toast.makeText(getApplicationContext(),"password is " + email + password + UserModel.checkInputs(email, password),Toast.LENGTH_SHORT).show();
 
                 if(UserModel.checkInputs(email, password)){
                     Intent intent = MapsActivity.makeIntent(Login.this);
                     startActivity(intent);
                     finish();
+                }else {
+                    errorsForUser.setVisibility(View.VISIBLE);
+                    errorsForUser.setTextColor(Color.RED);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            spinner.setVisibility(View.INVISIBLE);
+                        }
+                    });
                 }
 
             }

@@ -2,6 +2,7 @@ package com.teal.a276.walkinggroup.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -39,7 +40,6 @@ public class CreateAccount extends AppCompatActivity {
                 String lastName = ((EditText) findViewById(R.id.lastName)).getText().toString();
                 String email = ((EditText) findViewById(R.id.email)).getText().toString();
                 String password = ((EditText) findViewById(R.id.password)).getText().toString();
-                Toast.makeText(getApplicationContext(),"in",Toast.LENGTH_SHORT).show();
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -64,9 +64,9 @@ public class CreateAccount extends AppCompatActivity {
                     TextView errorsForUser = (TextView) findViewById(R.id.badEmailOrPassword);
                     errorsForUser.setText(stringForTextView);
                     errorsForUser.setVisibility(View.VISIBLE);
+                    errorsForUser.setTextColor(Color.RED);
                 }else{
-                    //TODO: call to actually make account
-
+                    UserModel.setAccountInfo(firstName + " " + lastName, email, password);
                     Intent intent = MapsActivity.makeIntent(CreateAccount.this);
                     startActivity(intent);
                     finish();
