@@ -83,6 +83,16 @@ public interface ServerProxy {
                             @Body User userWithId);
 
     /**
+     * Creates a monitor relation between the two users
+     * @param monitorId Id for the user who will be the monitor
+     * @param userWithId User who the monitor will monitor
+     * @return The list of users that the monitor now monitors after adding the new relationship
+     */
+    @POST("/users/{id}/monitorsByUsers")
+    Call<List<User>> monitoredByUser(@Path("id") Long monitorId,
+                                 @Body User userWithId);
+
+    /**
      * Deletes a monitor relationship between A and B.
      * @param idA Id for the monitor
      * @param idB Id for the monitoree
