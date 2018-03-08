@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -49,6 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
+    public static final int MAX_RESULTS = 1;
 
     // TODO: Populate markers array from existing groups
 
@@ -67,7 +69,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // Instantiates the googleApiClient field if it’s null
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -82,8 +83,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-
-        // Add zoom controls /  make marker clickable
         map.getUiSettings().setZoomControlsEnabled(true);
         map.setOnMarkerClickListener(this);
     }
@@ -96,14 +95,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onStart() {
         super.onStart();
-        // Initiates a background connection of the client to Google Play services.
         googleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // Closes the connection to Google Play services if the client is not null and is connected
         if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
         }
@@ -117,34 +114,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        // Enables the my-location layer which draws a light blue dot on the user’s location
         map.setMyLocationEnabled(true);
-
-        // Set map type
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-
-        // Determines the availability of location data on the device
         LocationAvailability locationAvailability =
                 LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient);
         if (null != locationAvailability && locationAvailability.isLocationAvailable()) {
-            // Gives you the most recent location currently available
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            // Move the camera to the user’s current location
             if (lastLocation != null) {
                 LatLng currentLocation = new LatLng(lastLocation.getLatitude(), lastLocation
                         .getLongitude());
-                // Add pin at user's location
-                placeUserMarkerOnMap(currentLocation);
-
-                //TODO: Add pins at groups locations
+                placeMarkerOnMap(currentLocation);
 
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
             }
         }
     }
 
-    protected void placeUserMarkerOnMap(LatLng location) {
+    protected void placeMarkerOnMap(LatLng location) {
 
         map.clear();
 
@@ -172,22 +159,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         StringBuilder addressText = new StringBuilder();
         List<Address> addresses = null;
         Address address = null;
-        try {
-            // Asks the geocoder to get the address from the location passed to the method.
-            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-            // If the response contains any address, then append it to a string and return.
-            if (null != addresses && !addresses.isEmpty()) {
-                address = addresses.get(0);
-                addressText = addressText.append(address.getAddressLine(0));
+
+        if(isValidLatLng(latLng.latitude, latLng.longitude)){
+            try {
+                // Asks the geocoder to get the address from the location passed to the method.
+                addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, MAX_RESULTS);
+                // If the response contains any address, then append it to a string and return.
+                if (null != addresses && !addresses.isEmpty()) {
+                    address = addresses.get(0);
+                    addressText = addressText.append(address.getAddressLine(0));
+                }
+            } catch (IOException e) {
+                Log.e("WalkingGroupApp", " Error: Geocoder was unable to retrieve current location");
             }
-        } catch (IOException e) {
+        } else{
+            addressText = addressText.append("Address not available");
         }
+
         return addressText.toString();
     }
 
-    // Request permission and check for location updates
+     // source: https://stackoverflow.com/questions/7356373/android-how-to-validate-locations-latitude-and-longtitude-values
+    public boolean isValidLatLng(double lat, double lng){
+        if(lat < -90 || lat > 90) {
+            return false;
+        } else if(lng < -180 || lng > 180) {
+            return false;
+        }
+        return true;
+    }
+
     protected void startLocationUpdates() {
-        // If permission is not granted request it now and return
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -195,7 +197,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     LOCATION_PERMISSION_REQUEST_CODE);
             return;
         }
-        //If there is permission, request for location updates.
+
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,
                 this);
     }
@@ -221,19 +223,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onResult(@NonNull LocationSettingsResult result) {
                 final Status status = result.getStatus();
                 switch (status.getStatusCode()) {
-                    // A SUCCESS status means all is well and you can go ahead and initiate a location request
                     case LocationSettingsStatusCodes.SUCCESS:
                         locationUpdateState = true;
                         startLocationUpdates();
                         break;
-                    // A RESOLUTION_REQUIRED status means the location settings have some issues which can be fixed
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         try {
                             status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
                         }
                         break;
-                    // A SETTINGS_CHANGE_UNAVAILABLE status means the location settings have some issues that you can’t fix
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                         break;
                 }
@@ -241,7 +240,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    // Start the update request if it has a RESULT_OK result for a REQUEST_CHECK_SETTINGS request.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -253,14 +251,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    // Stop location update request on pause
     @Override
     protected void onPause() {
         super.onPause();
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
     }
 
-    // Restart the location update request
     @Override
     public void onResume() {
         super.onResume();
@@ -271,17 +267,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        // Update lastLocation with the new location and update the map
         lastLocation = location;
         if (null != lastLocation) {
-            placeUserMarkerOnMap(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
+            placeMarkerOnMap(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
         }
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         setUpMap();
-        // Start location updates if user's location settings are turned on.
         if (locationUpdateState) {
             startLocationUpdates();
         }
