@@ -11,16 +11,13 @@ public class Group {
     private String meetingLocation;
     private String destination;
 
-    private int id;
+    private Long id;
+    private User leader;
     private List<String> routeLatArray = new ArrayList<>();
     private List<String> routeLngArray = new ArrayList<>();
     private List<User> memberUsers = new ArrayList<>();
 
-
-
-
     //private User user;
-
 
     public Group(String groupName, String meetingLocation, String destination) {
         this.groupName = groupName;
@@ -66,32 +63,77 @@ public class Group {
 
 
 
+
     //added to match Dr Brian's Json retrofit
+
+    public Long getGroupId(){
+        return id;
+    }
+    public void setGroupId(Long id){
+        this.id = id;
+    }
+
+
+    public User getLeader(){
+        return leader;
+    }
+    public void setLeader(User user){
+        this.leader = user;
+    }
+
 
     public String getGroupDescription(){
         String groupDescription = groupName;
         return groupDescription;
     }
+    public void setGroupDescription(String descriptions){
+        this.groupName = descriptions;
+    }
 
 
-    //TODO:
+
     public List<User> getMemberUsers(){
         return memberUsers;
     }
-
-
-    public int getGroupId(){
-        return id;
+    public void setMemberUsers(List<User> memberUsers){
+        this.memberUsers = memberUsers;
     }
+
 
     public List<String> getRouteLatArray(){
         return routeLatArray;
     }
+    public void setRouteLatArray(List<String> routeLatArray){
+        this.routeLatArray = routeLatArray;
+    }
+
 
     public List<String> getRouteLngArray(){
        return routeLngArray;
     }
+    public void setRouteLngArray(List<String> routeLngArray){
+        this.routeLngArray = routeLngArray;
+    }
 
+
+
+
+    @Override
+    public String toString(){
+        return "groupDescription=" + groupName +
+               ", leader='" + leader + '\'' +
+
+               ", routeLatArray='" + routeLatArray + '\'' +
+               ", routeLngArray='" + routeLngArray + '\'' +
+               ", memberUsers='" + memberUsers + '\'' +
+               '}';
+
+
+
+
+
+
+    }
 
 
 

@@ -9,7 +9,6 @@ import android.widget.Button;
 import com.teal.a276.walkinggroup.R;
 
 public class Welcome extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
