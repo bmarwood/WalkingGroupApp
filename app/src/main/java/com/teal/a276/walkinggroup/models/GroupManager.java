@@ -84,7 +84,7 @@ public class GroupManager {
 
         for(int i = 0; i< countJoinGroups(); i++){
             Group group = getJoinGroup(i);
-            descriptions[i] = "Name :" + group.getGroupName() + "\nMeeting Location: " +
+            descriptions[i] = "Name: " + group.getGroupName() + "\nMeeting Location: " +
                     group.getMeetingLocation() + "\nDestination: " + group.getDestination();
         }
         return descriptions;

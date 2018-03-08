@@ -1,5 +1,8 @@
 package com.teal.a276.walkinggroup.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Group {
 
     //private List<User> users = new ArrayList<>();
@@ -7,6 +10,15 @@ public class Group {
     private String groupName;
     private String meetingLocation;
     private String destination;
+
+    private int id;
+    private List<String> routeLatArray = new ArrayList<>();
+    private List<String> routeLngArray = new ArrayList<>();
+    private List<User> memberUsers = new ArrayList<>();
+
+
+
+
     //private User user;
 
 
@@ -50,5 +62,48 @@ public class Group {
         }
         this.destination = destination;
     }
+
+
+
+
+    //added to match Dr Brian's Json retrofit
+
+    public String getGroupDescription(){
+        String groupDescription = groupName;
+        return groupDescription;
+    }
+
+
+    //TODO:
+    public List<User> getMemberUsers(){
+        return memberUsers;
+    }
+
+
+    public int getGroupId(){
+        return id;
+    }
+
+    public List<String> getRouteLatArray(){
+        return routeLatArray;
+    }
+
+    public List<String> getRouteLngArray(){
+       return routeLngArray;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
