@@ -122,8 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (null != locationAvailability && locationAvailability.isLocationAvailable()) {
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
-                LatLng currentLocation = new LatLng(lastLocation.getLatitude(), lastLocation
-                        .getLongitude());
+                LatLng currentLocation = locationToLatLng();
                 placeMarkerOnMap(currentLocation);
 
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
@@ -267,8 +266,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         lastLocation = location;
         if (null != lastLocation) {
-            placeMarkerOnMap(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
+            placeMarkerOnMap(locationToLatLng());
         }
+    }
+
+    @NonNull
+    private LatLng locationToLatLng() {
+        return new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
     }
 
     @Override
