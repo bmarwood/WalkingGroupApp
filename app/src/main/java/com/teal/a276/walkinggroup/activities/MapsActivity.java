@@ -243,11 +243,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CHECK_SETTINGS) {
-            if (resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CHECK_SETTINGS && resultCode == RESULT_OK) {
                 locationUpdateState = true;
                 startLocationUpdates();
-            }
         }
     }
 
