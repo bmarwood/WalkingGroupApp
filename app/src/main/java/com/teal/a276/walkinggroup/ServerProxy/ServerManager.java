@@ -1,15 +1,11 @@
-package com.teal.a276.walkinggroup.proxy;
+package com.teal.a276.walkinggroup.ServerProxy;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -17,49 +13,31 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-/**
- * General support for getting the Retrofit proxy object.
- * Adds:
- *   - Logging
- *   - Setting API key header
- *   - Setting Authorization header (and managing token received)
- *
- * For more on Retrofit, see http://square.github.io/retrofit/
- */
 public class ServerManager {
     private static final String SERVER_URL = "https://cmpt276-1177-bf.cmpt.sfu.ca:8443/";
     private static final String API_KEY = "BB23730A-C1B3-4B65-855E-C538EE143FDC";
+    private static String apiToken = null;
 
-
-    // Allow client-code to register callback for when the token is received.
-    // NOTE: the current proxy does not upgrade to using the token!
-    private static ServerResult<String> receivedTokenCallback;
-    public static void setOnTokenReceiveCallback(ServerResult<String> callback) {
-        receivedTokenCallback = callback;
-    }
 
     /**
-     * Return the proxy that client code can use to call server.
-     * @param token    The token you have been issued
-     * @return proxy object to call the server.
-     */
-    public static AbstractServerManager getProxy(String token) {
-        // Enable Logging
+    * Return the proxy that client code can use to call server.
+    * @return proxy object to call the server.
+    */
+    public static ServerProxy getServerRequest() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(logging)
-                .addInterceptor(new AddHeaderInterceptor(API_KEY, token))
+                .addInterceptor(new AddHeaderInterceptor(API_KEY, apiToken))
                 .build();
 
-        // Build Retrofit proxy object for server
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(SERVER_URL)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(client)
                 .build();
 
-        return retrofit.create(AbstractServerManager.class);
+        return retrofit.create(ServerProxy.class);
     }
 
     /**
@@ -70,7 +48,7 @@ public class ServerManager {
      * @param callback  Client-code to execute when we have a good answer for them or when an error occured.
      * @param <T>       The type of data that Call object is expected to fetch
      */
-    public static <T> void callProxy(Call<T> caller, @NonNull final ServerResult<T> callback) {
+    public static <T> void serverRequest(Call<T> caller, @NonNull final ServerResult<T> callback) {
         caller.enqueue(new Callback<T>() {
             @Override
             public void onResponse(@NonNull Call<T> call, @NonNull retrofit2.Response<T> response) {
@@ -80,51 +58,51 @@ public class ServerManager {
                     // Check for authentication token:
                     String tokenInHeader = response.headers().get("Authorization");
                     if (tokenInHeader != null) {
-                        if (receivedTokenCallback != null) {
-                            receivedTokenCallback.result(tokenInHeader);
-                        } else {
-                            // We got the token, but nobody wanted it!
-                            Log.w("ProxyBuilder", "WARNING: Received token but no callback registered for it!");
-                        }
+                        apiToken = tokenInHeader;
                     }
+
                     T body = response.body();
                     callback.result(body);
 
                 } else {
-                    String message;
-                    try {
-                        message = "CALL TO SERVER FAILED:\n" + response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        message = "Unable to decode response (body or error's body).";
-                    }
-
-                    callback.error(message);
+                    callback.error(serverErrorString(response));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-                String message = "Server Error: " + t.getMessage();
+                String message = "CALL TO SERVER FAILED: " + t.getMessage();
                 callback.error(message);
             }
         });
+    }
+
+    static private String serverErrorString(@NonNull retrofit2.Response response) {
+        String message;
+        try {
+            message = "Server Error:\n" + response.errorBody().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+            message = "Unable to decode response (body or error's body).";
+        }
+
+        return message;
     }
 
     private static class AddHeaderInterceptor implements Interceptor {
         private String apiKey;
         private String token;
 
-        public AddHeaderInterceptor(String apiKey, String token) {
+        private AddHeaderInterceptor(String apiKey, String token) {
             this.apiKey = apiKey;
             this.token = token;
         }
 
         @Override
         public Response intercept(Interceptor.Chain chain) throws IOException {
-            Request originalRequest = chain.request();
+            okhttp3.Request originalRequest = chain.request();
 
-            Request.Builder builder = originalRequest.newBuilder();
+            okhttp3.Request.Builder builder = originalRequest.newBuilder();
             // Add API header
             if (apiKey != null) {
                 builder.header("apiKey", apiKey);
@@ -133,7 +111,7 @@ public class ServerManager {
             if (token != null) {
                 builder.header("Authorization", token);
             }
-            Request modifiedRequest = builder.build();
+            okhttp3.Request modifiedRequest = builder.build();
 
             return chain.proceed(modifiedRequest);
         }
