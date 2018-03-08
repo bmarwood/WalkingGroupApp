@@ -50,20 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
 
-
     // TODO: Populate markers array from existing groups
-//    ArrayList<MarkerData> markersArray;
-//
-//    private void populateMarkerArrayList () {
-//    }
-//
-//    private void placeGroupMarkersOnMap(ArrayList<MarkerData> markersArray){
-//
-//    }
-
-
-
-
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
@@ -150,11 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Add pin at user's location
                 placeUserMarkerOnMap(currentLocation);
 
-
-
                 //TODO: Add pins at groups locations
-//                placeGroupMarkersOnMap();
-
 
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
             }
