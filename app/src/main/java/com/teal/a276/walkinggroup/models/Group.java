@@ -3,6 +3,9 @@ package com.teal.a276.walkinggroup.models;
 import java.util.ArrayList;
 import java.util.List;
 
+
+//added for JsonIgnore
+
 public class Group {
 
     //private List<User> users = new ArrayList<>();
@@ -18,7 +21,7 @@ public class Group {
     private List<User> memberUsers = new ArrayList<>();
 
     //private User user;
-
+    //@JsonIgnore
     public Group(String groupName, String meetingLocation, String destination) {
         this.groupName = groupName;
         this.meetingLocation = meetingLocation;
@@ -116,8 +119,6 @@ public class Group {
     }
 
 
-
-
     @Override
     public String toString(){
         return "groupDescription=" + groupName +
@@ -128,24 +129,5 @@ public class Group {
                ", memberUsers='" + memberUsers + '\'' +
                '}';
 
-
-
-
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
