@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,6 +33,30 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.disableMenuItem(menu.findItem(R.id.mapItem));
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mapItem:
+                break;
+            case R.id.groupItem:
+                Toast.makeText(this, "Clicked group item!", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.monitorItem:
+                Toast.makeText(this, "Clicked monitor item!", Toast.LENGTH_LONG).show();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
     }
 
     public static Intent makeIntent(Context context) {
