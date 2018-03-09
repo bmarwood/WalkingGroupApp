@@ -159,30 +159,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         List<Address> addresses = null;
         Address address = null;
 
-        if(isValidLatLng(latLng.latitude, latLng.longitude)){
-            try {
-                // Asks the geocoder to get the address from the location passed to the method.
-                addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, MAX_RESULTS);
-                // If the response contains any address, then append it to a string and return.
-                if (null != addresses && !addresses.isEmpty()) {
-                    address = addresses.get(0);
-                    addressText = addressText.append(address.getAddressLine(0));
-                }
-            } catch (IOException e) {
-                Log.e("WalkingGroupApp", " Error: Geocoder was unable to retrieve current location");
-            }
-        } else{
+        if (!isValidLatLng(latLng.latitude, latLng.longitude)) {
             addressText = addressText.append("Address not available");
+            return addressText.toString();
+        }
+
+        try {
+            // Asks the geocoder to get the address from the location passed to the method.
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, MAX_RESULTS);
+            // If the response contains any address, then append it to a string and return.
+            if (null != addresses && !addresses.isEmpty()) {
+                address = addresses.get(0);
+                addressText = addressText.append(address.getAddressLine(0));
+            }
+        } catch (IOException e) {
+            Log.e("WalkingGroupApp", " Error: Geocoder was unable to retrieve current location");
         }
 
         return addressText.toString();
     }
 
-     // source: https://stackoverflow.com/questions/7356373/android-how-to-validate-locations-latitude-and-longtitude-values
-    public boolean isValidLatLng(double lat, double lng){
-        if(lat < -90 || lat > 90) {
+    // Source: https://stackoverflow.com/questions/7356373/android-how-to-validate-locations-latitude-and-longtitude-values
+    public boolean isValidLatLng(double lat, double lng) {
+        if (lat < -90 || lat > 90) {
             return false;
-        } else if(lng < -180 || lng > 180) {
+        } else if (lng < -180 || lng > 180) {
             return false;
         }
         return true;
@@ -243,8 +244,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CHECK_SETTINGS && resultCode == RESULT_OK) {
-                locationUpdateState = true;
-                startLocationUpdates();
+            locationUpdateState = true;
+            startLocationUpdates();
         }
     }
 
