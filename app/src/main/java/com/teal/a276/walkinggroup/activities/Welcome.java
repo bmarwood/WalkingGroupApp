@@ -1,6 +1,5 @@
 package com.teal.a276.walkinggroup.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -19,7 +18,7 @@ public class Welcome extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mapItem:
-                startActivity(new Intent(this, MapsActivity.class));
+                startActivity(MapsActivity.makeIntent(Welcome.this));
                 break;
             case R.id.groupItem:
                 Toast.makeText(this, "Clicked group item!", Toast.LENGTH_LONG).show();

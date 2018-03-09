@@ -1,8 +1,6 @@
 package com.teal.a276.walkinggroup.activities;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -53,12 +51,13 @@ abstract class BaseActivity extends AppCompatActivity {
 
     protected void disableMenuItem(MenuItem item) {
 
+        //idea for setting the disabled look from here https://stackoverflow.com/a/19008520/5323434
         if (viewFinalized) {
-            item.setEnabled(false);
-
             SpannableString string = new SpannableString(item.getTitle());
             string.setSpan(new ForegroundColorSpan(Color.GRAY), 0, string.length(), 0);
             item.setTitle(string);
+
+            item.setEnabled(false);
         }
     }
 }
