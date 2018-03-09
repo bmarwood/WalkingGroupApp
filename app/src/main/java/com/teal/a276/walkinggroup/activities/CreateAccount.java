@@ -129,8 +129,6 @@ public class CreateAccount extends AppCompatActivity {
             }
         }
 
-
-
         return returnErrorMessages;
     }
 }

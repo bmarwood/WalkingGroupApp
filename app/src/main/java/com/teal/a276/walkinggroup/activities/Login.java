@@ -25,6 +25,8 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        TextView errorsForUser = (TextView) findViewById(R.id.errorInput);
+        errorsForUser.setTextColor(Color.RED);
         setUpLoginButton();
         setupCreateAccountButton();
     }
@@ -66,7 +68,6 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void error(String error) {
                         errorsForUser.setVisibility(View.VISIBLE);
-                        errorsForUser.setTextColor(Color.RED);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -94,6 +95,5 @@ public class Login extends AppCompatActivity {
     public static Intent makeIntent(Context context){
         return new Intent(context, Login.class);
     }
-
 
 }
