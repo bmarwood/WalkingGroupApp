@@ -31,7 +31,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/avatar" />
+        app:srcCompat="@mipmap/avatar"
+        android:contentDescription="@string/defaultuserpicture" />
 
     <TableLayout
         android:id="@+id/tableLayout"
@@ -79,7 +80,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="49dp"
         android:ems="10"
-        android:hint="Email"
+        android:hint="@string/hint_email"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +94,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="42dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/hint_password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

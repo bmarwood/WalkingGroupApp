@@ -53,6 +53,13 @@ public class User {
         this.password = password;
     }
 
+    public  void setAccountInfo(String name, String email, String password) {
+        setEmail(email);
+        setPassword(password);
+        setName(name);
+    }
+
+
     public List<User> getMonitoredByUsers() {
         return monitoredByUsers;
     }

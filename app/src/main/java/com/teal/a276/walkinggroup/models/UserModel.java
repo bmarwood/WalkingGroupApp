@@ -1,14 +1,7 @@
 package com.teal.a276.walkinggroup.models;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import com.teal.a276.walkinggroup.R;
-
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,37 +10,40 @@ import java.util.regex.Pattern;
  */
 
 public class UserModel {
-    private static String id;
+    private  long id;
     private static String name;
-    private static String userEmail = "1";
-    private static String userPassword = "2";
+    private static String email;
+    private static String password;
+    public ArrayList<Object> memberOfGroups;
+    public ArrayList<Object> leadsGroups;
 
-    public static boolean checkInputs(String email, String password) {
-        return email.equals(userEmail) && password.equals(userPassword);
-    }
+//    public static boolean checkInputs(String email, String password) {
+//
+//        return email.equals(UserModel.email) && password.equals(UserModel.password);
+//    }
 
-    public static String getId() {
+    public Long getId() {
         return id;
     }
 
-    public static void setId(String id) {
-        UserModel.id = id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public static String getUserEmail() {
-        return userEmail;
+    public static String getEmail() {
+        return email;
     }
 
-    public static void setUserEmail(String userEmail) {
-        UserModel.userEmail = userEmail;
+    public static void setEmail(String email) {
+        UserModel.email = email;
     }
 
-    public static String getUserPassword() {
-        return userPassword;
+    public static String getPassword() {
+        return password;
     }
 
-    public static void setUserPassword(String userPassword) {
-        UserModel.userPassword = userPassword;
+    public static void setPassword(String password) {
+        UserModel.password = password;
     }
 
     public static String getName() {
@@ -85,8 +81,8 @@ public class UserModel {
 
 
     public static void setAccountInfo(String name, String email, String password) {
-        setUserEmail(email);
-        setUserPassword(password);
+        setEmail(email);
+        setPassword(password);
         setName(name);
     }
     //TODO: interact with server to check if email and string are correct
