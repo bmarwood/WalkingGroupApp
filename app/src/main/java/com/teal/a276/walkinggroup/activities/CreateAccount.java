@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +17,6 @@ import com.teal.a276.walkinggroup.ServerProxy.ServerManager;
 import com.teal.a276.walkinggroup.ServerProxy.ServerProxy;
 import com.teal.a276.walkinggroup.ServerProxy.ServerResult;
 import com.teal.a276.walkinggroup.dataobjects.User;
-import com.teal.a276.walkinggroup.models.UserModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -91,13 +88,14 @@ public class CreateAccount extends AppCompatActivity {
 
                         @Override
                         public void error(String error) {
-                            Toast.makeText(CreateAccount.this, error, Toast.LENGTH_LONG).show();
+                            TextView errorsForUser = (TextView) findViewById(R.id.badEmailOrPassword);
+
+                            errorsForUser.setText(R.string.email_in_use);
+                            errorsForUser.setVisibility(View.VISIBLE);
+                            errorsForUser.setTextColor(Color.RED);
+
                         }
                     });
-
-                    Intent intent = MapsActivity.makeIntent(CreateAccount.this);
-                    startActivity(intent);
-                    finish();
                 }
             }
         });
@@ -112,24 +110,27 @@ public class CreateAccount extends AppCompatActivity {
         ArrayList<String> returnErrorMessages = new ArrayList<>();
 
         if (firstName.length() == 0) {
-            returnErrorMessages.add("First Name must be inputted");
+            returnErrorMessages.add(getString(R.string.first_name_must_be_inputted));
         }
         if (lastName.length() == 0) {
-            returnErrorMessages.add("Last Name must be inputted");
+            returnErrorMessages.add(getString(R.string.last_name_must_be_inputted));
         }
         if (email.length() == 0) {
-            returnErrorMessages.add("Email must be inputted");
+            returnErrorMessages.add(getString(R.string.email_must_be_inputted));
         }
         if(password.length() == 0) {
-            returnErrorMessages.add("password must be inputted");
+            returnErrorMessages.add(getString(R.string.password_must_be_inputted));
         }
         if(email.length() > 0) {
-            Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
+            Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
             Matcher m = p.matcher(email);
             if (! m.matches()) {
                 returnErrorMessages.add("Email must be formatted correctly");
             }
         }
+
+
+
         return returnErrorMessages;
     }
 }

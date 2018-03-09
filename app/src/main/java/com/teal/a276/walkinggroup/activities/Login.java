@@ -10,14 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.ServerProxy.ServerManager;
 import com.teal.a276.walkinggroup.ServerProxy.ServerProxy;
 import com.teal.a276.walkinggroup.ServerProxy.ServerResult;
 import com.teal.a276.walkinggroup.dataobjects.User;
-import com.teal.a276.walkinggroup.models.UserModel;
 
 import retrofit2.Call;
 
