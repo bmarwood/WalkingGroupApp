@@ -1,6 +1,5 @@
-package com.teal.a276.walkinggroup.models;
+package com.teal.a276.walkinggroup.model.dataobjects;
 
-import com.teal.a276.walkinggroup.dataobjects.User;
 import java.util.ArrayList;
 import java.util.List;
 

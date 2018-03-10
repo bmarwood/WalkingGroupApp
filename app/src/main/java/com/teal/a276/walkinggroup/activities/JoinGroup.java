@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.models.Group;
-import com.teal.a276.walkinggroup.models.GroupManager;
+import com.teal.a276.walkinggroup.model.dataobjects.Group;
+import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 
 import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_DESTLAT;
 import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_DESTLNG;

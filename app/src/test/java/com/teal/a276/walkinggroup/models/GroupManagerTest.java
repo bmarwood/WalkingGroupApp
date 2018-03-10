@@ -1,5 +1,8 @@
 package com.teal.a276.walkinggroup.models;
 
+import com.teal.a276.walkinggroup.model.dataobjects.Group;
+import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

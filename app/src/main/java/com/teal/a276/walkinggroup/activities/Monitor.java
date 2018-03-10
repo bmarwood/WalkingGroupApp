@@ -17,10 +17,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.ServerProxy.ServerManager;
-import com.teal.a276.walkinggroup.ServerProxy.ServerProxy;
-import com.teal.a276.walkinggroup.ServerProxy.ServerResult;
-import com.teal.a276.walkinggroup.dataobjects.User;
+import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.List;
 
@@ -76,50 +75,6 @@ public class Monitor extends AppCompatActivity {
                         User user = new User();
                         user.setEmail("c@test.com");
                         user.setPassword("1234");
-
-                        Call<Void> call = proxy.login(user);
-                        ServerManager.serverRequest(call, new ServerResult<Void>() {
-                            @Override
-                            public void result(Void ans) {
-
-                                Call<User> call = proxy.getUserByEmail(getEmail);
-
-                                ServerManager.serverRequest(call, new ServerResult<User>() {
-                                    @Override
-                                    public void result(User ans) {
-                                        Call<List<User>> call = proxy.monitorUser(12L, ans);
-                                        ServerManager.serverRequest(call, new ServerResult<List<User>>() {
-                                            @Override
-                                            public void result(List<User> ans) {
-                                                StringBuilder sb = new StringBuilder();
-                                                for (User u: ans) {
-                                                    sb.append(u);
-                                                }
-                                                Log.d("get User list", sb.toString());
-                                            }
-
-                                            @Override
-                                            public void error(String error) {
-
-                                                Log.e("test", error);
-                                                Toast.makeText(Monitor.this, error, Toast.LENGTH_LONG).show();
-                                            }
-                                        });
-                                    }
-
-                                    @Override
-                                    public void error(String error) {
-                                        Log.e("test", error);
-                                        Toast.makeText(Monitor.this, error, Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void error(String error) {
-
-                            }
-                        });
 
 
                     }

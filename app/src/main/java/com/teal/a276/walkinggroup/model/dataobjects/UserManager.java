@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.models;
+package com.teal.a276.walkinggroup.model.dataobjects;
 
 public class UserManager{
 
