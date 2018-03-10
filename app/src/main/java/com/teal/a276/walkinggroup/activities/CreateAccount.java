@@ -42,51 +42,48 @@ public class CreateAccount extends AppCompatActivity {
         Button btn = (Button) findViewById(R.id.makeAccountBtn);
         final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBarCreate);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String firstName = ((EditText) findViewById(R.id.firstName)).getText().toString();
-                String lastName = ((EditText) findViewById(R.id.lastName)).getText().toString();
-                String email = ((EditText) findViewById(R.id.email)).getText().toString();
-                String password = ((EditText) findViewById(R.id.password)).getText().toString();
+        btn.setOnClickListener(v -> {
+            String firstName = ((EditText) findViewById(R.id.firstName)).getText().toString();
+            String lastName = ((EditText) findViewById(R.id.lastName)).getText().toString();
+            String email = ((EditText) findViewById(R.id.email)).getText().toString();
+            String password = ((EditText) findViewById(R.id.password)).getText().toString();
 
-                toggleSpinner(VIEW_VISIBLE);
+            toggleSpinner(VIEW_VISIBLE);
 
-                ArrayList<String> errors =  checkCreateInputs(firstName, lastName, email, password);
+            ArrayList<String> errors =  checkCreateInputs(firstName, lastName, email, password);
 
 
-                if(!errors.isEmpty()) {
-                    ErrorStringGen(errors);
-                    return;
-                }
-
-                    User user = new User(firstName + " " + lastName, email, password);
-
-                    ServerProxy proxy = ServerManager.getServerRequest();
-                    Call<User> caller = proxy.createNewUser(user);
-                    ServerManager.serverRequest(caller, new ServerResult<User>() {
-                        @Override
-                        public void result(User user) {
-                            Intent intent = MapsActivity.makeIntent(CreateAccount.this);
-
-                            toggleSpinner(VIEW_INVISIBLE);
-                            startActivity(intent);
-                            finish();
-                        }
-
-                        @Override
-                        public void error(String error) {
-                            TextView errorsForUser = (TextView) findViewById(R.id.badEmailOrPassword);
-
-                            errorsForUser.setText(R.string.email_in_use);
-                            errorsForUser.setVisibility(View.VISIBLE);
-                            errorsForUser.setTextColor(Color.RED);
-
-                            toggleSpinner(VIEW_INVISIBLE);
-                        }
-                    });
-
+            if(!errors.isEmpty()) {
+                ErrorStringGen(errors);
+                return;
             }
+
+                User user = new User(firstName + " " + lastName, email, password);
+
+                ServerProxy proxy = ServerManager.getServerRequest();
+                Call<User> caller = proxy.createNewUser(user);
+                ServerManager.serverRequest(caller, new ServerResult<User>() {
+                    @Override
+                    public void result(User user) {
+                        Intent intent = MapsActivity.makeIntent(CreateAccount.this);
+
+                        toggleSpinner(VIEW_INVISIBLE);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void error(String error) {
+                        TextView errorsForUser = (TextView) findViewById(R.id.badEmailOrPassword);
+
+                        errorsForUser.setText(R.string.email_in_use);
+                        errorsForUser.setVisibility(View.VISIBLE);
+                        errorsForUser.setTextColor(Color.RED);
+
+                        toggleSpinner(VIEW_INVISIBLE);
+                    }
+                });
+
         });
     }
 
