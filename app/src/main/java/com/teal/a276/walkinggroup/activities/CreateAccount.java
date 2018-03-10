@@ -60,8 +60,7 @@ public class CreateAccount extends AppCompatActivity {
                     return;
                 }
 
-                    User user = new User();
-                    user.setAccountInfo(firstName + " " + lastName, email, password);
+                    User user = new User(firstName + " " + lastName, email, password);
 
                     ServerProxy proxy = ServerManager.getServerRequest();
                     Call<User> caller = proxy.createNewUser(user);

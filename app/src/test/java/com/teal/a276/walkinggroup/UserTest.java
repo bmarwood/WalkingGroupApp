@@ -76,4 +76,24 @@ public class UserTest {
         assertEquals(null, user.getPassword());
     }
 
+
+    //testing Constructors
+    @Test
+    public void testBaseConstructor() throws Exception{
+        User user = new User();
+        assertEquals(null,user.getName());
+        assertEquals(null,user.getPassword());
+        assertEquals(null,user.getEmail());
+        assertEquals(null,user.getHref());
+        assertEquals(null,user.getId());
+    }
+    @Test
+    public void testConstructor() throws Exception{
+        User user = new User("Bob Lee", "email@email.com", "Password1234");
+        assertEquals("Bob Lee",user.getName());
+        assertEquals("Password1234",user.getPassword());
+        assertEquals("email@email.com",user.getEmail());
+        assertEquals(null,user.getHref());
+        assertEquals(null,user.getId());
+    }
 }
