@@ -21,6 +21,9 @@ import retrofit2.Call;
 
 public class Login extends AppCompatActivity {
 
+    private static final int VIEW_VISIBLE = -1;
+    private static final int VIEW_INVISIBLE = -2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +36,7 @@ public class Login extends AppCompatActivity {
 
     private void setUpLoginButton() {
         Button btn = (Button) findViewById(R.id.signInBtn);
-        final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBar);
+
 
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -43,12 +46,8 @@ public class Login extends AppCompatActivity {
                 errorsForUser.setVisibility(View.INVISIBLE);
                 String email = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
                 String password = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        spinner.setVisibility(View.VISIBLE);
-                    }
-                });
+
+                toggleSpinner(VIEW_VISIBLE);
 
 
                 User user = new User();
@@ -67,15 +66,27 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void error(String error) {
+                        final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBar);
                         errorsForUser.setVisibility(View.VISIBLE);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                spinner.setVisibility(View.INVISIBLE);
-                            }
-                        });
+                        toggleSpinner(VIEW_INVISIBLE);
                     }
                 });
+            }
+        });
+    }
+
+    private void toggleSpinner(int view) {
+        final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBar);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                if(view == VIEW_VISIBLE){
+                    spinner.setVisibility(View.VISIBLE);
+                }
+                else if(view == VIEW_INVISIBLE){
+                    spinner.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }
