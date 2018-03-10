@@ -65,9 +65,9 @@ public class CreateAccount extends AppCompatActivity {
                     errorsForUser.setText(stringForTextView);
                     errorsForUser.setVisibility(View.VISIBLE);
                     errorsForUser.setTextColor(Color.RED);
-
                     toggleSpinner(VIEW_INVISIBLE);
-                }else{
+                    return;
+                }
 
                     User user = new User();
                     user.setAccountInfo(firstName + " " + lastName, email, password);
@@ -95,7 +95,7 @@ public class CreateAccount extends AppCompatActivity {
                             toggleSpinner(VIEW_INVISIBLE);
                         }
                     });
-                }
+
             }
         });
     }
