@@ -18,9 +18,15 @@ import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.models.Group;
 import com.teal.a276.walkinggroup.models.GroupManager;
 
-import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_DESTINATION;
+import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_DESTLAT;
+import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_DESTLNG;
 import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_GROUPNAME;
-import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_MEETINGLOCATION_;
+import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_MEETINGLAT;
+import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_MEETINGLNG;
+
+//import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_DESTINATION;
+//import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_MEETINGLOCATION_;
+
 
 //DO NOT IMPORT THIS, OR REFACTOR THE GROUP CLASS LATER!!
 //import java.security.acl.Group;
@@ -89,12 +95,31 @@ public class JoinGroup extends AppCompatActivity {
              case 1234:
                  if(resultCode == Activity.RESULT_OK) {
                      String groupName = intent.getStringExtra(EXTRA_GROUPNAME);
-                     String meetingLocation= intent.getStringExtra(EXTRA_MEETINGLOCATION_);
-                     String destination = intent.getStringExtra(EXTRA_DESTINATION);
+                     //String meetingLocation= intent.getStringExtra(EXTRA_MEETINGLOCATION_);
+                     //String destination = intent.getStringExtra(EXTRA_DESTINATION);
+                     String meetingLat = intent.getStringExtra(EXTRA_MEETINGLAT);
+                     String meetingLng = intent.getStringExtra(EXTRA_MEETINGLNG);
+                     String destinationLat = intent.getStringExtra(EXTRA_DESTLAT);
+                     String destinationLng = intent.getStringExtra(EXTRA_DESTLNG);
+                     Group group = new Group();
+                     //Group group = new Group(groupName, meetingLocation, destination)
+                     group.setGroupName(groupName);
+                     group.setMeetingLat(meetingLat);
+                     group.setMeetingLng(meetingLng);
+                     group.setDestinationLat(destinationLat);
+                     group.setDestinationLng(destinationLng);
 
-                     Group group = new Group(groupName, meetingLocation, destination);
+                     //added 16:57 Mar9
+
+                     //send this new group to server and addnew group on server
+
+
                      groupManager.addJoinGroup(group);
+
+
                      populateJoinGroupsListView();
+
+
                  }
          }
     }

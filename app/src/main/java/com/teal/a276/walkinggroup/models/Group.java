@@ -1,5 +1,6 @@
 package com.teal.a276.walkinggroup.models;
 
+import com.teal.a276.walkinggroup.dataobjects.User;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,13 @@ public class Group {
     private String meetingLocation;
     private String destination;
 
+
+    private String meetingLatStr;
+    private String meetingLngStr;
+    private String destinationLatStr;
+    private String destinationLngStr;
+
+
     private Long id;
     private User leader;
     private List<String> routeLatArray = new ArrayList<>();
@@ -22,11 +30,11 @@ public class Group {
 
     //private User user;
     //@JsonIgnore
-    public Group(String groupName, String meetingLocation, String destination) {
-        this.groupName = groupName;
-        this.meetingLocation = meetingLocation;
-        this.destination = destination;
-    }
+    //public Group(String groupName, String meetingLocation, String destination) {
+    //    this.groupName = groupName;
+    //    this.meetingLocation = meetingLocation;
+     //   this.destination = destination;
+    //}
 
 
     public String getGroupName() {
@@ -41,27 +49,77 @@ public class Group {
     }
 
 
-    public String getMeetingLocation() {
-        return meetingLocation;
+   // public String getMeetingLocation() {
+   //     return meetingLocation;
+   // }
+
+//    public void setMeetingLocation(String meetingLocation) {
+//        if (meetingLocation == null || meetingLocation.isEmpty()) {
+//            throw new IllegalArgumentException("Name is empty or NULL");
+//        }
+//        this.meetingLocation = meetingLocation;
+//    }
+
+//    public String getDestination() {
+//        return destination;
+//    }
+//
+//    public void setDestination(String destination) {
+//        if (destination == null || destination.isEmpty()) {
+//            throw new IllegalArgumentException("Name is empty or NULL");
+//        }
+//        this.destination = destination;
+//    }
+
+
+
+    //Added 3/9 tweaked to use lng, lat
+    public void setMeetingLat(String meetingLatStr){
+        this.meetingLatStr = meetingLatStr;
+    }
+    //public String getMeetingLat(Group group){
+    //    return group.meetingLatStr;
+    //}
+    public String getMeetingLat(){
+        return meetingLatStr;
     }
 
-    public void setMeetingLocation(String meetingLocation) {
-        if (meetingLocation == null || meetingLocation.isEmpty()) {
-            throw new IllegalArgumentException("Name is empty or NULL");
-        }
-        this.meetingLocation = meetingLocation;
+    public void setMeetingLng(String meetingLngStr){
+        this.meetingLngStr = meetingLngStr;
+    }
+    //public String getMeetingLng(Group group){
+    //    return group.meetingLngStr;
+    //}
+    public String getMeetingLng(){
+        return meetingLngStr;
     }
 
-    public String getDestination() {
-        return destination;
+
+
+    public void setDestinationLat(String destinationLatStr){
+        this.destinationLatStr = destinationLatStr;
+    }
+    //public String getDestinationLat(Group group){
+     //   return group.destinationLatStr;
+    //}
+    public String getDestinationLat(){
+        return destinationLatStr;
     }
 
-    public void setDestination(String destination) {
-        if (destination == null || destination.isEmpty()) {
-            throw new IllegalArgumentException("Name is empty or NULL");
-        }
-        this.destination = destination;
+    public void setDestinationLng(String destinationLngStr){
+        this.destinationLngStr = destinationLngStr;
     }
+    //public String getDestinationLng(Group group){
+    //    return group.destinationLngStr;
+    //}
+    public String getDestinationLng(){
+        return destinationLngStr;
+    }
+
+
+
+
+
 
 
 

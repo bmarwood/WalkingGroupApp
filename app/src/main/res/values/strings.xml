@@ -16,4 +16,6 @@
     <string name="groups">Groups</string>
     <string name="monitor">Monitor</string>
     <string name="map">map</string>
+    <string name="lat">Lat</string>
+    <string name="lng">Lng</string>
 </resources>

@@ -14,15 +14,23 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.models.User;
+import com.teal.a276.walkinggroup.ServerProxy.ServerManager;
+import com.teal.a276.walkinggroup.ServerProxy.ServerProxy;
+import com.teal.a276.walkinggroup.ServerProxy.ServerResult;
+import com.teal.a276.walkinggroup.dataobjects.User;
+
+import java.util.List;
+
+import retrofit2.Call;
+
 
 public class Monitor extends AppCompatActivity {
 
     //use singleton, change later on
     User user = new User();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +38,11 @@ public class Monitor extends AppCompatActivity {
         setContentView(R.layout.activity_monitor);
 
         populateMonitoredByListView();
-        populateMonitoringListView();
+        populateMonitorsListView();
         setupAddToMonitorButton();
         setupAddToMonitoredByButton();
         registerMonitoredByClickCallback();
+        registerMonitoringClickCallback();
     }
 
     private void setupAddToMonitorButton() {
@@ -49,7 +58,7 @@ public class Monitor extends AppCompatActivity {
                 adb.setView(input);
 
                 adb.setNegativeButton("Cancel", null);
-                adb.setPositiveButton("Add", new AlertDialog.OnClickListener() {
+                adb.setPositiveButton("Add", new AlertDialog.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -57,7 +66,61 @@ public class Monitor extends AppCompatActivity {
                         //after server check, populate monitoring listview again
 
                         String getEmail = input.getText().toString();
+
+                        getEmail.replaceAll("@", "%40");
+
                         Log.i("CHECK", getEmail);
+
+                        ServerProxy proxy = ServerManager.getServerRequest();
+
+                        User user = new User();
+                        user.setEmail("c@test.com");
+                        user.setPassword("1234");
+
+                        Call<Void> call = proxy.login(user);
+                        ServerManager.serverRequest(call, new ServerResult<Void>() {
+                            @Override
+                            public void result(Void ans) {
+
+                                Call<User> call = proxy.getUserByEmail(getEmail);
+
+                                ServerManager.serverRequest(call, new ServerResult<User>() {
+                                    @Override
+                                    public void result(User ans) {
+                                        Call<List<User>> call = proxy.monitorUser(12L, ans);
+                                        ServerManager.serverRequest(call, new ServerResult<List<User>>() {
+                                            @Override
+                                            public void result(List<User> ans) {
+                                                StringBuilder sb = new StringBuilder();
+                                                for (User u: ans) {
+                                                    sb.append(u);
+                                                }
+                                                Log.d("get User list", sb.toString());
+                                            }
+
+                                            @Override
+                                            public void error(String error) {
+
+                                                Log.e("test", error);
+                                                Toast.makeText(Monitor.this, error, Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void error(String error) {
+                                        Log.e("test", error);
+                                        Toast.makeText(Monitor.this, error, Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void error(String error) {
+
+                            }
+                        });
+
 
                     }
                 });
@@ -92,6 +155,10 @@ public class Monitor extends AppCompatActivity {
 
 
 
+
+
+
+
                     }
                 });
                 adb.show();
@@ -115,8 +182,14 @@ public class Monitor extends AppCompatActivity {
         list.setAdapter(monitoredByAdapter);
    }
 
-    private void populateMonitoringListView() {
-        String[] monitoringItems = user.getMonitoringUsersDescriptions();
+
+
+
+
+
+
+    private void populateMonitorsListView() {
+        String[] monitoringItems = user.getMonitorsUsersDescriptions();
 
         //ARRAY ADAPTER
         ArrayAdapter<String> monitoringAdapter = new ArrayAdapter<String>(
@@ -124,9 +197,12 @@ public class Monitor extends AppCompatActivity {
                 R.layout.monitoring,
                 monitoringItems);
 
-            ListView list = (ListView) findViewById(R.id.monitoringListView);
-            list.setAdapter(monitoringAdapter);
-   }
+           ListView list = (ListView) findViewById(R.id.monitoringListView);
+          list.setAdapter(monitoringAdapter);
+ }
+
+
+
 
     private void registerMonitoredByClickCallback(){
         ListView list = (ListView) findViewById(R.id.monitoredByListView);
@@ -136,13 +212,7 @@ public class Monitor extends AppCompatActivity {
 
                 //TODO: Ask server to remove users that monitor current user by clicking on them
 
-                //User user = userManager.getMonitoredBy(position);
-
-
-
-
-
-
+                //User user = user.getMonitoredBy(position);
 
 
 
@@ -152,7 +222,7 @@ public class Monitor extends AppCompatActivity {
     }
 
 
-    private void revisterMonitoringClickCallback(){
+    private void registerMonitoringClickCallback(){
         ListView list = (ListView) findViewById(R.id.monitoringListView);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

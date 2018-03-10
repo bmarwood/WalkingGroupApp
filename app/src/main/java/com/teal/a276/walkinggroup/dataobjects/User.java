@@ -7,6 +7,7 @@ import java.util.List;
  * Simple User class to store the data the server expects and returns.
  * (Incomplete: Needs support for monitoring and groups).
  */
+
 public class User {
     private Long id;
     private String name;
@@ -97,4 +98,62 @@ public class User {
                 ", walkingGroups=" + walkingGroups +
                 '}';
     }
+    public int countMonitoredByUsers(){
+        return monitoredByUsers.size();
+    }
+    public int countMonitorsUsers(){
+        return monitorsUsers.size();
+    }
+
+
+    //below are added by Jamie, managing users
+    //TODO: add @JsonIgnore to these
+
+
+
+    private void validateIndexWithExceptionMonitoredBy(int index){
+        if(index < 0 || index >= countMonitoredByUsers()){
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void validateIndexWithExceptionMonitors(int index){
+        if(index < 0 || index >= countMonitorsUsers()){
+            throw new IllegalArgumentException();
+        }
+    }
+
+    //RETURNS SINGLE USER, NOTE THAT THIS FUNC IS VERY SIMILAR TO THE ORIGINAL
+    //FUNCTION THAT RETURNS A LIST
+    public User getMonitoredByUser(int index){
+        validateIndexWithExceptionMonitoredBy(index);
+        return monitoredByUsers.get(index);
+    }
+
+    public User getMonitorsUser(int index){
+        validateIndexWithExceptionMonitors(index);
+        return monitorsUsers.get(index);
+    }
+
+    public String[] getMonitoredByUsersDescriptions(){
+        String[] descriptions = new String[monitoredByUsers.size()];
+        for(int i = 0; i< countMonitoredByUsers(); i++){
+            User user = getMonitoredByUser(i);
+            descriptions[i] = "Name: " + user.getName() + "\nEmail: " +
+                    user.getEmail();
+        }
+        return descriptions;
+    }
+
+
+    public String[] getMonitorsUsersDescriptions() {
+        String[] descriptions = new String[monitorsUsers.size()];
+        for (int i = 0; i < countMonitorsUsers(); i++) {
+            User user = getMonitorsUser(i);
+            descriptions[i] = "Name: " + user.getName() + "\nEmail: " +
+                    user.getEmail();
+        }
+        return descriptions;
+    }
+
 }

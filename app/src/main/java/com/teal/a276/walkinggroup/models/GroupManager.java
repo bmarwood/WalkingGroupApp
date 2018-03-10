@@ -84,8 +84,12 @@ public class GroupManager {
 
         for(int i = 0; i< countJoinGroups(); i++){
             Group group = getJoinGroup(i);
-            descriptions[i] = "Name: " + group.getGroupName() + "\nMeeting Location: " +
-                    group.getMeetingLocation() + "\nDestination: " + group.getDestination();
+            //descriptions[i] = "Name: " + group.getGroupName() + "\nMeeting Location: " +
+            //        group.getMeetingLocation() + "\nDestination: " + group.getDestination();
+            descriptions[i] = "Name :" + group.getGroupName() + "\nMeeting Location: " + "[" +
+                    group.getMeetingLat() + ", " + group.getMeetingLng() + "]" +
+                    "\nMeeting Location: " + group.getDestinationLat() + ", " +
+                    group.getDestinationLng() + "]";
         }
         return descriptions;
     }
@@ -95,8 +99,12 @@ public class GroupManager {
 
         for(int i=0;i<countJoinedGroups();i++){
             Group group = getJoinedGroup(i);
-            descriptions[i] = "Name :" + group.getGroupName() + "\nMeeting Location: " +
-                    group.getMeetingLocation() + "\nDestination: " + group.getDestination();
+            //descriptions[i] = "Name :" + group.getGroupName() + "\nMeeting Location: " +
+            //       group.getMeetingLocation() + "\nDestination: " + group.getDestination();
+            descriptions[i] = "Name :" + group.getGroupName() + "\nMeeting Location: " + "[" +
+                    group.getMeetingLat() + ", " + group.getMeetingLng() + "]" +
+                    "\nMeeting Location: " + group.getDestinationLat() + ", " +
+                    group.getDestinationLng() + "]";
         }
         return descriptions;
     }
