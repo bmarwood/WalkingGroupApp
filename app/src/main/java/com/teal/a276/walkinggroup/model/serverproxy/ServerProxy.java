@@ -88,7 +88,7 @@ public interface ServerProxy {
      * @param userWithId User who the monitor will monitor
      * @return The list of users that the monitor now monitors after adding the new relationship
      */
-    @POST("/users/{id}/monitorsByUsers")
+    @POST("/users/{id}/monitoredByUsers")
     Call<List<User>> monitoredByUser(@Path("id") Long monitorId,
                                  @Body User userWithId);
 

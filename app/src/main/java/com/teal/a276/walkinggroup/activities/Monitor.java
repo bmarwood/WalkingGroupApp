@@ -24,6 +24,7 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.List;
+import java.util.function.Function;
 
 import retrofit2.Call;
 
@@ -49,7 +50,7 @@ public class Monitor extends BaseActivity {
         monitorsAdapter = new UserListViewAdapter(user.getMonitorsUsers());
         monitorsAdapter.addAll(user.getMonitorsUsers());
 
-        monitoredByAdapter = new UserListViewAdapter(user.getMonitorsUsers());
+        monitoredByAdapter = new UserListViewAdapter(user.getMonitoredByUsers());
         monitoredByAdapter.addAll(user.getMonitoredByUsers());
 
         ListView monitoringList = findViewById(R.id.monitoringListView);
@@ -98,31 +99,6 @@ public class Monitor extends BaseActivity {
         });
     }
 
-
-    private void login(Void ans) {
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<User> userByEmailCall = proxy.getUserByEmail(user.getEmail());
-        ServerManager.serverRequest(userByEmailCall, Monitor.this::monitor, Monitor.this::error);
-
-    }
-
-    private void monitor(User user) {
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.monitorUser(164L, user);
-        ServerManager.serverRequest(call, this::newMonitorees, this::error);
-    }
-
-    private void newMonitorees(List<User> users) {
-        user.setMonitorsUsers(users);
-        monitorsAdapter.addAll(users);
-        monitorsAdapter.notifyDataSetChanged();
-
-        Log.d("Num of users monitored", "" + users.size());
-        for (int i = 0; i < users.size(); i++) {
-            Log.d("User " + i, users.get(i).toString());
-        }
-    }
-
     private void setupAddToMonitoredByButton(){
 
         Button btn = (Button) findViewById(R.id.addToMonitoredByBtn);
@@ -147,17 +123,53 @@ public class Monitor extends BaseActivity {
                         //TODO: server check if this email is valid, then add to monitored by.
                         //after server check, populate monitoredby listview again.
 
-
-
-
-
-
-
+                        ServerProxy proxy = ServerManager.getServerRequest();
+                        Call<User> userByEmailCall = proxy.getUserByEmail(getEmail);
+                        ServerManager.serverRequest(userByEmailCall, Monitor.this::userByEmail, Monitor.this::error);
                     }
                 });
                 adb.show();
             }
         });
+    }
+
+    private void login(Void ans) {
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<User> userByEmailCall = proxy.getUserByEmail(user.getEmail());
+        ServerManager.serverRequest(userByEmailCall, Monitor.this::monitor, Monitor.this::error);
+
+    }
+
+    private void monitor(User user) {
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<List<User>> call = proxy.monitorUser(164L, user);
+        ServerManager.serverRequest(call, this::newMonitorees, this::error);
+    }
+
+    private void userByEmail(User user) {
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<List<User>> call = proxy.monitoredByUser(239L, user);
+        ServerManager.serverRequest(call, Monitor.this::monitoredBy, Monitor.this::error);
+    }
+
+
+    private void newMonitorees(List<User> users) {
+        monitorsAdapter.addAll(users);
+        monitorsAdapter.notifyDataSetChanged();
+
+        Log.d("Num of users monitored", "" + users.size());
+        for (int i = 0; i < users.size(); i++) {
+            Log.d("User " + i, users.get(i).toString());
+        }
+    }
+
+    private void monitoredBy(List<User> users) {
+        monitoredByAdapter.addAll(users);
+        monitoredByAdapter.notifyDataSetChanged();
+
+        for (int i = 0; i < users.size(); i++) {
+            Log.d("User monitors you" + i, users.get(i).toString());
+        }
     }
 
     @Override
