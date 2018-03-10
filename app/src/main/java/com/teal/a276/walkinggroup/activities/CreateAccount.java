@@ -10,13 +10,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.ServerProxy.ServerManager;
 import com.teal.a276.walkinggroup.ServerProxy.ServerProxy;
 import com.teal.a276.walkinggroup.ServerProxy.ServerResult;
 import com.teal.a276.walkinggroup.dataobjects.User;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,8 +28,6 @@ import retrofit2.Call;
 
 public class CreateAccount extends AppCompatActivity {
 
-    private static final int VIEW_VISIBLE = -1;
-    private static final int VIEW_INVISIBLE = -2;
 
 
     @Override
@@ -48,7 +47,7 @@ public class CreateAccount extends AppCompatActivity {
             String email = ((EditText) findViewById(R.id.email)).getText().toString();
             String password = ((EditText) findViewById(R.id.password)).getText().toString();
 
-            toggleSpinner(VIEW_VISIBLE);
+            toggleSpinner(View.VISIBLE);
 
             ArrayList<String> errors =  checkCreateInputs(firstName, lastName, email, password);
 
@@ -67,7 +66,7 @@ public class CreateAccount extends AppCompatActivity {
                     public void result(User user) {
                         Intent intent = MapsActivity.makeIntent(CreateAccount.this);
 
-                        toggleSpinner(VIEW_INVISIBLE);
+                        toggleSpinner(View.INVISIBLE);
                         startActivity(intent);
                         finish();
                     }
@@ -80,7 +79,7 @@ public class CreateAccount extends AppCompatActivity {
                         errorsForUser.setVisibility(View.VISIBLE);
                         errorsForUser.setTextColor(Color.RED);
 
-                        toggleSpinner(VIEW_INVISIBLE);
+                        toggleSpinner(View.INVISIBLE);
                     }
                 });
 
@@ -97,19 +96,13 @@ public class CreateAccount extends AppCompatActivity {
         errorsForUser.setText(stringForTextView.toString());
         errorsForUser.setVisibility(View.VISIBLE);
         errorsForUser.setTextColor(Color.RED);
-        toggleSpinner(VIEW_INVISIBLE);
+        toggleSpinner(View.INVISIBLE);
     }
 
-    private void toggleSpinner(int view) {
+    private void toggleSpinner(int visibility) {
         final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBarCreate);
         runOnUiThread(() -> {
-
-            if(view == VIEW_VISIBLE){
-                spinner.setVisibility(View.VISIBLE);
-            }
-            else if(view == VIEW_INVISIBLE){
-                spinner.setVisibility(View.INVISIBLE);
-            }
+            spinner.setVisibility(visibility);
         });
     }
 

@@ -2,6 +2,9 @@ package com.teal.a276.walkinggroup.ServerProxy;
 
 import android.support.annotation.NonNull;
 
+
+import com.teal.a276.walkinggroup.ServerProxy.ServerManager;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;

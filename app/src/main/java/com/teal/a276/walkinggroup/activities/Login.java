@@ -21,8 +21,7 @@ import retrofit2.Call;
 
 public class Login extends AppCompatActivity {
 
-    private static final int VIEW_VISIBLE = -1;
-    private static final int VIEW_INVISIBLE = -2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +35,7 @@ public class Login extends AppCompatActivity {
 
     private void setUpLoginButton() {
         Button btn = (Button) findViewById(R.id.signInBtn);
-
+        final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBar);
 
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -47,8 +46,7 @@ public class Login extends AppCompatActivity {
                 String email = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
                 String password = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
 
-                toggleSpinner(VIEW_VISIBLE);
-
+                toggleSpinner(View.VISIBLE);
 
                 User user = new User();
                 user.setEmail(email);
@@ -66,28 +64,18 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void error(String error) {
-                        final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBar);
                         errorsForUser.setVisibility(View.VISIBLE);
-                        toggleSpinner(VIEW_INVISIBLE);
+                        toggleSpinner(View.INVISIBLE);
                     }
                 });
             }
         });
     }
 
-    private void toggleSpinner(int view) {
+    private void toggleSpinner(int visibility) {
         final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBar);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                if(view == VIEW_VISIBLE){
-                    spinner.setVisibility(View.VISIBLE);
-                }
-                else if(view == VIEW_INVISIBLE){
-                    spinner.setVisibility(View.INVISIBLE);
-                }
-            }
+        runOnUiThread(() -> {
+            spinner.setVisibility(visibility);
         });
     }
 

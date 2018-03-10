@@ -14,12 +14,12 @@ import static junit.framework.Assert.assertEquals;
 public class UserTest {
     private User user = new User();
     @Test
-    public void setAndGetName() throws Exception{
+    public void setAndGetName() {
         user.setName("bill");
         assertEquals("bill",user.getName());
     }
     @Test
-    public void getAndSetId() throws Exception {
+    public void getAndSetId(){
         Long l =(long) 10;
         user.setId(l);
         assertEquals(l,user.getId());
