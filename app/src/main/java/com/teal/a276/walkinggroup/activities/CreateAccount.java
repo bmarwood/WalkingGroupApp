@@ -27,6 +27,10 @@ import retrofit2.Call;
 
 public class CreateAccount extends AppCompatActivity {
 
+    private static final int VIEW_VISIBLE = -1;
+    private static final int VIEW_INVISIBLE = -2;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,20 +50,10 @@ public class CreateAccount extends AppCompatActivity {
                 String email = ((EditText) findViewById(R.id.email)).getText().toString();
                 String password = ((EditText) findViewById(R.id.password)).getText().toString();
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        spinner.setVisibility(View.VISIBLE);
-                    }
-                });
+                toggleSpinner(VIEW_VISIBLE);
 
                 ArrayList<String> errors =  checkCreateInputs(firstName, lastName, email, password);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        spinner.setVisibility(View.INVISIBLE);
-                    }
-                });
+
 
                 if(!errors.isEmpty()) {
                     Iterator<String> foreach = errors.iterator();
@@ -71,6 +65,8 @@ public class CreateAccount extends AppCompatActivity {
                     errorsForUser.setText(stringForTextView);
                     errorsForUser.setVisibility(View.VISIBLE);
                     errorsForUser.setTextColor(Color.RED);
+
+                    toggleSpinner(VIEW_INVISIBLE);
                 }else{
 
                     User user = new User();
@@ -82,6 +78,8 @@ public class CreateAccount extends AppCompatActivity {
                         @Override
                         public void result(User user) {
                             Intent intent = MapsActivity.makeIntent(CreateAccount.this);
+
+                            toggleSpinner(VIEW_INVISIBLE);
                             startActivity(intent);
                             finish();
                         }
@@ -94,8 +92,24 @@ public class CreateAccount extends AppCompatActivity {
                             errorsForUser.setVisibility(View.VISIBLE);
                             errorsForUser.setTextColor(Color.RED);
 
+                            toggleSpinner(VIEW_INVISIBLE);
                         }
                     });
+                }
+            }
+        });
+    }
+    private void toggleSpinner(int view) {
+        final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBarCreate);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                if(view == VIEW_VISIBLE){
+                    spinner.setVisibility(View.VISIBLE);
+                }
+                else if(view == VIEW_INVISIBLE){
+                    spinner.setVisibility(View.INVISIBLE);
                 }
             }
         });
