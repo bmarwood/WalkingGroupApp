@@ -56,16 +56,7 @@ public class CreateAccount extends AppCompatActivity {
 
 
                 if(!errors.isEmpty()) {
-                    Iterator<String> foreach = errors.iterator();
-                    String stringForTextView = "";
-                    while (foreach.hasNext()) {
-                        stringForTextView += foreach.next() + "\n";
-                    }
-                    TextView errorsForUser = (TextView) findViewById(R.id.badEmailOrPassword);
-                    errorsForUser.setText(stringForTextView);
-                    errorsForUser.setVisibility(View.VISIBLE);
-                    errorsForUser.setTextColor(Color.RED);
-                    toggleSpinner(VIEW_INVISIBLE);
+                    ErrorStringGen(errors);
                     return;
                 }
 
@@ -99,18 +90,29 @@ public class CreateAccount extends AppCompatActivity {
             }
         });
     }
+
+    private void ErrorStringGen(ArrayList<String> errors) {
+        Iterator<String> foreach = errors.iterator();
+        StringBuilder stringForTextView = new StringBuilder();
+        while (foreach.hasNext()) {
+            stringForTextView.append(foreach.next()).append("\n");
+        }
+        TextView errorsForUser = (TextView) findViewById(R.id.badEmailOrPassword);
+        errorsForUser.setText(stringForTextView.toString());
+        errorsForUser.setVisibility(View.VISIBLE);
+        errorsForUser.setTextColor(Color.RED);
+        toggleSpinner(VIEW_INVISIBLE);
+    }
+
     private void toggleSpinner(int view) {
         final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBarCreate);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        runOnUiThread(() -> {
 
-                if(view == VIEW_VISIBLE){
-                    spinner.setVisibility(View.VISIBLE);
-                }
-                else if(view == VIEW_INVISIBLE){
-                    spinner.setVisibility(View.INVISIBLE);
-                }
+            if(view == VIEW_VISIBLE){
+                spinner.setVisibility(View.VISIBLE);
+            }
+            else if(view == VIEW_INVISIBLE){
+                spinner.setVisibility(View.INVISIBLE);
             }
         });
     }
