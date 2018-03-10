@@ -36,5 +36,44 @@ public class UserTest {
         assertEquals("1234", user.getPassword());
     }
 
+    //empty tests
+    @Test
+    public void setAndGetNameEmpty() throws Exception{
+        user.setName("");
+        assertEquals("",user.getName());
+    }
+    @Test
+    public void getAndSetEmailEmpty() throws Exception{
+        user.setEmail("");
+        assertEquals("", user.getEmail());
+    }
+    @Test
+    public void getAndSetPasswordEmpty() throws Exception{
+        user.setPassword("");
+        assertEquals("", user.getPassword());
+    }
+
+
+    //null Tests
+
+    @Test
+    public void setAndGetNameNull() throws Exception{
+        assertEquals(null,user.getName());
+    }
+    @Test
+    public void getAndSetIdNull() throws Exception {
+
+
+        assertEquals(null,user.getId());
+    }
+    @Test
+    public void getAndSetEmailNull() throws Exception{
+        assertEquals(null, user.getEmail());
+    }
+    @Test
+    public void getAndSetPasswordNull() throws Exception{
+
+        assertEquals(null, user.getPassword());
+    }
 
 }
