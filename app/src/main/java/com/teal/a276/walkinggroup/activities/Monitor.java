@@ -6,23 +6,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
@@ -39,24 +33,30 @@ public class Monitor extends BaseActivity {
     //use singleton, change later on
     User user = new User();
     ArrayAdapter<User> monitorsAdapter;
+    ArrayAdapter<User> monitoredByAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitor);
 
-        populateMonitoredByListView();
-        initializeListViews(R.id.monitoringListView);
+        initializeListViews();
         setupAddToMonitorButton();
         setupAddToMonitoredByButton();
-        registerMonitoredByClickCallback();
-        registerMonitoringClickCallback();
     }
 
-    private void initializeListViews(int id) {
-        monitorsAdapter = new MonitorListAdapter();
-        ListView list = findViewById(id);
-        list.setAdapter(monitorsAdapter);
+    private void initializeListViews() {
+        monitorsAdapter = new UserListViewAdapter(user.getMonitorsUsers());
+        monitorsAdapter.addAll(user.getMonitorsUsers());
+
+        monitoredByAdapter = new UserListViewAdapter(user.getMonitorsUsers());
+        monitoredByAdapter.addAll(user.getMonitoredByUsers());
+
+        ListView monitoringList = findViewById(R.id.monitoringListView);
+        monitoringList.setAdapter(monitorsAdapter);
+
+        ListView monitoredBy = findViewById(R.id.monitoredByListView);
+        monitoredBy.setAdapter(monitoredByAdapter);
     }
 
     private void setupAddToMonitorButton() {
@@ -160,62 +160,6 @@ public class Monitor extends BaseActivity {
         });
     }
 
-
-
-
-    private void populateMonitoredByListView() {
-        String[] monitoredByItems = user.getMonitoredByUsersDescriptions();
-
-       //ARRAY ADAPTER
-        ArrayAdapter<String> monitoredByAdapter = new ArrayAdapter<String>(
-                this,
-                R.layout.monitoredby,
-                monitoredByItems);
-
-        ListView list = (ListView) findViewById(R.id.monitoredByListView);
-        list.setAdapter(monitoredByAdapter);
-   }
-
-
-
-
-    private void registerMonitoredByClickCallback(){
-        ListView list = (ListView) findViewById(R.id.monitoredByListView);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                //TODO: Ask server to remove users that monitor current user by clicking on them
-
-                //User user = user.getMonitoredBy(position);
-
-
-
-
-            }
-        });
-    }
-
-
-    private void registerMonitoringClickCallback(){
-        ListView list = (ListView) findViewById(R.id.monitoringListView);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                //TODO: Ask Server to remove users that are monitored by the current user
-
-
-
-
-
-
-
-            }
-        });
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
@@ -227,19 +171,22 @@ public class Monitor extends BaseActivity {
         return new Intent(context, Monitor.class);
     }
 
-    private class MonitorListAdapter extends ArrayAdapter<User> {
-        MonitorListAdapter() {
-            super(Monitor.this, R.layout.list_item, user.getMonitorsUsers());
+    private class UserListViewAdapter extends ArrayAdapter<User> {
+        List<User> userList;
+        UserListViewAdapter(List<User> users) {
+            super(Monitor.this, R.layout.list_item, users);
+            userList = users;
         }
 
         @Override
+        @NonNull
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View itemView = convertView;
             if(itemView == null) {
                 itemView = getLayoutInflater().inflate(R.layout.list_item, parent, false);
             }
 
-            User currentUser = user.getMonitorsUser(position);
+            User currentUser = userList.get(position);
             TextView userText = itemView.findViewById(R.id.userName);
             userText.setText(currentUser.getEmail());
 
