@@ -125,19 +125,19 @@ public class CreateAccount extends AppCompatActivity {
     public ArrayList<String> checkCreateInputs(String firstName, String lastName, String email, String password) {
         ArrayList<String> returnErrorMessages = new ArrayList<>();
 
-        if (firstName.length() == 0) {
+        if (firstName.isEmpty()) {
             returnErrorMessages.add(getString(R.string.first_name_must_be_inputted));
         }
-        if (lastName.length() == 0) {
+        if (lastName.isEmpty()) {
             returnErrorMessages.add(getString(R.string.last_name_must_be_inputted));
         }
-        if (email.length() == 0) {
+        if (email.isEmpty()) {
             returnErrorMessages.add(getString(R.string.email_must_be_inputted));
         }
-        if(password.length() == 0) {
+        if(password.isEmpty()) {
             returnErrorMessages.add(getString(R.string.password_must_be_inputted));
         }
-        if(email.length() > 0) {
+        if(!email.isEmpty()) {
             Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
             Matcher m = p.matcher(email);
             if (! m.matches()) {
