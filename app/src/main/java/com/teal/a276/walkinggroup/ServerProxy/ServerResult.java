@@ -8,5 +8,4 @@ package com.teal.a276.walkinggroup.ServerProxy;
  */
 public interface ServerResult<T> {
     void result(T ans);
-    void error(String error);
 }
