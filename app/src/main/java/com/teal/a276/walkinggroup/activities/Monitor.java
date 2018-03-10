@@ -8,6 +8,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,7 +29,7 @@ import java.util.List;
 import retrofit2.Call;
 
 
-public class Monitor extends AppCompatActivity {
+public class Monitor extends BaseActivity {
 
     //use singleton, change later on
     User user = new User();
@@ -196,7 +199,10 @@ public class Monitor extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
 
 
 
