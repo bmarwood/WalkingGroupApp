@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -59,5 +60,10 @@ abstract class BaseActivity extends AppCompatActivity {
 
             item.setEnabled(false);
         }
+    }
+
+    protected void error(String error) {
+        Log.e("Login Error", error);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
 }
