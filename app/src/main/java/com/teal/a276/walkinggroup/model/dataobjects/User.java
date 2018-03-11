@@ -13,12 +13,12 @@ public class User {
     private String name;
     private String email;
     private String password;
-    public ArrayList<Object> memberOfGroups;
-    public ArrayList<Object> leadsGroups;
+    private ArrayList<Group> memberOfGroups;
+    private ArrayList<Group> leadsGroups;
 
     private List<User> monitoredByUsers = new ArrayList<>();
     private List<User> monitorsUsers = new ArrayList<>();
-    private List<Void> walkingGroups = new ArrayList<>();   // <-- TO BE IMPLEMENTED
+   // private List<Void> walkingGroups = new ArrayList<>();   // <-- TO BE IMPLEMENTED
 
     private String href;
 
@@ -70,12 +70,45 @@ public class User {
         this.monitorsUsers = monitorsUsers;
     }
 
-    public List<Void> getWalkingGroups() {
-        return walkingGroups;
+//    public List<Void> getWalkingGroups() {
+//        return walkingGroups;
+//    }
+//
+//    public void setWalkingGroups(List<Void> walkingGroups) {
+//        this.walkingGroups = walkingGroups;
+//    }
+
+
+    public ArrayList<Group> getMemberOfGroups() {
+        return memberOfGroups;
     }
 
-    public void setWalkingGroups(List<Void> walkingGroups) {
-        this.walkingGroups = walkingGroups;
+    public void setMemberOfGroups(ArrayList<Group> memberOfGroups) {
+        this.memberOfGroups = memberOfGroups;
+    }
+
+    public ArrayList<Group> getLeadsGroups() {
+        return leadsGroups;
+    }
+
+    public void setLeadsGroups(ArrayList<Group> leadsGroups) {
+        this.leadsGroups = leadsGroups;
+    }
+
+    public void addGroupToLead(Group group) {
+        this.leadsGroups.add(group);
+    }
+
+    public void removeGroupToLead(Group group) {
+        this.leadsGroups.remove(group);
+    }
+
+    public void joinGroup(Group group) {
+        this.memberOfGroups.add(group);
+    }
+
+    public void leaveGroup(Group group) {
+        this.memberOfGroups.remove(group);
     }
 
     public String getHref() {
@@ -95,7 +128,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", monitoredByUsers=" + monitoredByUsers +
                 ", monitorsUsers=" + monitorsUsers +
-                ", walkingGroups=" + walkingGroups +
+                //", walkingGroups=" + walkingGroups +
                 '}';
     }
     public int countMonitoredByUsers(){

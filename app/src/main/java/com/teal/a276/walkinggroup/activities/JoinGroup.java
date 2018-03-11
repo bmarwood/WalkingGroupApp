@@ -44,40 +44,40 @@ public class JoinGroup extends BaseActivity {
         setContentView(R.layout.activity_join_group);
 
         setupCreateNewGroupButton();
-        populateJoinGroupsListView();
-        populateJoinedGroupsListView();
+//        populateJoinGroupsListView();
+//        populateJoinedGroupsListView();
         registerJoinGroupClickCallback();
         registerJoinedGroupClickCallback();
 
     }
 
 
-    private void populateJoinGroupsListView() {
-        String[] joinGroupsItems = groupManager.getJoinGroupDescriptions();
-
-        //Array Adapter
-        ArrayAdapter<String> joinGroupsAdapter = new ArrayAdapter<String>(
-                this,
-                R.layout.joingroups,
-                joinGroupsItems);
-
-        ListView list = (ListView) findViewById(R.id.joinGroupsListView);
-        list.setAdapter(joinGroupsAdapter);
-    }
-
-
-    private void populateJoinedGroupsListView() {
-        String[] joinedGroupItems = groupManager.getJoinedGroupDescriptions();
-
-        //Array Adapter
-        ArrayAdapter<String> joinedGroupsAdapter = new ArrayAdapter<String>(
-                this,
-                R.layout.joinedgroups,
-                joinedGroupItems);
-
-        ListView list = (ListView) findViewById(R.id.joinedGroupsListView);
-        list.setAdapter(joinedGroupsAdapter);
-    }
+//    private void populateJoinGroupsListView() {
+//        String[] joinGroupsItems = groupManager.getJoinGroupDescriptions();
+//
+//        //Array Adapter
+//        ArrayAdapter<String> joinGroupsAdapter = new ArrayAdapter<String>(
+//                this,
+//                R.layout.joingroups,
+//                joinGroupsItems);
+//
+//        ListView list = (ListView) findViewById(R.id.joinGroupsListView);
+//        list.setAdapter(joinGroupsAdapter);
+//    }
+//
+//
+//    private void populateJoinedGroupsListView() {
+//        String[] joinedGroupItems = groupManager.getJoinedGroupDescriptions();
+//
+//        //Array Adapter
+//        ArrayAdapter<String> joinedGroupsAdapter = new ArrayAdapter<String>(
+//                this,
+//                R.layout.joinedgroups,
+//                joinedGroupItems);
+//
+//        ListView list = (ListView) findViewById(R.id.joinedGroupsListView);
+//        list.setAdapter(joinedGroupsAdapter);
+//    }
 
 
     private void setupCreateNewGroupButton() {
@@ -105,11 +105,11 @@ public class JoinGroup extends BaseActivity {
                      String destinationLng = intent.getStringExtra(EXTRA_DESTLNG);
                      Group group = new Group();
                      //Group group = new Group(groupName, meetingLocation, destination)
-                     group.setGroupName(groupName);
-                     group.setMeetingLat(meetingLat);
-                     group.setMeetingLng(meetingLng);
-                     group.setDestinationLat(destinationLat);
-                     group.setDestinationLng(destinationLng);
+                     group.setGroupDescription(groupName);
+//                     group.setMeetingLat(meetingLat);
+//                     group.setMeetingLng(meetingLng);
+//                     group.setDestinationLat(destinationLat);
+//                     group.setDestinationLng(destinationLng);
 
                      //added 16:57 Mar9
 
@@ -119,7 +119,7 @@ public class JoinGroup extends BaseActivity {
                      groupManager.addJoinGroup(group);
 
 
-                     populateJoinGroupsListView();
+//                     populateJoinGroupsListView();
 
 
                  }
@@ -135,7 +135,7 @@ public class JoinGroup extends BaseActivity {
 
 
                 Group group = groupManager.getJoinGroup(position);
-                String displayGroupName = group.getGroupName();
+//                String displayGroupName = group.getGroupName();
 
                 //Before dialog opens, check if the group is already joined
                 if(groupManager.checkIfUserAlreadyInSameGroup(group)){
@@ -145,7 +145,7 @@ public class JoinGroup extends BaseActivity {
 
                 AlertDialog.Builder adb = new AlertDialog.Builder(JoinGroup.this);
                 adb.setTitle("Join?");
-                adb.setMessage("Are you sure you want to join " + displayGroupName + "?");
+//                adb.setMessage("Are you sure you want to join " + displayGroupName + "?");
                 final int joinPosition = position;
                 adb.setNegativeButton("Cancel", null);
                 adb.setPositiveButton("Join", new AlertDialog.OnClickListener() {
@@ -157,7 +157,7 @@ public class JoinGroup extends BaseActivity {
                             group = groupManager.getJoinGroup(joinPosition);
 
                             groupManager.addJoinedGroup(group);
-                            populateJoinedGroupsListView();
+//                            populateJoinedGroupsListView();
 
                     }});
                    adb.show();
@@ -173,10 +173,10 @@ public class JoinGroup extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Group group = groupManager.getJoinGroup(position);
-                String displayGroupName = group.getGroupName();
+//                String displayGroupName = group.getGroupName();
                 AlertDialog.Builder adb = new AlertDialog.Builder(JoinGroup.this);
                 adb.setTitle("Remove?");
-                adb.setMessage("Are you sure you want to be removed from " + displayGroupName + "?");
+//                adb.setMessage("Are you sure you want to be removed from " + displayGroupName + "?");
                 final int removePosition = position;
                 adb.setNegativeButton("Cancel", null);
                 adb.setPositiveButton("Remove", new AlertDialog.OnClickListener() {
@@ -185,7 +185,7 @@ public class JoinGroup extends BaseActivity {
 
                         Group group = groupManager.getJoinGroup(removePosition);
                         groupManager.removeFromJoinedGroups(group);
-                        populateJoinedGroupsListView();
+//                        populateJoinedGroupsListView();
 
                     }
                 });
