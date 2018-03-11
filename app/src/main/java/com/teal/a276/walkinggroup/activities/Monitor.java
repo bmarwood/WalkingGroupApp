@@ -19,12 +19,13 @@ import com.teal.a276.walkinggroup.adapters.ListItemAdapter;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
+import com.teal.a276.walkinggroup.model.serverstrategy.MonitorStrategy;
+import com.teal.a276.walkinggroup.model.serverstrategy.MonitoredByStrategy;
 
 import java.util.List;
 
 import retrofit2.Call;
 
-//TODO: rethink how to handle chaining network calls to avoid code duplication
 public class Monitor extends BaseActivity {
 
     //TODO: use singleton, change later on
@@ -113,12 +114,18 @@ public class Monitor extends BaseActivity {
                         //TODO: server check if this email is valid, then add the user of this email
                         //after server check, populate monitoring listview again
                         String getEmail = input.getText().toString();
-                        user.setEmail(getEmail);
                         Log.i("CHECK", getEmail);
 
-                        ServerProxy proxy = ServerManager.getServerRequest();
-                        Call<User> userByEmailCall = proxy.getUserByEmail(getEmail);
-                        ServerManager.serverRequest(userByEmailCall, Monitor.this::monitor, Monitor.this::error);
+                        MonitorStrategy strategy = new MonitorStrategy(user, getEmail, Monitor.this::error);
+                        strategy.makeServerRequest();
+                        strategy.addObserver((observable, o) -> {
+                            MonitorStrategy strategy1 = (MonitorStrategy)observable;
+                            List<User> users = strategy1.getServerResult();
+
+                            user.setMonitorsUsers(users);
+                            monitorsAdapter.addAll(users);
+                            monitorsAdapter.notifyDataSetChanged();
+                        });
                     }
                 });
                 adb.show();
@@ -150,9 +157,16 @@ public class Monitor extends BaseActivity {
                         //TODO: server check if this email is valid, then add to monitored by.
                         //after server check, populate monitoredby listview again.
 
-                        ServerProxy proxy = ServerManager.getServerRequest();
-                        Call<User> userByEmailCall = proxy.getUserByEmail(getEmail);
-                        ServerManager.serverRequest(userByEmailCall, Monitor.this::userByEmail, Monitor.this::error);
+                        MonitoredByStrategy strategy = new MonitoredByStrategy(user, getEmail, Monitor.this::error);
+                        strategy.makeServerRequest();
+                        strategy.addObserver((observable, o) -> {
+                            MonitoredByStrategy strategy1 = (MonitoredByStrategy)observable;
+                            List<User> users = strategy1.getServerResult();
+
+                            user.setMonitorsUsers(users);
+                            monitoredByAdapter.addAll(users);
+                            monitoredByAdapter.notifyDataSetChanged();
+                        });
                     }
                 });
                 adb.show();
@@ -160,7 +174,6 @@ public class Monitor extends BaseActivity {
         });
     }
 
-    //TODO: strategy pattern might resolve this issue
     private void login(Void ans) {
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<User> userByEmailCall = proxy.getUserByEmail(user.getEmail());
@@ -188,43 +201,10 @@ public class Monitor extends BaseActivity {
         initializeListViews();
     }
 
-    private void monitor(User user) {
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.monitorUser(this.user.getId(), user);
-        ServerManager.serverRequest(call, this::newMonitorees, this::error);
-    }
-
-    private void userByEmail(User user) {
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.monitoredByUser(this.user.getId(), user);
-        ServerManager.serverRequest(call, Monitor.this::newMonitoredBy, Monitor.this::error);
-    }
-
-    private void newMonitorees(List<User> users) {
-        monitorsAdapter.addAll(users);
-        monitorsAdapter.notifyDataSetChanged();
-
-        Log.d("Num of users monitored", "" + users.size());
-        for (int i = 0; i < users.size(); i++) {
-            Log.d("User " + i, users.get(i).toString());
-        }
-    }
-
-    private void newMonitoredBy(List<User> users) {
-        monitoredByAdapter.addAll(users);
-        monitoredByAdapter.notifyDataSetChanged();
-
-        for (int i = 0; i < users.size(); i++) {
-            Log.d("User monitors you" + i, users.get(i).toString());
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }
-
-
 
     public static Intent makeIntent(Context context){
         return new Intent(context, Monitor.class);

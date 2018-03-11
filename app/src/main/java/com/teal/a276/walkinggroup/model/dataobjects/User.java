@@ -13,8 +13,8 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private ArrayList<Group> memberOfGroups;
-    private ArrayList<Group> leadsGroups;
+    private List<Group> memberOfGroups = new ArrayList<>();
+    private List<Group> leadsGroups = new ArrayList<>();
 
     private List<User> monitoredByUsers = new ArrayList<>();
     private List<User> monitorsUsers = new ArrayList<>();
@@ -69,15 +69,15 @@ public class User {
         this.monitorsUsers = monitorsUsers;
     }
 
-    public ArrayList<Group> getMemberOfGroups() {
+    public List<Group> getMemberOfGroups() {
         return memberOfGroups;
     }
 
-    public void setMemberOfGroups(ArrayList<Group> memberOfGroups) {
+    public void setMemberOfGroups(List<Group> memberOfGroups) {
         this.memberOfGroups = memberOfGroups;
     }
 
-    public ArrayList<Group> getLeadsGroups() {
+    public List<Group> getLeadsGroups() {
         return leadsGroups;
     }
 
