@@ -69,7 +69,7 @@ public interface ServerProxy {
      * @param userId Id for the user
      * @return A list of all monitors monitoring the user
      */
-    @GET("/users/{id}/monitorsByUsers")
+    @GET("/users/{id}/monitoredByUsers")
     Call<List<User>> getMonitoredBy(@Path("id") Long userId);
 
     /**

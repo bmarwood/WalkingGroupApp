@@ -24,14 +24,13 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.List;
-import java.util.function.Function;
 
 import retrofit2.Call;
 
-
+//TODO: rethink how to handle chaining network calls to avoid code duplication
 public class Monitor extends BaseActivity {
 
-    //use singleton, change later on
+    //TODO: use singleton, change later on
     User user = new User();
     ArrayAdapter<User> monitorsAdapter;
     ArrayAdapter<User> monitoredByAdapter;
@@ -41,16 +40,22 @@ public class Monitor extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitor);
 
-        initializeListViews();
         setupAddToMonitorButton();
         setupAddToMonitoredByButton();
+
+        user.setEmail("c@test.com");
+        user.setPassword("1234");
+
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<Void> call = proxy.login(user);
+        ServerManager.serverRequest(call, Monitor.this::login, Monitor.this::error);
     }
 
     private void initializeListViews() {
-        monitorsAdapter = new UserListViewAdapter(user.getMonitorsUsers());
+        monitorsAdapter = new ListViewAdapter(user.getMonitorsUsers());
         monitorsAdapter.addAll(user.getMonitorsUsers());
 
-        monitoredByAdapter = new UserListViewAdapter(user.getMonitoredByUsers());
+        monitoredByAdapter = new ListViewAdapter(user.getMonitoredByUsers());
         monitoredByAdapter.addAll(user.getMonitoredByUsers());
 
         ListView monitoringList = findViewById(R.id.monitoringListView);
@@ -79,19 +84,13 @@ public class Monitor extends BaseActivity {
 
                         //TODO: server check if this email is valid, then add the user of this email
                         //after server check, populate monitoring listview again
-
-                        User test = new User();
-                        test.setEmail("c@test.com");
-                        test.setPassword("1234");
-
-                        ServerProxy proxy = ServerManager.getServerRequest();
-                        Call<Void> call = proxy.login(test);
-                        ServerManager.serverRequest(call, Monitor.this::login, Monitor.this::error);
-
                         String getEmail = input.getText().toString();
                         user.setEmail(getEmail);
                         Log.i("CHECK", getEmail);
 
+                        ServerProxy proxy = ServerManager.getServerRequest();
+                        Call<User> userByEmailCall = proxy.getUserByEmail(getEmail);
+                        ServerManager.serverRequest(userByEmailCall, Monitor.this::monitor, Monitor.this::error);
                     }
                 });
                 adb.show();
@@ -135,9 +134,29 @@ public class Monitor extends BaseActivity {
 
     private void login(Void ans) {
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<User> userByEmailCall = proxy.getUserByEmail(user.getEmail());
-        ServerManager.serverRequest(userByEmailCall, Monitor.this::monitor, Monitor.this::error);
+        Call<User> userByEmailCall = proxy.getUserById(164L);
+        ServerManager.serverRequest(userByEmailCall, this::getUser, this::error);
 
+    }
+
+    private void getUser(User user) {
+        this.user = user;
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<List<User>> call = proxy.getMonitors(164L);
+        ServerManager.serverRequest(call, this::monitors, this::error);
+    }
+
+    private void monitors(List<User> users) {
+        user.setMonitorsUsers(users);
+
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<List<User>> call = proxy.getMonitoredBy(164L);
+        ServerManager.serverRequest(call, this::monitoredBy, this::error);
+    }
+
+    private void monitoredBy(List<User> users) {
+        user.setMonitoredByUsers(users);
+        initializeListViews();
     }
 
     private void monitor(User user) {
@@ -149,9 +168,8 @@ public class Monitor extends BaseActivity {
     private void userByEmail(User user) {
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<List<User>> call = proxy.monitoredByUser(239L, user);
-        ServerManager.serverRequest(call, Monitor.this::monitoredBy, Monitor.this::error);
+        ServerManager.serverRequest(call, Monitor.this::newMonitoredBy, Monitor.this::error);
     }
-
 
     private void newMonitorees(List<User> users) {
         monitorsAdapter.addAll(users);
@@ -163,7 +181,7 @@ public class Monitor extends BaseActivity {
         }
     }
 
-    private void monitoredBy(List<User> users) {
+    private void newMonitoredBy(List<User> users) {
         monitoredByAdapter.addAll(users);
         monitoredByAdapter.notifyDataSetChanged();
 
@@ -183,9 +201,9 @@ public class Monitor extends BaseActivity {
         return new Intent(context, Monitor.class);
     }
 
-    private class UserListViewAdapter extends ArrayAdapter<User> {
+    private class ListViewAdapter extends ArrayAdapter<User> {
         List<User> userList;
-        UserListViewAdapter(List<User> users) {
+        ListViewAdapter(List<User> users) {
             super(Monitor.this, R.layout.list_item, users);
             userList = users;
         }
@@ -204,11 +222,34 @@ public class Monitor extends BaseActivity {
 
             ImageView removeUser = itemView.findViewById(R.id.removeUser);
             removeUser.setOnClickListener(view -> {
-                //TODO: server request here
+                ServerProxy proxy = ServerManager.getServerRequest();
+                Call<Void> call = proxy.endMonitoring(user.getId(), currentUser.getId());
+                if (userList == user.getMonitorsUsers()) {
+                    ServerManager.serverRequest(call, result -> removeMonitoree(result, currentUser), Monitor.this::error);
+                } else {
+                    ServerManager.serverRequest(call, result -> removeMonitor(result, currentUser), Monitor.this::error);
+                }
             });
 
             return itemView;
         }
+    }
+
+
+    private void removeMonitoree(Void ans, User user) {
+        this.user.getMonitorsUsers().remove(user);
+        monitorsAdapter.remove(user);
+        monitorsAdapter.notifyDataSetChanged();
+
+        findViewById(R.id.monitoringListView).invalidate();
+    }
+
+    private void removeMonitor(Void ans, User user) {
+        this.user.getMonitoredByUsers().remove(user);
+        monitoredByAdapter.remove(user);
+        monitoredByAdapter.notifyDataSetChanged();
+
+        findViewById(R.id.monitoredByListView).invalidate();
     }
 }
 

@@ -2,9 +2,6 @@ package com.teal.a276.walkinggroup.activities;
 
 import android.os.Bundle;
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.model.dataobjects.User;
-import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
-import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import android.view.MenuItem;
 
