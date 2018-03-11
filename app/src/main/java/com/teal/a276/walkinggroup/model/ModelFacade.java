@@ -3,16 +3,15 @@ package com.teal.a276.walkinggroup.model;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 /**
- * Created by scott on 09/03/18.
+ * Singleton for accessing groups/users
  */
-
 public class ModelFacade {
 
     private static ModelFacade instance;
     private User currentUser = null;
-    private ModelFacade() {
 
-    }
+
+    private ModelFacade() {}
 
     public static ModelFacade getInstance() {
         if(instance == null) {

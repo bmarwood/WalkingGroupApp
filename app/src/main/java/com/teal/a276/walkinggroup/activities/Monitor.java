@@ -4,21 +4,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.adapters.ListItemAdapter;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -52,17 +49,48 @@ public class Monitor extends BaseActivity {
     }
 
     private void initializeListViews() {
-        monitorsAdapter = new ListViewAdapter(user.getMonitorsUsers());
+        monitorsAdapter = new ListItemAdapter(this, user.getMonitorsUsers());
         monitorsAdapter.addAll(user.getMonitorsUsers());
-
-        monitoredByAdapter = new ListViewAdapter(user.getMonitoredByUsers());
-        monitoredByAdapter.addAll(user.getMonitoredByUsers());
 
         ListView monitoringList = findViewById(R.id.monitoringListView);
         monitoringList.setAdapter(monitorsAdapter);
+        monitoringList.setOnItemClickListener((adapterView, view, i, l) -> {
+            User selectedUser = user.getMonitorsUser(i);
+
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<Void> call = proxy.endMonitoring(user.getId(), selectedUser.getId());
+            ServerManager.serverRequest(call, result -> removeMonitoree(result, selectedUser), Monitor.this::error);
+        });
+
+
+        monitoredByAdapter = new ListItemAdapter(this, user.getMonitoredByUsers());
+        monitoredByAdapter.addAll(user.getMonitoredByUsers());
 
         ListView monitoredBy = findViewById(R.id.monitoredByListView);
         monitoredBy.setAdapter(monitoredByAdapter);
+        monitoredBy.setOnItemClickListener((adapterView, view, i, l) -> {
+            User selectedMonitor = user.getMonitoredByUser(i);
+
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<Void> call = proxy.endMonitoring(selectedMonitor.getId(), user.getId());
+            ServerManager.serverRequest(call, result -> removeMonitor(result, selectedMonitor), Monitor.this::error);
+        });
+    }
+
+    private void removeMonitoree(Void ans, User user) {
+        this.user.getMonitorsUsers().remove(user);
+        updateListAdapter(R.id.monitoringListView, user, monitorsAdapter);
+    }
+
+    private void removeMonitor(Void ans, User user) {
+        this.user.getMonitoredByUsers().remove(user);
+        updateListAdapter(R.id.monitoredByListView, user, monitoredByAdapter);
+    }
+
+    private void updateListAdapter(int id, User user, ArrayAdapter<User> adapter) {
+        adapter.remove(user);
+        adapter.notifyDataSetChanged();
+        findViewById(id).invalidate();
     }
 
     private void setupAddToMonitorButton() {
@@ -132,9 +160,10 @@ public class Monitor extends BaseActivity {
         });
     }
 
+    //TODO: strategy pattern might resolve this issue
     private void login(Void ans) {
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<User> userByEmailCall = proxy.getUserById(164L);
+        Call<User> userByEmailCall = proxy.getUserByEmail(user.getEmail());
         ServerManager.serverRequest(userByEmailCall, this::getUser, this::error);
 
     }
@@ -142,7 +171,7 @@ public class Monitor extends BaseActivity {
     private void getUser(User user) {
         this.user = user;
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.getMonitors(164L);
+        Call<List<User>> call = proxy.getMonitors(user.getId());
         ServerManager.serverRequest(call, this::monitors, this::error);
     }
 
@@ -150,7 +179,7 @@ public class Monitor extends BaseActivity {
         user.setMonitorsUsers(users);
 
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.getMonitoredBy(164L);
+        Call<List<User>> call = proxy.getMonitoredBy(user.getId());
         ServerManager.serverRequest(call, this::monitoredBy, this::error);
     }
 
@@ -161,13 +190,13 @@ public class Monitor extends BaseActivity {
 
     private void monitor(User user) {
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.monitorUser(164L, user);
+        Call<List<User>> call = proxy.monitorUser(user.getId(), user);
         ServerManager.serverRequest(call, this::newMonitorees, this::error);
     }
 
     private void userByEmail(User user) {
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.monitoredByUser(239L, user);
+        Call<List<User>> call = proxy.monitoredByUser(this.user.getId(), user);
         ServerManager.serverRequest(call, Monitor.this::newMonitoredBy, Monitor.this::error);
     }
 
@@ -199,57 +228,6 @@ public class Monitor extends BaseActivity {
 
     public static Intent makeIntent(Context context){
         return new Intent(context, Monitor.class);
-    }
-
-    private class ListViewAdapter extends ArrayAdapter<User> {
-        List<User> userList;
-        ListViewAdapter(List<User> users) {
-            super(Monitor.this, R.layout.list_item, users);
-            userList = users;
-        }
-
-        @Override
-        @NonNull
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            View itemView = convertView;
-            if(itemView == null) {
-                itemView = getLayoutInflater().inflate(R.layout.list_item, parent, false);
-            }
-
-            User currentUser = userList.get(position);
-            TextView userText = itemView.findViewById(R.id.userName);
-            userText.setText(currentUser.getEmail());
-
-            ImageView removeUser = itemView.findViewById(R.id.removeUser);
-            removeUser.setOnClickListener(view -> {
-                ServerProxy proxy = ServerManager.getServerRequest();
-                Call<Void> call = proxy.endMonitoring(user.getId(), currentUser.getId());
-                if (userList == user.getMonitorsUsers()) {
-                    ServerManager.serverRequest(call, result -> removeMonitoree(result, currentUser), Monitor.this::error);
-                } else {
-                    ServerManager.serverRequest(call, result -> removeMonitor(result, currentUser), Monitor.this::error);
-                }
-            });
-
-            return itemView;
-        }
-    }
-
-
-    private void removeMonitoree(Void ans, User user) {
-        this.user.getMonitorsUsers().remove(user);
-        monitorsAdapter.remove(user);
-        monitorsAdapter.notifyDataSetChanged();
-
-        findViewById(R.id.monitoringListView).invalidate();
-    }
-
-    private void removeMonitor(Void ans, User user) {
-        this.user.getMonitoredByUsers().remove(user);
-        monitoredByAdapter.remove(user);
-        monitoredByAdapter.notifyDataSetChanged();
-
-        findViewById(R.id.monitoredByListView).invalidate();
     }
 }
 
