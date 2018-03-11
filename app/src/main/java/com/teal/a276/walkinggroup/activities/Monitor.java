@@ -190,7 +190,7 @@ public class Monitor extends BaseActivity {
 
     private void monitor(User user) {
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.monitorUser(user.getId(), user);
+        Call<List<User>> call = proxy.monitorUser(this.user.getId(), user);
         ServerManager.serverRequest(call, this::newMonitorees, this::error);
     }
 

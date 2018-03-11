@@ -18,7 +18,6 @@ public class User {
 
     private List<User> monitoredByUsers = new ArrayList<>();
     private List<User> monitorsUsers = new ArrayList<>();
-   // private List<Void> walkingGroups = new ArrayList<>();   // <-- TO BE IMPLEMENTED
 
     private String href;
 
@@ -69,15 +68,6 @@ public class User {
     public void setMonitorsUsers(List<User> monitorsUsers) {
         this.monitorsUsers = monitorsUsers;
     }
-
-//    public List<Void> getWalkingGroups() {
-//        return walkingGroups;
-//    }
-//
-//    public void setWalkingGroups(List<Void> walkingGroups) {
-//        this.walkingGroups = walkingGroups;
-//    }
-
 
     public ArrayList<Group> getMemberOfGroups() {
         return memberOfGroups;
