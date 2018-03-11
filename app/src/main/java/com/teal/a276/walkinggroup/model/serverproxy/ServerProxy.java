@@ -1,5 +1,6 @@
 package com.teal.a276.walkinggroup.model.serverproxy;
 
+import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -101,5 +103,68 @@ public interface ServerProxy {
     @DELETE("/users/{idA}/monitorsUsers/{idB}")
     Call<Void> endMonitoring(@Path("idA") Long idA, @Path("idB") Long idB);
 
-    //TODO: add methods for groups and logout
+    /**
+     * @return All Groups
+     */
+    @GET("/groups")
+    Call<List<Group>> getGroups();
+
+    /**
+     * Creates a new group. The group must have at least a leader and a description
+     * @param group The group to create
+     * @return The created group object.
+     */
+    @POST("/groups")
+    Call<Group> createGroup(@Body Group group);
+
+    /**
+     * Gets a group specified by Id
+     * @param groupId Id of the group
+     * @return The group with the id of groupId
+     */
+    @GET("/groups/{id}")
+    Call<Group> getGroup(@Path("id") Long groupId);
+
+    /**
+     *
+     * @param groupId Id of the group to update
+     * @param group Group information to update
+     * @return The new group object
+     */
+    @POST("/groups/{id}")
+    Call<Group> updateGroup(@Path("id") Long groupId, @Body Group group);
+
+    /**
+     *
+     * @param groupId Id of group to delete
+     * @return Nothing
+     */
+    @DELETE("/groups/{id}")
+    Call<Void> deleteGroup(@Path("id") Long groupId);
+
+    /**
+     *
+     * @param groupId Id of group
+     * @return A list of all users in the group
+     */
+    @GET("/groups/{id}/memberUsers")
+    Call<List<User>> getGroupMembers(@Path("id") Long groupId);
+
+    /**
+     *
+     * @param groupId Id of group
+     * @param user User to add to group
+     * @return A list of all users in the group
+     */
+    @POST("/groups/{id}/memberUsers")
+    Call<List<User>> addUserToGroup(@Path("id") Long groupId, @Body User user);
+
+    /**
+     *
+     * @param groupId Id of the group to remove the user from
+     * @param userId Id of user to remove from the group
+     * @return Placeholder void object, can be ignored
+     */
+    @DELETE("/groups/{groupId}/memberUsers/{userId}")
+    Call<Void> addUserToGroup(@Path("groupId") Long groupId, @Path("userId") Long userId);
 }
