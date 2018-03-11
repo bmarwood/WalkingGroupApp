@@ -11,21 +11,25 @@ public class GroupManager {
    //     this.serverManager = serverManager;
    // }
 
-    private List<Group> groups = new ArrayList<>();
+    private List<Group> joinGroups = new ArrayList<>();
     private List<Group> joinedGroups = new ArrayList<>();
 
 
     public void addJoinGroup(Group group){
-        groups.add(group);
+        joinGroups.add(group);
     }
     public void addJoinedGroup(Group group){
         joinedGroups.add(group);
     }
 
+    public void addJoinGroups(List<Group> groups) {
+        this.joinGroups.addAll(groups);
+    }
+
 
 
     public int countJoinGroups(){
-        return groups.size();
+        return joinGroups.size();
     }
     public int countJoinedGroups(){
         return joinedGroups.size();
@@ -35,7 +39,7 @@ public class GroupManager {
 
     public Group getJoinGroup(int index){
         validateIndexWithException(index);
-        return groups.get(index);
+        return joinGroups.get(index);
     }
     public Group getJoinedGroup(int index){
         validateIndexWithExceptionJoined(index);

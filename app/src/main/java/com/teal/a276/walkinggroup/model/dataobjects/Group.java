@@ -1,22 +1,24 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.teal.a276.walkinggroup.adapters.DisplayData;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Group {
+public class Group implements DisplayData {
 
     private Long id;
     private User leader;
+    private String groupName;
     private String groupDescription;
     private List<Double> routeLatArray = new ArrayList<>();
     private List<Double> routeLngArray = new ArrayList<>();
     private List<User> memberUsers = new ArrayList<>();
     private String href;
 
-
-
-    //added to match Dr Brian's Json retrofit
+//added to match Dr Brian's Json retrofit
 
     public Long getId() {
         return id;
@@ -74,10 +76,21 @@ public class Group {
         this.href = href;
     }
 
+    @JsonIgnore
+    public String getGroupName() {
+        return groupName;
+    }
+
+    @JsonIgnore
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
 
     @Override
     public String toString(){
-        return "groupDescription=" + groupDescription +
+        return "groupName=" + groupName +
+                "groupDescription=" + groupDescription +
                ", leader='" + leader + '\'' +
 
                ", routeLatArray='" + routeLatArray + '\'' +
@@ -85,5 +98,10 @@ public class Group {
                ", memberUsers='" + memberUsers + '\'' +
                '}';
 
+    }
+
+    @Override
+    public String getDisplayData() {
+        return groupDescription;
     }
 }

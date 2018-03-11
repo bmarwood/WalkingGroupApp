@@ -50,7 +50,7 @@ public class Monitor extends BaseActivity {
     }
 
     private void initializeListViews() {
-        monitorsAdapter = new ListItemAdapter(this, user.getMonitorsUsers());
+        monitorsAdapter = new ListItemAdapter<>(this, user.getMonitorsUsers());
         monitorsAdapter.addAll(user.getMonitorsUsers());
 
         ListView monitoringList = findViewById(R.id.monitoringListView);
@@ -64,7 +64,7 @@ public class Monitor extends BaseActivity {
         });
 
 
-        monitoredByAdapter = new ListItemAdapter(this, user.getMonitoredByUsers());
+        monitoredByAdapter = new ListItemAdapter<>(this, user.getMonitoredByUsers());
         monitoredByAdapter.addAll(user.getMonitoredByUsers());
 
         ListView monitoredBy = findViewById(R.id.monitoredByListView);

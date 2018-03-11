@@ -17,8 +17,15 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.adapters.ListItemAdapter;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
+
+import java.util.List;
+
+import retrofit2.Call;
 
 import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_DESTLAT;
 import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_DESTLNG;
@@ -36,6 +43,7 @@ import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_MEETINGLNG
 public class JoinGroup extends BaseActivity {
 
     GroupManager groupManager = new GroupManager();
+    ArrayAdapter groupsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +57,19 @@ public class JoinGroup extends BaseActivity {
         registerJoinGroupClickCallback();
         registerJoinedGroupClickCallback();
 
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<List<Group>> call = proxy.getGroups();
+        ServerManager.serverRequest(call, this::groupsResult, this::error);
     }
+
+    private void groupsResult(List<Group> groups) {
+        groupManager.addJoinGroups(groups);
+        groupsAdapter = new ListItemAdapter<>(this, groups);
+        ListView groupsList = findViewById(R.id.joinGroupsListView);
+        groupsList.setAdapter(groupsAdapter);
+    }
+
+
 
 
 //    private void populateJoinGroupsListView() {
@@ -157,7 +177,7 @@ public class JoinGroup extends BaseActivity {
                             group = groupManager.getJoinGroup(joinPosition);
 
                             groupManager.addJoinedGroup(group);
-//                            populateJoinedGroupsListView();
+                            groupsAdapter.notifyDataSetChanged();
 
                     }});
                    adb.show();
