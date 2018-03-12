@@ -18,8 +18,10 @@ import android.widget.ListView;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.adapters.ListItemAdapter;
+import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
+import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
@@ -43,7 +45,8 @@ import static com.teal.a276.walkinggroup.activities.AddNewGroup.EXTRA_MEETINGLNG
 public class JoinGroup extends BaseActivity {
 
     GroupManager groupManager = new GroupManager();
-    ArrayAdapter groupsAdapter;
+    ArrayAdapter<Group> groupsAdapter;
+    ArrayAdapter<Group> joinedGroupsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +63,33 @@ public class JoinGroup extends BaseActivity {
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<List<Group>> call = proxy.getGroups();
         ServerManager.serverRequest(call, this::groupsResult, this::error);
+
+        for(Group group: ModelFacade.getInstance().getCurrentUser().getMemberOfGroups()) {
+            Call<Group> joinedGroupCall = proxy.getGroup(group.getId());
+            ServerManager.serverRequest(joinedGroupCall, this::joinedGroupResult, this::error);
+        }
     }
 
     private void groupsResult(List<Group> groups) {
         groupManager.addJoinGroups(groups);
         groupsAdapter = new ListItemAdapter<>(this, groups);
-        ListView groupsList = findViewById(R.id.joinGroupsListView);
-        groupsList.setAdapter(groupsAdapter);
+        if (ModelFacade.getInstance().getCurrentUser().getMemberOfGroups().size() == 0) {
+            ListView groupsList = findViewById(R.id.joinGroupsListView);
+            groupsList.setAdapter(groupsAdapter);
+        }
+    }
+
+    private void joinedGroupResult(Group group) {
+        groupManager.addJoinedGroup(group);
+        if(ModelFacade.getInstance().getCurrentUser().getMemberOfGroups().size() == groupManager.countJoinedGroups()) {
+            joinedGroupsAdapter = new ListItemAdapter<>(this, groupManager.getJoinedGroups());
+
+            ListView joinedGroupList = findViewById(R.id.joinedGroupsListView);
+            joinedGroupList.setAdapter(joinedGroupsAdapter);
+
+            ListView groupsList = findViewById(R.id.joinGroupsListView);
+            groupsList.setAdapter(groupsAdapter);
+        }
     }
 
 
@@ -176,13 +199,21 @@ public class JoinGroup extends BaseActivity {
                             Group group;
                             group = groupManager.getJoinGroup(joinPosition);
 
-                            groupManager.addJoinedGroup(group);
-                            groupsAdapter.notifyDataSetChanged();
+                            ServerProxy proxy = ServerManager.getServerRequest();
+                            Call<List<User>> call = proxy.addUserToGroup(group.getId(), ModelFacade.getInstance().getCurrentUser());
+                            ServerManager.serverRequest(call, result -> addGroupMemberResult(result, group), JoinGroup.this::error);
 
                     }});
                    adb.show();
             }
         });
+    }
+
+    private void addGroupMemberResult(List<User> users, Group group) {
+        group.setMemberUsers(users);
+        groupManager.addJoinedGroup(group);
+        joinedGroupsAdapter.add(group);
+        joinedGroupsAdapter.notifyDataSetChanged();
     }
 
 

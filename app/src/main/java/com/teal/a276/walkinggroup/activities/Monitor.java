@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.adapters.ListItemAdapter;
+import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -183,6 +184,7 @@ public class Monitor extends BaseActivity {
 
     private void getUser(User user) {
         this.user = user;
+        ModelFacade.getInstance().setCurrentUser(user);
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<List<User>> call = proxy.getMonitors(user.getId());
         ServerManager.serverRequest(call, this::monitors, this::error);

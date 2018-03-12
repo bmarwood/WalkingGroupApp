@@ -26,6 +26,9 @@ public class GroupManager {
         this.joinGroups.addAll(groups);
     }
 
+    public List<Group> getJoinedGroups() {
+        return joinedGroups;
+    }
 
 
     public int countJoinGroups(){

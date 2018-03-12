@@ -17,12 +17,10 @@ import retrofit2.Call;
 public class MonitorStrategy extends ServerRequestSolution {
     private List<User> monitors = new ArrayList<>();
     private final String userEmail;
-    private final User currentUser;
 
     public MonitorStrategy(User currentUser, String emailToMonitor, ServerError errorCallback) {
-        super(errorCallback);
+        super(currentUser, errorCallback);
         this.userEmail = emailToMonitor;
-        this.currentUser = currentUser;
     }
 
     @Override

@@ -18,8 +18,10 @@ import retrofit2.Call;
 
 abstract class ServerRequestSolution extends Observable implements ServerRequestStrategy {
     final ServerError errorCallback;
+    final User currentUser;
 
-    ServerRequestSolution(ServerError errorCallback) {
+    ServerRequestSolution(User currentUser, ServerError errorCallback) {
+        this.currentUser = currentUser;
         this.errorCallback = errorCallback;
     }
 
