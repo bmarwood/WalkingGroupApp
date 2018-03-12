@@ -20,8 +20,8 @@ import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
-import com.teal.a276.walkinggroup.model.serverstrategy.MonitorStrategy;
-import com.teal.a276.walkinggroup.model.serverstrategy.MonitoredByStrategy;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.MonitorRequest;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.MonitoredByRequest;
 
 import java.util.List;
 
@@ -39,15 +39,10 @@ public class Monitor extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitor);
 
+        user = ModelFacade.getInstance().getCurrentUser();
         setupAddToMonitorButton();
         setupAddToMonitoredByButton();
-
-        user.setEmail("c@test.com");
-        user.setPassword("1234");
-
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<Void> call = proxy.login(user);
-        ServerManager.serverRequest(call, Monitor.this::login, Monitor.this::error);
+        initializeListViews();
     }
 
     private void initializeListViews() {
@@ -115,11 +110,10 @@ public class Monitor extends BaseActivity {
                         String getEmail = input.getText().toString();
                         Log.i("CHECK", getEmail);
 
-                        MonitorStrategy strategy = new MonitorStrategy(user, getEmail, Monitor.this::error);
+                        MonitorRequest strategy = new MonitorRequest(user, getEmail, Monitor.this::error);
                         strategy.makeServerRequest();
                         strategy.addObserver((observable, o) -> {
-                            MonitorStrategy strategy1 = (MonitorStrategy)observable;
-                            List<User> users = strategy1.getServerResult();
+                            List<User> users = (List<User>) o;
 
                             user.setMonitorsUsers(users);
                             monitorsAdapter.clear();
@@ -157,11 +151,10 @@ public class Monitor extends BaseActivity {
                         //TODO: server check if this email is valid, then add to monitored by.
                         //after server check, populate monitoredby listview again.
 
-                        MonitoredByStrategy strategy = new MonitoredByStrategy(user, getEmail, Monitor.this::error);
+                        MonitoredByRequest strategy = new MonitoredByRequest(user, getEmail, Monitor.this::error);
                         strategy.makeServerRequest();
                         strategy.addObserver((observable, o) -> {
-                            MonitoredByStrategy strategy1 = (MonitoredByStrategy)observable;
-                            List<User> users = strategy1.getServerResult();
+                            List<User> users = (List<User>) o;
 
                             user.setMonitorsUsers(users);
                             monitoredByAdapter.clear();
@@ -173,34 +166,6 @@ public class Monitor extends BaseActivity {
                 adb.show();
             }
         });
-    }
-
-    private void login(Void ans) {
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<User> userByEmailCall = proxy.getUserByEmail(user.getEmail());
-        ServerManager.serverRequest(userByEmailCall, this::getUser, this::error);
-
-    }
-
-    private void getUser(User user) {
-        this.user = user;
-        ModelFacade.getInstance().setCurrentUser(user);
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.getMonitors(user.getId());
-        ServerManager.serverRequest(call, this::monitors, this::error);
-    }
-
-    private void monitors(List<User> users) {
-        user.setMonitorsUsers(users);
-
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.getMonitoredBy(user.getId());
-        ServerManager.serverRequest(call, this::monitoredBy, this::error);
-    }
-
-    private void monitoredBy(List<User> users) {
-        user.setMonitoredByUsers(users);
-        initializeListViews();
     }
 
     @Override

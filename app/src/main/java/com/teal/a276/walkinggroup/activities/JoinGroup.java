@@ -6,9 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -60,36 +58,23 @@ public class JoinGroup extends BaseActivity {
         registerJoinGroupClickCallback();
         registerJoinedGroupClickCallback();
 
+        User user = ModelFacade.getInstance().getCurrentUser();
+        groupManager.setJoinedGroup(user.getMemberOfGroups());
+
+        joinedGroupsAdapter = new ListItemAdapter<>(this, groupManager.getJoinedGroups());
+        ListView joinedGroups = findViewById(R.id.joinedGroupsListView);
+        joinedGroups.setAdapter(joinedGroupsAdapter);
+
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<List<Group>> call = proxy.getGroups();
         ServerManager.serverRequest(call, this::groupsResult, this::error);
-
-        for(Group group: ModelFacade.getInstance().getCurrentUser().getMemberOfGroups()) {
-            Call<Group> joinedGroupCall = proxy.getGroup(group.getId());
-            ServerManager.serverRequest(joinedGroupCall, this::joinedGroupResult, this::error);
-        }
     }
 
     private void groupsResult(List<Group> groups) {
         groupManager.addJoinGroups(groups);
         groupsAdapter = new ListItemAdapter<>(this, groups);
-        if (ModelFacade.getInstance().getCurrentUser().getMemberOfGroups().size() == 0) {
-            ListView groupsList = findViewById(R.id.joinGroupsListView);
-            groupsList.setAdapter(groupsAdapter);
-        }
-    }
-
-    private void joinedGroupResult(Group group) {
-        groupManager.addJoinedGroup(group);
-        if(ModelFacade.getInstance().getCurrentUser().getMemberOfGroups().size() == groupManager.countJoinedGroups()) {
-            joinedGroupsAdapter = new ListItemAdapter<>(this, groupManager.getJoinedGroups());
-
-            ListView joinedGroupList = findViewById(R.id.joinedGroupsListView);
-            joinedGroupList.setAdapter(joinedGroupsAdapter);
-
-            ListView groupsList = findViewById(R.id.joinGroupsListView);
-            groupsList.setAdapter(groupsAdapter);
-        }
+        ListView groupsList = findViewById(R.id.joinGroupsListView);
+        groupsList.setAdapter(groupsAdapter);
     }
 
 

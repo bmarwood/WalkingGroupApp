@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.model.serverstrategy;
+package com.teal.a276.walkinggroup.model.serverrequest;
 
 import android.support.annotation.NonNull;
 
@@ -16,18 +16,25 @@ import retrofit2.Call;
  * Created by scott on 11/03/18.
  */
 
-abstract class ServerRequestSolution extends Observable implements ServerRequestStrategy {
-    final ServerError errorCallback;
-    final User currentUser;
+public abstract class AbstractServerRequest extends Observable {
+    protected final ServerError errorCallback;
+    protected final User currentUser;
 
-    ServerRequestSolution(User currentUser, ServerError errorCallback) {
+    protected AbstractServerRequest(User currentUser, ServerError errorCallback) {
         this.currentUser = currentUser;
         this.errorCallback = errorCallback;
     }
 
-    void getUserForEmail(String email, @NonNull final ServerResult<User> resultCallback) {
+    protected abstract void makeServerRequest();
+
+    public void getUserForEmail(String email, @NonNull final ServerResult<User> resultCallback) {
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<User> userByEmailCall = proxy.getUserByEmail(email);
         ServerManager.serverRequest(userByEmailCall, resultCallback, errorCallback);
+    }
+
+    protected <T> void setDataChanged(T data) {
+        setChanged();
+        notifyObservers(data);
     }
 }

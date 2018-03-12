@@ -29,6 +29,9 @@ public class GroupManager {
     public List<Group> getJoinedGroups() {
         return joinedGroups;
     }
+    public List<Group> getJoinGroups() {
+        return joinGroups;
+    }
 
 
     public int countJoinGroups(){
@@ -36,6 +39,10 @@ public class GroupManager {
     }
     public int countJoinedGroups(){
         return joinedGroups.size();
+    }
+
+    public void setJoinedGroup(List<Group> joinedGroups) {
+        this.joinedGroups = joinedGroups;
     }
 
 

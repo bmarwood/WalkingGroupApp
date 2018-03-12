@@ -3,6 +3,8 @@ package com.teal.a276.walkinggroup.model.dataobjects;
 import com.teal.a276.walkinggroup.adapters.DisplayData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -97,6 +99,17 @@ public class User implements DisplayData {
 
     public void joinGroup(Group group) {
         this.memberOfGroups.add(group);
+    }
+
+    public void updateGroup(Group newGroup) {
+        Group[] groupsArray = getMemberOfGroups().toArray(new Group[this.memberOfGroups.size()]);
+        for(int i = 0; i < groupsArray.length; i++) {
+            Group group = groupsArray[i];
+            if(group.getId().equals(newGroup.getId())) {
+                groupsArray[i] = newGroup;
+            }
+        }
+        this.memberOfGroups = Arrays.asList(groupsArray);
     }
 
     public void leaveGroup(Group group) {

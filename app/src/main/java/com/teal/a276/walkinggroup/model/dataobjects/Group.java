@@ -86,7 +86,6 @@ public class Group implements DisplayData {
         this.groupName = groupName;
     }
 
-
     @Override
     public String toString(){
         return "groupName=" + groupName +

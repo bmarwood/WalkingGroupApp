@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.model.serverstrategy;
+package com.teal.a276.walkinggroup.model.serverrequest.requestimplementation;
 
 import android.support.annotation.NonNull;
 
@@ -6,6 +6,7 @@ import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
+import com.teal.a276.walkinggroup.model.serverrequest.AbstractServerRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +17,11 @@ import retrofit2.Call;
  * Created by scott on 11/03/18.
  */
 
-public class MonitoredByStrategy extends ServerRequestSolution {
+public class MonitoredByRequest extends AbstractServerRequest {
     private List<User> monitors = new ArrayList<>();
     private final String userEmail;
 
-    public MonitoredByStrategy(User currentUser, String emailToMonitor, @NonNull ServerError errorCallback) {
+    public MonitoredByRequest(User currentUser, String emailToMonitor, @NonNull ServerError errorCallback) {
         super(currentUser, errorCallback);
         this.userEmail = emailToMonitor;
     }
@@ -38,12 +39,6 @@ public class MonitoredByStrategy extends ServerRequestSolution {
 
     private void monitorsResult(List<User> users) {
         monitors = users;
-        setChanged();
-        notifyObservers();
-    }
-
-    @Override
-    public List<User> getServerResult() {
-        return monitors;
+        setDataChanged(monitors);
     }
 }
