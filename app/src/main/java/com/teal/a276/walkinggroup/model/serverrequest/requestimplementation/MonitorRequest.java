@@ -1,5 +1,7 @@
 package com.teal.a276.walkinggroup.model.serverrequest.requestimplementation;
 
+import android.support.annotation.NonNull;
+
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -16,7 +18,7 @@ import retrofit2.Call;
 public class MonitorRequest extends AbstractServerRequest {
     private final String userToMonitorEmail;
 
-    public MonitorRequest(User currentUser, String userToMonitorEmail, ServerError errorCallback) {
+    public MonitorRequest(User currentUser, String userToMonitorEmail, @NonNull ServerError errorCallback) {
         super(currentUser, errorCallback);
         this.userToMonitorEmail = userToMonitorEmail;
     }

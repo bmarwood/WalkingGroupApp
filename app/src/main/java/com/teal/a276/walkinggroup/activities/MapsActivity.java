@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.util.Log;
 
@@ -41,9 +42,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationListener;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.adapters.ListItemAdapter;
+import com.teal.a276.walkinggroup.model.ModelFacade;
+import com.teal.a276.walkinggroup.model.dataobjects.Group;
+import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
+import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
 
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -57,6 +68,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
     // TODO: Populate markers array from existing groups
 
+    private List<Group> groups = new ArrayList<>();
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
@@ -81,6 +93,14 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
         }
 
         createLocationRequest();
+
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<List<Group>> call = proxy.getGroups();
+        ServerManager.serverRequest(call, this::groupsResult, this::error);
+    }
+
+    private void groupsResult(List<Group> groups) {
+        this.groups = groups;
     }
 
     @Override
@@ -101,7 +121,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.groupItem:
-                Toast.makeText(this, "Clicked group item!", Toast.LENGTH_LONG).show();
+                startActivity(JoinGroup.makeIntent(this));
                 break;
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));

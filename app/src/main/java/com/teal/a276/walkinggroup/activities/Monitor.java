@@ -1,7 +1,6 @@
 package com.teal.a276.walkinggroup.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -27,10 +26,17 @@ import java.util.List;
 
 import retrofit2.Call;
 
+/**
+ * Interface for abstracting out observable call
+ */
 interface ObservableCallback {
    void makeRequest(String email);
 }
 
+/**
+ * Activity for displaying who you monitor and who is monitoring you and for allowing the user
+ * to add a monitor or a monitoree.
+ */
 public class Monitor extends BaseActivity {
 
     User user;

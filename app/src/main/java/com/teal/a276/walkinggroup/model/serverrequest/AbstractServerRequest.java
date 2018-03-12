@@ -20,7 +20,7 @@ public abstract class AbstractServerRequest extends Observable {
     protected final ServerError errorCallback;
     protected final User currentUser;
 
-    protected AbstractServerRequest(User currentUser, ServerError errorCallback) {
+    protected AbstractServerRequest(User currentUser, @NonNull ServerError errorCallback) {
         this.currentUser = currentUser;
         this.errorCallback = errorCallback;
     }
