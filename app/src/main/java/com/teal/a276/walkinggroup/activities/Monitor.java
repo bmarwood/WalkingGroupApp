@@ -52,7 +52,6 @@ public class Monitor extends BaseActivity {
 
     private void initializeListViews() {
         monitorsAdapter = new ListItemAdapter<>(this, user.getMonitorsUsers());
-        monitorsAdapter.addAll(user.getMonitorsUsers());
 
         ListView monitoringList = findViewById(R.id.monitoringListView);
         monitoringList.setAdapter(monitorsAdapter);
@@ -66,7 +65,6 @@ public class Monitor extends BaseActivity {
 
 
         monitoredByAdapter = new ListItemAdapter<>(this, user.getMonitoredByUsers());
-        monitoredByAdapter.addAll(user.getMonitoredByUsers());
 
         ListView monitoredBy = findViewById(R.id.monitoredByListView);
         monitoredBy.setAdapter(monitoredByAdapter);
@@ -124,6 +122,7 @@ public class Monitor extends BaseActivity {
                             List<User> users = strategy1.getServerResult();
 
                             user.setMonitorsUsers(users);
+                            monitorsAdapter.clear();
                             monitorsAdapter.addAll(users);
                             monitorsAdapter.notifyDataSetChanged();
                         });
@@ -165,6 +164,7 @@ public class Monitor extends BaseActivity {
                             List<User> users = strategy1.getServerResult();
 
                             user.setMonitorsUsers(users);
+                            monitoredByAdapter.clear();
                             monitoredByAdapter.addAll(users);
                             monitoredByAdapter.notifyDataSetChanged();
                         });
