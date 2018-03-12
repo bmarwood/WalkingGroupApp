@@ -1,28 +1,30 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
+import com.teal.a276.walkinggroup.adapters.DisplayData;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Simple User class to store the data the server expects and returns.
  * (Incomplete: Needs support for monitoring and groups).
  */
-public class User {
+
+public class User implements DisplayData {
     private Long id;
     private String name;
     private String email;
     private String password;
-    public ArrayList<Object> memberOfGroups;
-    public ArrayList<Object> leadsGroups;
+    private List<Group> memberOfGroups = new ArrayList<>();
+    private List<Group> leadsGroups = new ArrayList<>();
 
     private List<User> monitoredByUsers = new ArrayList<>();
     private List<User> monitorsUsers = new ArrayList<>();
-    private List<Void> walkingGroups = new ArrayList<>();   // <-- TO BE IMPLEMENTED
 
     private String href;
-
-
-
+    
     public User() {
     }
 
@@ -80,12 +82,47 @@ public class User {
         this.monitorsUsers = monitorsUsers;
     }
 
-    public List<Void> getWalkingGroups() {
-        return walkingGroups;
+    public List<Group> getMemberOfGroups() {
+        return memberOfGroups;
     }
 
-    public void setWalkingGroups(List<Void> walkingGroups) {
-        this.walkingGroups = walkingGroups;
+    public void setMemberOfGroups(List<Group> memberOfGroups) {
+        this.memberOfGroups = memberOfGroups;
+    }
+
+    public List<Group> getLeadsGroups() {
+        return leadsGroups;
+    }
+
+    public void setLeadsGroups(ArrayList<Group> leadsGroups) {
+        this.leadsGroups = leadsGroups;
+    }
+
+    public void addGroupToLead(Group group) {
+        this.leadsGroups.add(group);
+    }
+
+    public void removeGroupToLead(Group group) {
+        this.leadsGroups.remove(group);
+    }
+
+    public void joinGroup(Group group) {
+        this.memberOfGroups.add(group);
+    }
+
+    public void updateGroup(Group newGroup) {
+        Group[] groupsArray = getMemberOfGroups().toArray(new Group[this.memberOfGroups.size()]);
+        for(int i = 0; i < groupsArray.length; i++) {
+            Group group = groupsArray[i];
+            if(group.getId().equals(newGroup.getId())) {
+                groupsArray[i] = newGroup;
+            }
+        }
+        this.memberOfGroups = Arrays.asList(groupsArray);
+    }
+
+    public void leaveGroup(Group group) {
+        this.memberOfGroups.remove(group);
     }
 
     public String getHref() {
@@ -105,7 +142,37 @@ public class User {
                 ", password='" + password + '\'' +
                 ", monitoredByUsers=" + monitoredByUsers +
                 ", monitorsUsers=" + monitorsUsers +
-                ", walkingGroups=" + walkingGroups +
+                //", walkingGroups=" + walkingGroups +
                 '}';
+    }
+
+    //below are added by Jamie, managing users
+    private void validateIndexWithExceptionMonitoredBy(int index){
+        if(index < 0 || index >= monitoredByUsers.size()){
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void validateIndexWithExceptionMonitors(int index){
+        if(index < 0 || index >= monitorsUsers.size()){
+            throw new IllegalArgumentException();
+        }
+    }
+
+    //RETURNS SINGLE USER, NOTE THAT THIS FUNC IS VERY SIMILAR TO THE ORIGINAL
+    //FUNCTION THAT RETURNS A LIST
+    public User getMonitoredByUser(int index){
+        validateIndexWithExceptionMonitoredBy(index);
+        return monitoredByUsers.get(index);
+    }
+
+    public User getMonitorsUser(int index){
+        validateIndexWithExceptionMonitors(index);
+        return monitorsUsers.get(index);
+    }
+
+    @Override
+    public String getDisplayData() {
+        return email;
     }
 }

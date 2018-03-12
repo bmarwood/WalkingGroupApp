@@ -1,9 +1,7 @@
 package com.teal.a276.walkinggroup.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,14 +10,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CompleteUserRequest;
 
 import retrofit2.Call;
 
-public class Login extends AppCompatActivity {
-
+public class Login extends BaseActivity {
+    User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,6 @@ public class Login extends AppCompatActivity {
 
             toggleSpinner(View.VISIBLE);
 
-            User user = new User();
             user.setEmail(email);
             user.setPassword(password);
 
@@ -54,9 +53,15 @@ public class Login extends AppCompatActivity {
     }
 
     private void successLogin(Void ans) {
-        Intent intent = MapsActivity.makeIntent(Login.this);
-        startActivity(intent);
-        finish();
+        CompleteUserRequest request = new CompleteUserRequest(user, this::error);
+        request.makeServerRequest();
+        request.addObserver((observable, o) -> {
+            ModelFacade.getInstance().setCurrentUser((User)o);
+
+            Intent intent = MapsActivity.makeIntent(Login.this);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void errorLogin(String error) {

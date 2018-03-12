@@ -1,19 +1,20 @@
 <resources>
     <string name="app_name">Walking Group</string>
+    <string name="button">Button</string>
+    <string name="join_groups">Join Groups</string>
+    <string name="add_new_group">Add New Group</string>
+    <string name="add_group">Add Group</string>
+    <string name="group_name">Group Name:</string>
+    <string name="meeting_location">Meeting Location:</string>
+    <string name="destination">Destination:</string>
+    <string name="create_group">Create Group</string>
+    <string name="monitored_by">Monitored By</string>
+    <string name="monitoring">Monitoring</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_login">Sign in</string>
 
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="join_group">Join Group</string>
+    <string name="joined_groups">Joined Groups</string>
+
     <!-- Strings related to login -->
 
     <string name="login">Login</string>
@@ -39,8 +40,14 @@
     <string name="password_must_be_inputted">password must be inputted</string>
 
 
-    <string name="map">Map</string>
     <string name="monitor">Monitor</string>
     <string name="groups">Groups</string>
+    <string name="lat">Lat</string>
+    <string name="lng">Lng</string>
+
+    <string name="add_user_to_be_monitored_by">Add user to be monitored by</string>
+    <string name="add_user_to_monitor">Add user to monitor</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="logout">Logout</string>
 </resources>
