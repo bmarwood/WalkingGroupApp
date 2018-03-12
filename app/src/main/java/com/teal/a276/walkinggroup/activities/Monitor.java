@@ -3,12 +3,12 @@ package com.teal.a276.walkinggroup.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +27,10 @@ import java.util.List;
 
 import retrofit2.Call;
 
+interface ObservableCallback {
+   void makeRequest(String email);
+}
+
 public class Monitor extends BaseActivity {
 
     User user;
@@ -39,8 +43,8 @@ public class Monitor extends BaseActivity {
         setContentView(R.layout.activity_monitor);
 
         user = ModelFacade.getInstance().getCurrentUser();
-        setupAddToMonitorButton();
-        setupAddToMonitoredByButton();
+        initializeButton(R.id.addToMonitorBtn, R.string.add_user_to_monitor, this::monitorCallback);
+        initializeButton(R.id.addToMonitoredByBtn, R.string.add_user_to_be_monitored_by, this::monitoredByCallback);
         initializeListViews();
     }
 
@@ -87,77 +91,45 @@ public class Monitor extends BaseActivity {
         findViewById(id).invalidate();
     }
 
-    private void setupAddToMonitorButton() {
-        Button btn = (Button) findViewById(R.id.addToMonitorBtn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder adb = new AlertDialog.Builder(Monitor.this);
-                adb.setTitle("Add user to monitor");
 
-                final EditText input = new EditText(Monitor.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                adb.setView(input);
+    private void initializeButton(int viewId, int titleId, ObservableCallback observableCallback) {
+        Button btn = findViewById(viewId);
+        Resources res = getResources();
+        btn.setOnClickListener(v -> {
+            AlertDialog.Builder adb = new AlertDialog.Builder(Monitor.this);
+            adb.setTitle(res.getString(titleId));
 
-                adb.setNegativeButton("Cancel", null);
-                adb.setPositiveButton("Add", new AlertDialog.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            final EditText input = new EditText(Monitor.this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            adb.setView(input);
 
-                        //TODO: server check if this email is valid, then add the user of this email
-                        //after server check, populate monitoring listview again
-                        String getEmail = input.getText().toString();
-                        Log.i("CHECK", getEmail);
-
-                        MonitorRequest strategy = new MonitorRequest(user, getEmail, Monitor.this::error);
-                        strategy.makeServerRequest();
-                        strategy.addObserver((observable, o) -> {
-                            List<User> users = (List<User>) o;
-                            user.setMonitorsUsers(users);
-                            updateAdapter(monitorsAdapter, users);
-                        });
-                    }
-                });
-                adb.show();
-            }
+            adb.setNegativeButton("Cancel", null);
+            adb.setPositiveButton("Add", (dialog, which) -> {
+                String email = input.getText().toString();
+                Log.i("CHECK", email);
+                observableCallback.makeRequest(email);
+            });
+            adb.show();
         });
     }
 
-    private void setupAddToMonitoredByButton(){
+    private void monitorCallback(String email) {
+        MonitorRequest strategy = new MonitorRequest(user, email, Monitor.this::error);
+        strategy.makeServerRequest();
+        strategy.addObserver((observable, o) -> {
+            List<User> users = (List<User>) o;
+            user.setMonitorsUsers(users);
+            updateAdapter(monitorsAdapter, users);
+        });
+    }
 
-        Button btn = (Button) findViewById(R.id.addToMonitoredByBtn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder adb = new AlertDialog.Builder(Monitor.this);
-                adb.setTitle("Add user to be monitored by");
-
-                final EditText input = new EditText(Monitor.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                adb.setView(input);
-
-                adb.setNegativeButton("Cancel", null);
-                adb.setPositiveButton("Add", new AlertDialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        String getEmail = input.getText().toString();
-                        Log.i("CHECK", getEmail);
-
-                        //TODO: server check if this email is valid, then add to monitored by.
-                        //after server check, populate monitoredby listview again.
-
-                        MonitoredByRequest strategy = new MonitoredByRequest(user, getEmail, Monitor.this::error);
-                        strategy.makeServerRequest();
-                        strategy.addObserver((observable, o) -> {
-                            List<User> users = (List<User>) o;
-                            user.setMonitorsUsers(users);
-                            updateAdapter(monitoredByAdapter, users);
-                        });
-                    }
-                });
-                adb.show();
-            }
+    private void monitoredByCallback(String email) {
+        MonitoredByRequest strategy = new MonitoredByRequest(user, email, Monitor.this::error);
+        strategy.makeServerRequest();
+        strategy.addObserver((observable, o) -> {
+            List<User> users = (List<User>) o;
+            user.setMonitorsUsers(users);
+            updateAdapter(monitoredByAdapter, users);
         });
     }
 

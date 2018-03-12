@@ -20,5 +20,9 @@
     <string name="lat">Lat</string>
     <string name="lng">Lng</string>
 
+    <string name="add_user_to_be_monitored_by">Add user to be monitored by</string>
+    <string name="add_user_to_monitor">Add user to monitor</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="logout">Logout</string>
 </resources>
