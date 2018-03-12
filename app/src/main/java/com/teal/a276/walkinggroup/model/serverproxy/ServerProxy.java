@@ -1,6 +1,6 @@
-package com.teal.a276.walkinggroup.ServerProxy;
+package com.teal.a276.walkinggroup.model.serverproxy;
 
-import com.teal.a276.walkinggroup.dataobjects.User;
+import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 import java.util.List;
 

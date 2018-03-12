@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.ServerProxy;
+package com.teal.a276.walkinggroup.model.serverproxy;
 
 /**
  * Callback for server request between ServerManagers and Views
@@ -8,5 +8,4 @@ package com.teal.a276.walkinggroup.ServerProxy;
  */
 public interface ServerResult<T> {
     void result(T ans);
-    void error(String error);
 }

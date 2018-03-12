@@ -37,4 +37,10 @@
     <string name="last_name_must_be_inputted">Last Name must be inputted</string>
     <string name="email_must_be_inputted">Email must be inputted</string>
     <string name="password_must_be_inputted">password must be inputted</string>
+
+
+    <string name="map">Map</string>
+    <string name="monitor">Monitor</string>
+    <string name="groups">Groups</string>
+    <string name="logout">Logout</string>
 </resources>

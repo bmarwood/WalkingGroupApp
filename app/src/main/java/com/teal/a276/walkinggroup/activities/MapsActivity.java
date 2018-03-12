@@ -11,9 +11,11 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -42,7 +44,7 @@ import com.teal.a276.walkinggroup.R;
 import java.io.IOException;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener,
@@ -85,6 +87,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         map = googleMap;
         map.getUiSettings().setZoomControlsEnabled(true);
         map.setOnMarkerClickListener(this);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.disableMenuItem(menu.findItem(R.id.mapItem));
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mapItem:
+                break;
+            case R.id.groupItem:
+                Toast.makeText(this, "Clicked group item!", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.monitorItem:
+                Toast.makeText(this, "Clicked monitor item!", Toast.LENGTH_LONG).show();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
     }
 
     public static Intent makeIntent(Context context) {

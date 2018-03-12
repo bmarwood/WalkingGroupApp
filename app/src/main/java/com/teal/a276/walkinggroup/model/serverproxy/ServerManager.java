@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.ServerProxy;
+package com.teal.a276.walkinggroup.model.serverproxy;
 
 import android.support.annotation.NonNull;
 
@@ -48,10 +48,11 @@ public class ServerManager {
      * - Handle error checking in one place and put up toast & log on failure.
      * - Callback to simplified interface on success.
      * @param caller    Call object returned by the proxy
-     * @param callback  Client-code to execute when we have a good answer for them or when an error occured.
+     * @param resultCallback  Client-code to execute when the sever returns a result.
+     * @param errorCallback   Client-code to execute when an error has occurred.
      * @param <T>       The type of data that Call object is expected to fetch
      */
-    public static <T> void serverRequest(Call<T> caller, @NonNull final ServerResult<T> callback) {
+    public static <T> void serverRequest(Call<T> caller, @NonNull final ServerResult<T> resultCallback, @NonNull final ServerError errorCallback) {
         caller.enqueue(new Callback<T>() {
             @Override
             public void onResponse(@NonNull Call<T> call, @NonNull retrofit2.Response<T> response) {
@@ -65,17 +66,17 @@ public class ServerManager {
                     }
 
                     T body = response.body();
-                    callback.result(body);
+                    resultCallback.result(body);
 
                 } else {
-                    callback.error(serverErrorString(response));
+                    errorCallback.error(serverErrorString(response));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
                 String message = "CALL TO SERVER FAILED: " + t.getMessage();
-                callback.error(message);
+                errorCallback.error(message);
             }
         });
     }
