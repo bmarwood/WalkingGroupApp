@@ -14,9 +14,34 @@
 
     <string name="join_group">Join Group</string>
     <string name="joined_groups">Joined Groups</string>
-    <string name="groups">Groups</string>
+
+    <!-- Strings related to login -->
+
+    <string name="login">Login</string>
+    <string name="email">Email:</string>
+    <string name="password">Password:</string>
+    <string name="sign_in">Sign In</string>
+    <string name="not_a_member_sign_up_here">Not a Member? Sign Up Here</string>
+    <string name="create_account">Create Account</string>
+
+    <!-- Strings related to Create User -->
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="name">Name</string>
+    <string name="create">Create</string>
+    <string name="valid_input_yes">Valid Input: Yes</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_email">Email</string>
+    <string name="defaultuserpicture">defaultUserPicture</string>
+    <string name="email_in_use">That email is already in use</string>
+    <string name="first_name_must_be_inputted">First Name must be inputted</string>
+    <string name="last_name_must_be_inputted">Last Name must be inputted</string>
+    <string name="email_must_be_inputted">Email must be inputted</string>
+    <string name="password_must_be_inputted">password must be inputted</string>
+
+
     <string name="monitor">Monitor</string>
-    <string name="map">map</string>
+    <string name="groups">Groups</string>
     <string name="lat">Lat</string>
     <string name="lng">Lng</string>
 

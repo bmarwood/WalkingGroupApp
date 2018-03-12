@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import android.util.Log;
@@ -83,6 +84,13 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -90,21 +98,13 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.disableMenuItem(menu.findItem(R.id.mapItem));
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.mapItem:
-                break;
             case R.id.groupItem:
                 Toast.makeText(this, "Clicked group item!", Toast.LENGTH_LONG).show();
                 break;
             case R.id.monitorItem:
-                Toast.makeText(this, "Clicked monitor item!", Toast.LENGTH_LONG).show();
+                startActivity(Monitor.makeIntent(this));
                 break;
             default:
                 return super.onOptionsItemSelected(item);

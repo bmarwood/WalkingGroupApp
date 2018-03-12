@@ -25,10 +25,20 @@ public class User implements DisplayData {
 
     private String href;
 
+
+
+    public User() {
+    }
+
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -56,6 +66,7 @@ public class User implements DisplayData {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
     public List<User> getMonitoredByUsers() {
         return monitoredByUsers;

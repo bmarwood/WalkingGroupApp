@@ -1,5 +1,6 @@
 package com.teal.a276.walkinggroup.model;
 
+import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 /**
@@ -9,6 +10,7 @@ public class ModelFacade {
 
     private static ModelFacade instance;
     private User currentUser = null;
+    private GroupManager manager = null;
 
 
     private ModelFacade() {}
@@ -30,5 +32,18 @@ public class ModelFacade {
 
     public void setCurrentUser(User newCurrentUser) {
         this.currentUser = newCurrentUser;
+    }
+
+
+    public GroupManager getGroupManager() {
+        if (manager == null) {
+            throw new IllegalStateException("GroupManager was not set before calling getGroupManager");
+        }
+
+        return manager;
+    }
+
+    public void setGroupManager(GroupManager manager) {
+        this.manager = manager;
     }
 }
