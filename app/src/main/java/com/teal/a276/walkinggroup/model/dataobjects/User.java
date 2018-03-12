@@ -24,9 +24,7 @@ public class User implements DisplayData {
     private List<User> monitorsUsers = new ArrayList<>();
 
     private String href;
-
-
-
+    
     public User() {
     }
 
@@ -147,27 +145,16 @@ public class User implements DisplayData {
                 //", walkingGroups=" + walkingGroups +
                 '}';
     }
-    public int countMonitoredByUsers(){
-        return monitoredByUsers.size();
-    }
-    public int countMonitorsUsers(){
-        return monitorsUsers.size();
-    }
-
 
     //below are added by Jamie, managing users
-    //TODO: add @JsonIgnore to these
-
-
-
     private void validateIndexWithExceptionMonitoredBy(int index){
-        if(index < 0 || index >= countMonitoredByUsers()){
+        if(index < 0 || index >= monitoredByUsers.size()){
             throw new IllegalArgumentException();
         }
     }
 
     private void validateIndexWithExceptionMonitors(int index){
-        if(index < 0 || index >= countMonitorsUsers()){
+        if(index < 0 || index >= monitorsUsers.size()){
             throw new IllegalArgumentException();
         }
     }
@@ -182,27 +169,6 @@ public class User implements DisplayData {
     public User getMonitorsUser(int index){
         validateIndexWithExceptionMonitors(index);
         return monitorsUsers.get(index);
-    }
-
-    public String[] getMonitoredByUsersDescriptions(){
-        String[] descriptions = new String[monitoredByUsers.size()];
-        for(int i = 0; i< countMonitoredByUsers(); i++){
-            User user = getMonitoredByUser(i);
-            descriptions[i] = "Name: " + user.getName() + "\nEmail: " +
-                    user.getEmail();
-        }
-        return descriptions;
-    }
-
-
-    public String[] getMonitorsUsersDescriptions() {
-        String[] descriptions = new String[monitorsUsers.size()];
-        for (int i = 0; i < countMonitorsUsers(); i++) {
-            User user = getMonitorsUser(i);
-            descriptions[i] = "Name: " + user.getName() + "\nEmail: " +
-                    user.getEmail();
-        }
-        return descriptions;
     }
 
     @Override

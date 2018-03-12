@@ -102,20 +102,20 @@ public class Monitor extends BaseActivity {
         Button btn = findViewById(viewId);
         Resources res = getResources();
         btn.setOnClickListener(v -> {
-            AlertDialog.Builder adb = new AlertDialog.Builder(Monitor.this);
-            adb.setTitle(res.getString(titleId));
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(Monitor.this);
+            alertDialog.setTitle(res.getString(titleId));
 
             final EditText input = new EditText(Monitor.this);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
-            adb.setView(input);
+            alertDialog.setView(input);
 
-            adb.setNegativeButton("Cancel", null);
-            adb.setPositiveButton("Add", (dialog, which) -> {
+            alertDialog.setNegativeButton("Cancel", null);
+            alertDialog.setPositiveButton("Add", (dialog, which) -> {
                 String email = input.getText().toString();
                 Log.i("CHECK", email);
                 observableCallback.makeRequest(email);
             });
-            adb.show();
+            alertDialog.show();
         });
     }
 
