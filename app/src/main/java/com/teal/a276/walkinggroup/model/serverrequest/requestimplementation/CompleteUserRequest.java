@@ -49,7 +49,7 @@ public class CompleteUserRequest extends AbstractServerRequest {
         user.setMonitoredByUsers(users);
 
         if (user.getMemberOfGroups().size() == 0) {
-            setDataChanged(users);
+            setDataChanged(user);
             return;
         }
 
