@@ -14,9 +14,9 @@ import java.util.List;
 import retrofit2.Call;
 
 /**
- * Created by scott on 11/03/18.
+ * ServerRequest to fully populate a user object. By default user objects are returned from the server
+ * with limited group/monitoring information.
  */
-
 public class CompleteUserRequest extends AbstractServerRequest {
     private User user;
 

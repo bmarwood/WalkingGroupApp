@@ -8,27 +8,25 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 import com.teal.a276.walkinggroup.model.serverrequest.AbstractServerRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 
 /**
- * Created by scott on 11/03/18.
+ * ServerRequest for setting up a monitoring relationship between the current user and the user with
+ * the email.
  */
-
 public class MonitoredByRequest extends AbstractServerRequest {
-    private List<User> monitors = new ArrayList<>();
-    private final String userEmail;
+    private final String monitorsEmail;
 
-    public MonitoredByRequest(User currentUser, String emailToMonitor, @NonNull ServerError errorCallback) {
+    public MonitoredByRequest(User currentUser, String monitorsEmail, @NonNull ServerError errorCallback) {
         super(currentUser, errorCallback);
-        this.userEmail = emailToMonitor;
+        this.monitorsEmail = monitorsEmail;
     }
 
     @Override
     public void makeServerRequest() {
-        getUserForEmail(userEmail, this::userResult);
+        getUserForEmail(monitorsEmail, this::userResult);
     }
 
     private void userResult(User user) {
@@ -38,7 +36,6 @@ public class MonitoredByRequest extends AbstractServerRequest {
     }
 
     private void monitorsResult(List<User> users) {
-        monitors = users;
-        setDataChanged(monitors);
+        setDataChanged(users);
     }
 }

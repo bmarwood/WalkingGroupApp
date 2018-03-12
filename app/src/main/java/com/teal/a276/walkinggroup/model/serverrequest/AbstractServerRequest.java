@@ -13,9 +13,9 @@ import java.util.Observable;
 import retrofit2.Call;
 
 /**
- * Created by scott on 11/03/18.
+ * Abstract idea of a server request. This class encapsulated the idea of multiple chained server request to
+ * produce a single unified output.
  */
-
 public abstract class AbstractServerRequest extends Observable {
     protected final ServerError errorCallback;
     protected final User currentUser;
@@ -27,7 +27,7 @@ public abstract class AbstractServerRequest extends Observable {
 
     protected abstract void makeServerRequest();
 
-    public void getUserForEmail(String email, @NonNull final ServerResult<User> resultCallback) {
+    protected void getUserForEmail(String email, @NonNull final ServerResult<User> resultCallback) {
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<User> userByEmailCall = proxy.getUserByEmail(email);
         ServerManager.serverRequest(userByEmailCall, resultCallback, errorCallback);
