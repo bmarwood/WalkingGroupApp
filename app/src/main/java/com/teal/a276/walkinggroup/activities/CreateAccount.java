@@ -13,11 +13,9 @@ import android.widget.TextView;
 
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.ServerProxy.ServerManager;
-import com.teal.a276.walkinggroup.ServerProxy.ServerProxy;
-import com.teal.a276.walkinggroup.ServerProxy.ServerResult;
-import com.teal.a276.walkinggroup.dataobjects.User;
-
+import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,8 +36,7 @@ public class CreateAccount extends AppCompatActivity {
     }
 
     private void setupCreateButton() {
-        Button btn = (Button) findViewById(R.id.makeAccountBtn);
-        final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBarCreate);
+        Button btn =  findViewById(R.id.makeAccountBtn);
 
         btn.setOnClickListener(v -> {
             String firstName = ((EditText) findViewById(R.id.firstName)).getText().toString();
@@ -61,29 +58,27 @@ public class CreateAccount extends AppCompatActivity {
 
                 ServerProxy proxy = ServerManager.getServerRequest();
                 Call<User> caller = proxy.createNewUser(user);
-                ServerManager.serverRequest(caller, new ServerResult<User>() {
-                    @Override
-                    public void result(User user) {
-                        Intent intent = MapsActivity.makeIntent(CreateAccount.this);
-
-                        toggleSpinner(View.INVISIBLE);
-                        startActivity(intent);
-                        finish();
-                    }
-
-                    @Override
-                    public void error(String error) {
-                        TextView errorsForUser = (TextView) findViewById(R.id.badEmailOrPassword);
-
-                        errorsForUser.setText(R.string.email_in_use);
-                        errorsForUser.setVisibility(View.VISIBLE);
-                        errorsForUser.setTextColor(Color.RED);
-
-                        toggleSpinner(View.INVISIBLE);
-                    }
-                });
-
+                ServerManager.serverRequest(caller, CreateAccount.this::successFulresult,
+                        CreateAccount.this::errorCreateAccount);
         });
+    }
+
+    private void successFulresult(User user) {
+        Intent intent = MapsActivity.makeIntent(CreateAccount.this);
+
+        toggleSpinner(View.INVISIBLE);
+        startActivity(intent);
+        finish();
+    }
+
+    private void errorCreateAccount(String error) {
+        TextView errorsForUser = findViewById(R.id.badEmailOrPassword);
+
+        errorsForUser.setText(R.string.email_in_use);
+        errorsForUser.setVisibility(View.VISIBLE);
+        errorsForUser.setTextColor(Color.RED);
+
+        toggleSpinner(View.INVISIBLE);
     }
 
     private void ErrorStringGen(ArrayList<String> errors) {
@@ -92,7 +87,7 @@ public class CreateAccount extends AppCompatActivity {
         while (foreach.hasNext()) {
             stringForTextView.append(foreach.next()).append("\n");
         }
-        TextView errorsForUser = (TextView) findViewById(R.id.badEmailOrPassword);
+        TextView errorsForUser = findViewById(R.id.badEmailOrPassword);
         errorsForUser.setText(stringForTextView.toString());
         errorsForUser.setVisibility(View.VISIBLE);
         errorsForUser.setTextColor(Color.RED);
@@ -100,10 +95,8 @@ public class CreateAccount extends AppCompatActivity {
     }
 
     private void toggleSpinner(int visibility) {
-        final ProgressBar spinner = (ProgressBar) findViewById(R.id.progressBarCreate);
-        runOnUiThread(() -> {
-            spinner.setVisibility(visibility);
-        });
+        final ProgressBar spinner =  findViewById(R.id.progressBarCreate);
+        runOnUiThread(() -> spinner.setVisibility(visibility));
     }
 
     public static Intent makeIntent(Context context) {
