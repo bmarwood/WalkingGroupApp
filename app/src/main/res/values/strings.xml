@@ -1,6 +1,44 @@
 <resources>
     <string name="app_name">Walking Group</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <!-- Strings related to login -->
+
+    <string name="login">Login</string>
+    <string name="email">Email:</string>
+    <string name="password">Password:</string>
+    <string name="sign_in">Sign In</string>
+    <string name="not_a_member_sign_up_here">Not a Member? Sign Up Here</string>
+    <string name="create_account">Create Account</string>
+
+    <!-- Strings related to Create User -->
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="name">Name</string>
+    <string name="create">Create</string>
+    <string name="valid_input_yes">Valid Input: Yes</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_email">Email</string>
+    <string name="defaultuserpicture">defaultUserPicture</string>
+    <string name="email_in_use">That email is already in use</string>
+    <string name="first_name_must_be_inputted">First Name must be inputted</string>
+    <string name="last_name_must_be_inputted">Last Name must be inputted</string>
+    <string name="email_must_be_inputted">Email must be inputted</string>
+    <string name="password_must_be_inputted">password must be inputted</string>
+
+
     <string name="map">Map</string>
     <string name="monitor">Monitor</string>
     <string name="groups">Groups</string>
