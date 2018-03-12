@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.ServerProxy;
+package com.teal.a276.walkinggroup.model.serverproxy;
 
 
 /**
