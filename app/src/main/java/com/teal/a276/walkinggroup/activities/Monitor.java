@@ -29,8 +29,7 @@ import retrofit2.Call;
 
 public class Monitor extends BaseActivity {
 
-    //TODO: use singleton, change later on
-    User user = new User();
+    User user;
     ArrayAdapter<User> monitorsAdapter;
     ArrayAdapter<User> monitoredByAdapter;
 
@@ -114,11 +113,8 @@ public class Monitor extends BaseActivity {
                         strategy.makeServerRequest();
                         strategy.addObserver((observable, o) -> {
                             List<User> users = (List<User>) o;
-
                             user.setMonitorsUsers(users);
-                            monitorsAdapter.clear();
-                            monitorsAdapter.addAll(users);
-                            monitorsAdapter.notifyDataSetChanged();
+                            updateAdapter(monitorsAdapter, users);
                         });
                     }
                 });
@@ -155,17 +151,20 @@ public class Monitor extends BaseActivity {
                         strategy.makeServerRequest();
                         strategy.addObserver((observable, o) -> {
                             List<User> users = (List<User>) o;
-
                             user.setMonitorsUsers(users);
-                            monitoredByAdapter.clear();
-                            monitoredByAdapter.addAll(users);
-                            monitoredByAdapter.notifyDataSetChanged();
+                            updateAdapter(monitoredByAdapter, users);
                         });
                     }
                 });
                 adb.show();
             }
         });
+    }
+
+    private void updateAdapter(ArrayAdapter<User> adapter, List<User> users) {
+        adapter.clear();
+        adapter.addAll(users);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
