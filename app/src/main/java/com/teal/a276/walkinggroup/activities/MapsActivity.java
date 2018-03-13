@@ -16,8 +16,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
-import android.widget.Toast;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -42,15 +40,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationListener;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
-import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
-import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -65,14 +59,14 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private static final int REQUEST_CHECK_SETTINGS = 2;
     public static final int MAX_RESULTS = 1;
 
-    // TODO: Populate markers array from existing groups
-
-    private List<Group> groups = new ArrayList<>();
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
     private LocationRequest locationRequest;
     private boolean locationUpdateState;
+
+    // TODO: Populate markers array from existing groups
+    List<Group> groups;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +90,24 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<List<Group>> call = proxy.getGroups();
         ServerManager.serverRequest(call, this::groupsResult, this::error);
+    }
+
+    // TODO: Populate markers array from existing groups
+    private void populateGroupsOnMap(){
+
+        for(int i = 0; i < groups.size(); i++) {
+            Group group = groups.get(i);
+            List<Double> routeLatArray = group.getRouteLatArray();
+            List<Double> routeLngArray = group.getRouteLngArray();
+
+            for (int j = 0; j < routeLatArray.size(); j++){
+                LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
+                MarkerOptions markerOptions = new MarkerOptions().position(marker);
+                String titleStr = group.getGroupName();
+                markerOptions.title(titleStr);
+                map.addMarker(markerOptions);
+            }
+        }
     }
 
     private void groupsResult(List<Group> groups) {
@@ -169,7 +181,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
             if (lastLocation != null) {
                 LatLng currentLocation = locationToLatLng();
                 placeMarkerOnMap(currentLocation);
-
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
             }
         }
@@ -178,6 +189,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     protected void placeMarkerOnMap(LatLng location) {
 
         map.clear();
+
+        // TODO: Populate markers array from existing groups
+        populateGroupsOnMap();
 
         // Create a MarkerOptions object and sets the user’s current location as the position for the marker
         MarkerOptions markerOptions = new MarkerOptions().position(location);

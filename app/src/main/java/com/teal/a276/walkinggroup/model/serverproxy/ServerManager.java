@@ -44,12 +44,12 @@ public class ServerManager {
      * Simplify the calling of the "Call"
      * - Handle error checking in one place and put up toast & log on failure.
      * - Callback to simplified interface on success.
+     * @param <T>       The type of data that Call object is expected to fetch
      * @param caller    Call object returned by the proxy
      * @param resultCallback  Client-code to execute when the sever returns a result.
      * @param errorCallback   Client-code to execute when an error has occurred.
-     * @param <T>       The type of data that Call object is expected to fetch
      */
-    public static <T> void serverRequest(Call<T> caller, @NonNull final ServerResult<T> resultCallback, @NonNull final ServerError errorCallback) {
+    public static <T> ServerManager serverRequest(Call<T> caller, @NonNull final ServerResult<T> resultCallback, @NonNull final ServerError errorCallback) {
         caller.enqueue(new Callback<T>() {
             @Override
             public void onResponse(@NonNull Call<T> call, @NonNull retrofit2.Response<T> response) {
@@ -76,6 +76,7 @@ public class ServerManager {
                 errorCallback.error(message);
             }
         });
+        return null;
     }
 
     static private String serverErrorString(@NonNull retrofit2.Response response) {
