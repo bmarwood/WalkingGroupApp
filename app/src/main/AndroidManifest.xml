@@ -23,7 +23,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".activities.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,8 +31,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.JoinGroup" />
-        <activity android:name=".activities.AddNewGroup"></activity>
-        <activity android:name=".activities.Monitor"></activity>
+        <activity android:name=".activities.AddNewGroup" />
+        <activity android:name=".activities.Monitor" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -41,11 +40,10 @@
 
         <activity
             android:name=".activities.MapsActivity"
-            android:label="@string/title_activity_maps">
-        </activity>
-`
-
+            android:label="@string/title_activity_maps"></activity>
+        `
         <activity android:name=".activities.CreateAccount" />
+        <activity android:name=".activities.CreateNewGroup"></activity>
     </application>
 
 </manifest>
