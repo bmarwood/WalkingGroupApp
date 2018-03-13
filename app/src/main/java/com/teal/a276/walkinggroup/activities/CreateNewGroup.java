@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,12 +44,9 @@ public class CreateNewGroup extends BaseActivity {
 
     private void setupMapButton() {
         Button btn = findViewById(R.id.meetingMapBtn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = SelectLocationOnMap.makeIntent(CreateNewGroup.this);
-                startActivityForResult(intent, 1010);
-            }
+        btn.setOnClickListener(v -> {
+            Intent intent = SelectLocationOnMap.makeIntent(CreateNewGroup.this);
+            startActivityForResult(intent, 1010);
         });
     }
 
@@ -76,39 +72,40 @@ public class CreateNewGroup extends BaseActivity {
 
     private void setCreateNewGroupButton() {
         Button btn = findViewById(R.id.createNewGroupBtn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText nameVal = findViewById(R.id.createGroupNameEdit);
-                String nameValStr = nameVal.getText().toString();
+        btn.setOnClickListener(v -> {
+            EditText nameVal = findViewById(R.id.createGroupNameEdit);
+            String nameValStr = nameVal.getText().toString();
 
-                EditText leadersEmailVal = findViewById(R.id.createGroupEmailEdit);
-                String leadersEmailStr = leadersEmailVal.getText().toString();
+            EditText leadersEmailVal = findViewById(R.id.createGroupEmailEdit);
+            String leadersEmailStr = leadersEmailVal.getText().toString();
 
-                EditText destinationVal = findViewById(R.id.createDestinationEdit);
-                String  destination = destinationVal.getText().toString();
+            EditText destinationVal = findViewById(R.id.createDestinationEdit);
+            String  destination = destinationVal.getText().toString();
 
-//                if(nameValStr.isEmpty() || leadersEmail.isEmpty()){
-//                    Toast.makeText(
-//                            CreateNewGroup.this,
-//                            "good to go",
-//                            Toast.LENGTH_SHORT).show();
-//                }
 
-                //check if user selected a meeting place on the map
-                if(lat==0 && lng==0){
-                    Toast.makeText(
-                            CreateNewGroup.this,
-                            "lat lng not set",
-                            Toast.LENGTH_SHORT).show();
-                }
-                ServerProxy proxy = ServerManager.getServerRequest();
-                Call<User> call = proxy.getUserByEmail(leadersEmailStr);
-                ServerManager.serverRequest(call, result -> userFromEmail(result,
-                        nameValStr, lat, lng), CreateNewGroup.this::error);
-
-                finish();
+            //Input checking: If there are empty fields
+            if(leadersEmailStr.isEmpty() || nameValStr.isEmpty()){
+                Toast.makeText(
+                        CreateNewGroup.this,
+                        "Name or Email empty",
+                        Toast.LENGTH_SHORT).show();
+                return;
             }
+            if((lat==0) && (lng==0)) {
+                Toast.makeText(
+                        CreateNewGroup.this,
+                        "Lat/Lng NOT set",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            //If passed all input checking, continue to push group to server
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<User> call = proxy.getUserByEmail(leadersEmailStr);
+            ServerManager.serverRequest(call, result -> userFromEmail(result,
+                    nameValStr, lat, lng), CreateNewGroup.this::error);
+
+            finish();
         });
 
     }
@@ -116,12 +113,13 @@ public class CreateNewGroup extends BaseActivity {
     private void userFromEmail(User user, String groupDes, double Lat, double Lng){
         Group group = new Group();
         group.setLeader(user);
+
+        //TODO: Remove this line of code after new server has been pushed.
         group.setId(-1L);
+
         group.setGroupDescription(groupDes);
 
 
-       // Double latDouble = Double.valueOf(Lat);
-       // Double lngDouble = Double.valueOf(Lng);
         List<Double> latArray = new ArrayList<>();
         List<Double> lngArray = new ArrayList<>();
 
@@ -140,8 +138,6 @@ public class CreateNewGroup extends BaseActivity {
     }
     private void groupCreated(Group group){
         Log.d("Group Created", group.toString());
-
-
     }
 
     @Override
