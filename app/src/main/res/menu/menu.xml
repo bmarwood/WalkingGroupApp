@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
-    <item android:id="@+id/groupItem"
-        android:title="@string/groups"
-        app:showAsAction="never" />
 
     <item android:id="@+id/monitorItem"
         android:title="@string/monitor"
@@ -11,7 +8,7 @@
 
     <item
         android:id="@+id/addNewGroup"
-        android:title="Add New Group"
+        android:title="@string/add_new_group"
         app:showAsAction="never" />
 
     <item android:id="@+id/logoutItem"

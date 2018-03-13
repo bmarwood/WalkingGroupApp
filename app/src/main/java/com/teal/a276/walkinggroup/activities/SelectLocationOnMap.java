@@ -25,9 +25,7 @@ import com.teal.a276.walkinggroup.R;
 
 public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallback {
 
-
     private GoogleMap mMap;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +35,6 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
     }
 
     /**
@@ -88,43 +84,35 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
                         "Lat " + afterDrag.latitude + "\nLong " +
                                 afterDrag.longitude,
                         Toast.LENGTH_SHORT).show();
-
             }
         });
 
         //Upon click, asks user if this is the location they want.
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                double lat = marker.getPosition().latitude;
-                double lng = marker.getPosition().longitude;
-                String latStr = String.valueOf(lat);
-                String lonStr = String.valueOf(lng);
-                Toast.makeText(
-                        SelectLocationOnMap.this,
-                        "LAT: " + latStr + "\nLNG: " +
-                                lonStr,
-                        Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(SelectLocationOnMap.this);
-                alertDialog.setTitle("Use this location?");
-                alertDialog.setNegativeButton("Cancel", null);
-                alertDialog.setPositiveButton("Ok", (dialog, which) -> {
+        mMap.setOnMarkerClickListener(marker -> {
+            double lat = marker.getPosition().latitude;
+            double lng = marker.getPosition().longitude;
+            String latStr = String.valueOf(lat);
+            String lonStr = String.valueOf(lng);
+            Toast.makeText(
+                    SelectLocationOnMap.this,
+                    "LAT: " + latStr + "\nLNG: " +
+                            lonStr,
+                    Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(SelectLocationOnMap.this);
+            alertDialog.setTitle("Use this location?");
+            alertDialog.setNegativeButton("Cancel", null);
+            alertDialog.setPositiveButton("Ok", (dialog, which) -> {
 
-                    Intent intent = new Intent();
-                    intent.putExtra("latitude", lat);
-                    intent.putExtra("longitude", lng);
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();
+                Intent intent = new Intent();
+                intent.putExtra("latitude", lat);
+                intent.putExtra("longitude", lng);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
 
+            });
+            alertDialog.show();
 
-                });
-                alertDialog.show();
-
-
-
-
-                return false;
-            }
+            return false;
         });
     }
 
@@ -151,31 +139,22 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
         }
       Location location = locationManager.getLastKnownLocation(
               locationManager.getBestProvider(criteria, false));
-        //if (location != null) {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
                     location.getLongitude()), 13));
 
-          CameraPosition cameraPosition = new CameraPosition.Builder()
-                  .target(new LatLng(location.getLatitude(), location.getLongitude()))  // Sets the center of the map to location user
-                  .zoom(15)                   // Sets the zoom
-                  .bearing(0)                // Sets the orientation of the camera to east
-                  .tilt(0)                    // Sets the tilt of the camera to 30 degrees
-                  .build();                   // Creates a CameraPosition from the builder
+      CameraPosition cameraPosition = new CameraPosition.Builder()
+              .target(new LatLng(location.getLatitude(), location.getLongitude()))  // Sets the center of the map to location user
+              .zoom(15)                   // Sets the zoom
+              .bearing(0)                // Sets the orientation of the camera to east
+              .tilt(0)                    // Sets the tilt of the camera to 30 degrees
+              .build();                   // Creates a CameraPosition from the builder
 
-            LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
-            //mMap.addMarker(new MarkerOptions().position(currentPosition));
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        //}
         return currentPosition;
 
     }
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu){
-//        MenuInflater inflator = getMenuInflater();
-//        inflator.inflate(R.menu.menu, menu);
-//        return true;
-//    }
 
     public static Intent makeIntent(Context context){
         return new Intent(context, SelectLocationOnMap.class);

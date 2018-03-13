@@ -38,7 +38,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -113,9 +112,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.groupItem:
-                startActivity(JoinGroup.makeIntent(this));
-                break;
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));
                 break;
