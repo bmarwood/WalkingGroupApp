@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.adapters.ListItemAdapter;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
@@ -61,7 +60,6 @@ public class JoinGroup extends BaseActivity {
         User user = ModelFacade.getInstance().getCurrentUser();
         groupManager.setJoinedGroup(user.getMemberOfGroups());
 
-        joinedGroupsAdapter = new ListItemAdapter<>(this, groupManager.getJoinedGroups());
         ListView joinedGroups = findViewById(R.id.joinedGroupsListView);
         joinedGroups.setAdapter(joinedGroupsAdapter);
 
@@ -72,7 +70,6 @@ public class JoinGroup extends BaseActivity {
 
     private void groupsResult(List<Group> groups) {
         groupManager.addJoinGroups(groups);
-        groupsAdapter = new ListItemAdapter<>(this, groups);
         ListView groupsList = findViewById(R.id.joinGroupsListView);
         groupsList.setAdapter(groupsAdapter);
     }

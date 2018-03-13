@@ -1,13 +1,12 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.teal.a276.walkinggroup.adapters.DisplayData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Group implements DisplayData {
+public class Group {
 
     private Long id;
     private User leader;
@@ -97,10 +96,5 @@ public class Group implements DisplayData {
                ", memberUsers='" + memberUsers + '\'' +
                '}';
 
-    }
-
-    @Override
-    public String getDisplayData() {
-        return groupDescription;
     }
 }

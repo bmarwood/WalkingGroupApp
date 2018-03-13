@@ -4,17 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.adapters.ListItemAdapter;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -27,17 +31,16 @@ import java.util.List;
 import retrofit2.Call;
 
 /**
- * Interface for abstracting out observable call
- */
-interface ObservableCallback {
-   void makeRequest(String email);
-}
-
-/**
  * Activity for displaying who you monitor and who is monitoring you and for allowing the user
  * to add a monitor or a monitoree.
  */
 public class Monitor extends BaseActivity {
+    /**
+     * Interface for abstracting out observable call
+     */
+    interface ObservableCallback {
+        void makeRequest(String email);
+    }
 
     User user;
     ArrayAdapter<User> monitorsAdapter;
@@ -55,7 +58,7 @@ public class Monitor extends BaseActivity {
     }
 
     private void initializeListViews() {
-        monitorsAdapter = new ListItemAdapter<>(this, user.getMonitorsUsers());
+        monitorsAdapter = new ListItemAdapter(this, user.getMonitorsUsers());
 
         ListView monitoringList = findViewById(R.id.monitoringListView);
         monitoringList.setAdapter(monitorsAdapter);
@@ -68,7 +71,7 @@ public class Monitor extends BaseActivity {
         });
 
 
-        monitoredByAdapter = new ListItemAdapter<>(this, user.getMonitoredByUsers());
+        monitoredByAdapter = new ListItemAdapter(this, user.getMonitoredByUsers());
 
         ListView monitoredBy = findViewById(R.id.monitoredByListView);
         monitoredBy.setAdapter(monitoredByAdapter);
@@ -152,6 +155,36 @@ public class Monitor extends BaseActivity {
 
     public static Intent makeIntent(Context context){
         return new Intent(context, Monitor.class);
+    }
+
+    private class ListItemAdapter extends ArrayAdapter<User> {
+        private final List<User> listItems;
+        private final Context context;
+
+        public ListItemAdapter(Context context, List<User> listItems) {
+            super(context, R.layout.list_item, listItems);
+            this.listItems = listItems;
+            this.context = context;
+        }
+
+        @Override
+        @NonNull
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            View itemView = convertView;
+            if(itemView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                itemView = inflater.inflate(R.layout.list_item, parent, false);
+            }
+
+            User user = listItems.get(position);
+            TextView emailTextView = itemView.findViewById(R.id.userEmail);
+            emailTextView.setText(user.getEmail());
+
+            TextView nameTextView = itemView.findViewById(R.id.userName);
+            nameTextView.setText(user.getName());
+
+            return itemView;
+        }
     }
 }
 
