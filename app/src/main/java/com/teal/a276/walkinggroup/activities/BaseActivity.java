@@ -1,13 +1,20 @@
 package com.teal.a276.walkinggroup.activities;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.teal.a276.walkinggroup.R;
+
 abstract class BaseActivity extends AppCompatActivity {
 
     protected void error(String error) {
-        Log.e("Login Error", error);
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setPositiveButton(R.string.ok, null);
+        alertDialogBuilder.setTitle(R.string.error);
+        alertDialogBuilder.setMessage(error);
+
+        alertDialogBuilder.show();
     }
 }
