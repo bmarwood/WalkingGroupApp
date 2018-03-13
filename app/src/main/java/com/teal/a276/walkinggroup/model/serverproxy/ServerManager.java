@@ -7,16 +7,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -62,6 +59,7 @@ public class ServerManager {
             public void onResponse(@NonNull Call<T> call, @NonNull retrofit2.Response<T> response) {
 
                 // Process the response
+                //TODO: account creation DOESN'T return auth token
                 if (response.errorBody() == null) {
                     // Check for authentication token:
                     String tokenInHeader = response.headers().get("Authorization");
@@ -70,6 +68,7 @@ public class ServerManager {
                     }
 
                     T body = response.body();
+                    Log.d("server response:", body.toString());
                     resultCallback.result(body);
 
                 } else {
