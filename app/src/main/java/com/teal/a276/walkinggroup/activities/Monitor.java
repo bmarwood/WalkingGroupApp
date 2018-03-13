@@ -121,7 +121,6 @@ public class Monitor extends BaseActivity {
             });
 
             alertDialog.show();
-            String tmp = "ajshdkjahsd";
         });
     }
 
