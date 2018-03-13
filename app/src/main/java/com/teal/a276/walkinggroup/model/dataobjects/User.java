@@ -1,10 +1,7 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
-import com.teal.a276.walkinggroup.adapters.DisplayData;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,7 +9,7 @@ import java.util.List;
  * (Incomplete: Needs support for monitoring and groups).
  */
 
-public class User implements DisplayData {
+public class User {
     private Long id;
     private String name;
     private String email;
@@ -169,10 +166,5 @@ public class User implements DisplayData {
     public User getMonitorsUser(int index){
         validateIndexWithExceptionMonitors(index);
         return monitorsUsers.get(index);
-    }
-
-    @Override
-    public String getDisplayData() {
-        return email;
     }
 }
