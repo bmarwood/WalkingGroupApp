@@ -22,6 +22,19 @@ public class CreateNewGroup extends BaseActivity {
 
 
         setupAddGroupButton();
+        setupMapButton();
+    }
+
+    private void setupMapButton() {
+        Button btn = findViewById(R.id.meetingMapBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = SelectLocationOnMap.makeIntent(CreateNewGroup.this);
+                startActivity(intent);
+                //TODO: extract lat long
+            }
+        });
     }
 
     private void setupAddGroupButton() {

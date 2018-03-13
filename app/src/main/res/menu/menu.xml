@@ -9,6 +9,11 @@
         android:title="@string/monitor"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/addNewGroup"
+        android:title="Add New Group"
+        app:showAsAction="never" />
+
     <item android:id="@+id/logoutItem"
         android:title="@string/logout"
         app:showAsAction="never" />

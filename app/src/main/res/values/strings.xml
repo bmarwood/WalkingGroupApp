@@ -50,4 +50,5 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="logout">Logout</string>
+    <string name="title_activity_select_location_on_map">Map</string>
 </resources>
