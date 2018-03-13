@@ -1,8 +1,10 @@
 package com.teal.a276.walkinggroup.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +24,8 @@ public class Login extends BaseActivity {
     User user = new User();
     TextView errorsForUser;
 
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +33,18 @@ public class Login extends BaseActivity {
 
         errorsForUser = findViewById(R.id.errorInput);
         errorsForUser.setTextColor(Color.RED);
-
+        
+        setUpPermissions();
         setUpLoginButton();
         setupCreateAccountButton();
+    }
+
+    private void setUpPermissions() {
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]
+                    {android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
     }
 
     private void setUpLoginButton() {

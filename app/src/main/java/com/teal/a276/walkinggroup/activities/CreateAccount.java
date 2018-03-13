@@ -26,8 +26,6 @@ import retrofit2.Call;
 
 public class CreateAccount extends AppCompatActivity {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
