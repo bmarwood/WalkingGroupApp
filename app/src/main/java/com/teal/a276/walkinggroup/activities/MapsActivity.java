@@ -45,6 +45,7 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -64,9 +65,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private Location lastLocation;
     private LocationRequest locationRequest;
     private boolean locationUpdateState;
-
-    // TODO: Populate markers array from existing groups
-    List<Group> groups;
+    private List<Group> activeGroups = new ArrayList<Group>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +91,10 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
         ServerManager.serverRequest(call, this::groupsResult, this::error);
     }
 
-    // TODO: Populate markers array from existing groups
     private void populateGroupsOnMap(){
 
-        for(int i = 0; i < groups.size(); i++) {
-            Group group = groups.get(i);
+        for(int i = 0; i < activeGroups.size(); i++) {
+            Group group = activeGroups.get(i);
             List<Double> routeLatArray = group.getRouteLatArray();
             List<Double> routeLngArray = group.getRouteLngArray();
 
@@ -111,7 +109,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     private void groupsResult(List<Group> groups) {
-        this.groups = groups;
+        activeGroups = groups;
     }
 
     @Override
@@ -190,7 +188,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
         map.clear();
 
-        // TODO: Populate markers array from existing groups
         populateGroupsOnMap();
 
         // Create a MarkerOptions object and sets the user’s current location as the position for the marker
