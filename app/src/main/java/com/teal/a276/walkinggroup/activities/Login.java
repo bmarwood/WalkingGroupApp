@@ -20,28 +20,36 @@ import retrofit2.Call;
 
 public class Login extends BaseActivity {
     User user = new User();
+    TextView errorsForUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        TextView errorsForUser = findViewById(R.id.errorInput);
+
+        errorsForUser = findViewById(R.id.errorInput);
         errorsForUser.setTextColor(Color.RED);
+
         setUpLoginButton();
         setupCreateAccountButton();
     }
 
     private void setUpLoginButton() {
         Button btn = findViewById(R.id.signInBtn);
-
-
         btn.setOnClickListener(v -> {
+            EditText emailInput = findViewById(R.id.emailEditText);
+            EditText passwordInput = findViewById(R.id.passwordEditText);
+
             TextView errorsForUser = findViewById(R.id.errorInput);
             errorsForUser.setVisibility(View.INVISIBLE);
-            String email = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
-            String password = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
+
+            if(!validInput(emailInput, passwordInput)) {
+                return;
+            }
 
             toggleSpinner(View.VISIBLE);
+            String email = emailInput.getText().toString();
+            String password = passwordInput.getText().toString();
 
             user.setEmail(email);
             user.setPassword(password);
@@ -50,6 +58,24 @@ public class Login extends BaseActivity {
             Call<Void> caller = proxy.login(user);
             ServerManager.serverRequest(caller, Login.this::successLogin, Login.this::errorLogin);
         });
+    }
+
+    private boolean validInput(EditText emailInput, EditText passwordInput) {
+        boolean validInputs = true;
+
+        String password = passwordInput.getText().toString();
+        if (password.isEmpty()) {
+            passwordInput.setError(getString(R.string.empty_password));
+            validInputs = false;
+        }
+
+        String email = emailInput.getText().toString();
+        if (!User.validateEmail(email)) {
+            emailInput.setError(getString(R.string.invalid_email));
+            validInputs = false;
+        }
+
+        return validInputs;
     }
 
     private void successLogin(Void ans) {

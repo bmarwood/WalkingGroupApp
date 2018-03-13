@@ -119,12 +119,8 @@ public class CreateAccount extends AppCompatActivity {
         if(password.isEmpty()) {
             returnErrorMessages.add(getString(R.string.password_must_be_inputted));
         }
-        if(!email.isEmpty()) {
-            Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-            Matcher m = p.matcher(email);
-            if (! m.matches()) {
-                returnErrorMessages.add("Email must be formatted correctly");
-            }
+        if(!email.isEmpty() && !User.validateEmail(email)) {
+            returnErrorMessages.add(getString(R.string.invalid_email));
         }
 
         return returnErrorMessages;

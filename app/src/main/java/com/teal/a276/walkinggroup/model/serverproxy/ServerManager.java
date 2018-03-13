@@ -1,15 +1,22 @@
 package com.teal.a276.walkinggroup.model.serverproxy;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -66,25 +73,29 @@ public class ServerManager {
                     resultCallback.result(body);
 
                 } else {
-                    errorCallback.error(serverErrorString(response));
+                    errorCallback.error(getError(response));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-                String message = "CALL TO SERVER FAILED: " + t.getMessage();
-                errorCallback.error(message);
+                Log.e("Server Connection Error", Log.getStackTraceString(t));
+                errorCallback.error("");
             }
         });
     }
 
-    static private String serverErrorString(@NonNull retrofit2.Response response) {
-        String message;
+    //idea from: https://stackoverflow.com/questions/32519618/retrofit-2-0-how-to-get-deserialised-error-response-body
+    static private String getError(@NonNull retrofit2.Response response) {
+        String message = "";
         try {
-            message = "Server Error:\n" + response.errorBody().string();
-        } catch (IOException e) {
-            e.printStackTrace();
-            message = "Unable to decode response (body or error's body).";
+            String errorMessage = response.errorBody().string();
+            Log.e("Server Error:", errorMessage);
+
+            JSONObject jObjError = new JSONObject(errorMessage);
+            message = jObjError.getString("message");
+        } catch (IOException | JSONException e) {
+            Log.e("Error decoding message", Log.getStackTraceString(e));
         }
 
         return message;
@@ -118,3 +129,4 @@ public class ServerManager {
         }
     }
 }
+
