@@ -106,7 +106,7 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
                                 lonStr,
                         Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(SelectLocationOnMap.this);
-                alertDialog.setTitle("Use this location");
+                alertDialog.setTitle("Use this location?");
                 alertDialog.setNegativeButton("Cancel", null);
                 alertDialog.setPositiveButton("Ok", (dialog, which) -> {
 
@@ -128,11 +128,6 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
         });
     }
 
-//    public boolean onMarkerClick(final Marker marker){
-//        //Integer clickCount
-//
-//
-//
 
 
     // https://stackoverflow.com/questions/18425141/android-google-maps-api-v2-zoom-to-current-location/20930874
@@ -145,14 +140,14 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+            //  Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            //return TODO;
+            //return;
         }
       Location location = locationManager.getLastKnownLocation(
               locationManager.getBestProvider(criteria, false));
@@ -175,19 +170,6 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
         return currentPosition;
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu){
 //        MenuInflater inflator = getMenuInflater();
@@ -195,14 +177,9 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
 //        return true;
 //    }
 
-
     public static Intent makeIntent(Context context){
         return new Intent(context, SelectLocationOnMap.class);
     }
-
-//    public static Intent makeIntent(View.OnClickListener context){
-//        return new Intent((Context) context, SelectLocationOnMap.class);
-//    }
 
 
 }
