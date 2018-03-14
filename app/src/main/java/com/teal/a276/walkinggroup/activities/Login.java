@@ -43,64 +43,16 @@ public class Login extends BaseActivity {
         errorsForUser.setTextColor(Color.RED);
         signInError = findViewById(R.id.issueSignInTxt);
         signInError.setTextColor(Color.RED);
-        
+
         setUpPermissions();
         setUpLoginButton();
         setupCreateAccountButton();
     }
 
-    private void checkForLogin() {
-        SharedPreferences prefs = getSharedPreferences("loggedIn",MODE_PRIVATE);
-        Boolean extractedBool = prefs.getBoolean("Logged in", false);
-        layoutSwitchForLogin = extractedBool;
-        String userName = prefs.getString("email", null);
-        String password = prefs.getString("password", null);
-        Toast.makeText(this, extractedBool.toString(), Toast.LENGTH_SHORT).show();
-
-        if(extractedBool){
-            LayoutLoggingIn(true);
-            user.setEmail(userName);
-            user.setPassword(password);
-            ServerProxy proxy = ServerManager.getServerRequest();
-            Call<Void> caller = proxy.login(user);
-            ServerManager.serverRequest(caller, Login.this::successLogin, Login.this::errorLogin);
-        }
+    public static Intent makeIntent(Context context) {
+        return new Intent(context, Login.class);
     }
 
-    private void LayoutLoggingIn(boolean on) {
-        TextView txtLogin = findViewById(R.id.loginText);
-        TextView txtEmnail = findViewById(R.id.emailTxt);
-        TextView txtPassword = findViewById(R.id.passwordTxt);
-        TextView txtCreate = findViewById(R.id.createAccountTxt);
-        EditText editEmail = findViewById(R.id.emailEditText);
-        EditText editPassword = findViewById(R.id.passwordEditText);
-        Button createAccountbtn = findViewById(R.id.createAccntBtn);
-        Button signInbtn = findViewById(R.id.signInBtn);
-
-        ProgressBar loginSpin = findViewById(R.id.loggingInSpinner);
-        TextView txtLoggin = findViewById(R.id.loggingInText);
-        int main = 0;
-        int opposite = 0;
-        if(on) {
-            main = View.INVISIBLE;
-            opposite = View.VISIBLE;
-        }else{
-            main = View.VISIBLE;
-            opposite = View.INVISIBLE;
-        }
-            txtLogin.setVisibility(main);
-            txtEmnail.setVisibility(main);
-            txtPassword.setVisibility(main);
-            txtCreate.setVisibility(main);
-            editEmail.setVisibility(main);
-            editPassword.setVisibility(main);
-            createAccountbtn.setVisibility(main);
-            signInbtn.setVisibility(main);
-
-            loginSpin.setVisibility(opposite);
-            txtLoggin.setVisibility(opposite);
-
-    }
 
     private void setUpPermissions() {
         if (ActivityCompat.checkSelfPermission(this,
@@ -110,11 +62,40 @@ public class Login extends BaseActivity {
         }
     }
 
-    private void setUpLoginButton() {
-        if(layoutSwitchForLogin){
-            TextView signinError = findViewById(R.id.issueSignInTxt);
-            signinError.setVisibility(View.INVISIBLE);
+    private void checkForLogin() {
+        SharedPreferences prefs = getSharedPreferences("loggedIn", MODE_PRIVATE);
+        Boolean extractedBool = prefs.getBoolean("Logged in", false);
+        layoutSwitchForLogin = extractedBool;
+        String userName = prefs.getString("email", null);
+        String password = prefs.getString("password", null);
+        Toast.makeText(this, extractedBool.toString(), Toast.LENGTH_SHORT).show();
+
+        if (extractedBool) {
+            LayoutLoggingIn(true);
+            user.setEmail(userName);
+            user.setPassword(password);
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<Void> caller = proxy.login(user);
+            ServerManager.serverRequest(caller, Login.this::successLogin, Login.this::errorLogin);
         }
+    }
+
+    private void storeLogin() {
+        EditText emailInput = findViewById(R.id.emailEditText);
+        EditText passwordInput = findViewById(R.id.passwordEditText);
+
+        String email = emailInput.getText().toString();
+        String password = passwordInput.getText().toString();
+
+        SharedPreferences prefs = getSharedPreferences("loggedIn", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("Logged in", true);
+        editor.putString("email", email);
+        editor.putString("password", password);
+        editor.commit();
+    }
+
+    private void setUpLoginButton() {
         Button btn = findViewById(R.id.signInBtn);
         btn.setOnClickListener(v -> {
             EditText emailInput = findViewById(R.id.emailEditText);
@@ -122,8 +103,12 @@ public class Login extends BaseActivity {
 
             TextView errorsForUser = findViewById(R.id.errorInput);
             errorsForUser.setVisibility(View.INVISIBLE);
+            TextView signInError = findViewById(R.id.issueSignInTxt);
+            if (signInError.getVisibility() == View.VISIBLE) {
+                signInError.setVisibility(View.INVISIBLE);
+            }
 
-            if(!validInput(emailInput, passwordInput)) {
+            if (!validInput(emailInput, passwordInput)) {
                 return;
             }
 
@@ -137,6 +122,15 @@ public class Login extends BaseActivity {
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<Void> caller = proxy.login(user);
             ServerManager.serverRequest(caller, Login.this::successLogin, Login.this::errorLogin);
+        });
+    }
+
+    private void setupCreateAccountButton() {
+        Button btn = findViewById(R.id.createAccntBtn);
+        btn.setOnClickListener(v -> {
+            Intent intent = CreateAccount.makeIntent(Login.this);
+            startActivity(intent);
+            finish();
         });
     }
 
@@ -162,7 +156,7 @@ public class Login extends BaseActivity {
         CompleteUserRequest request = new CompleteUserRequest(user, this::error);
         request.makeServerRequest();
         request.addObserver((observable, o) -> {
-            ModelFacade.getInstance().setCurrentUser((User)o);
+            ModelFacade.getInstance().setCurrentUser((User) o);
 
             storeLogin();
 
@@ -172,33 +166,52 @@ public class Login extends BaseActivity {
         });
     }
 
-    private void storeLogin() {
-        EditText emailInput = findViewById(R.id.emailEditText);
-        EditText passwordInput = findViewById(R.id.passwordEditText);
-
-        String email = emailInput.getText().toString();
-        String password = passwordInput.getText().toString();
-
-        SharedPreferences prefs = getSharedPreferences("loggedIn",MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("Logged in", true);
-        editor.putString("email", email);
-        editor.putString("password", password);
-        editor.commit();
-    }
-
     private void errorLogin(String error) {
-        if(layoutSwitchForLogin){
+        if (layoutSwitchForLogin) {
             LayoutLoggingIn(false);
             TextView signinError = findViewById(R.id.issueSignInTxt);
             signinError.setVisibility(View.VISIBLE);
             layoutSwitchForLogin = false;
-        }
-        else {
+        } else {
             TextView errorsForUser = findViewById(R.id.errorInput);
             errorsForUser.setVisibility(View.VISIBLE);
             toggleSpinner(View.INVISIBLE);
         }
+    }
+
+    private void LayoutLoggingIn(boolean on) {
+        TextView txtLogin = findViewById(R.id.loginText);
+        TextView txtEmnail = findViewById(R.id.emailTxt);
+        TextView txtPassword = findViewById(R.id.passwordTxt);
+        TextView txtCreate = findViewById(R.id.createAccountTxt);
+        EditText editEmail = findViewById(R.id.emailEditText);
+        EditText editPassword = findViewById(R.id.passwordEditText);
+        Button createAccountbtn = findViewById(R.id.createAccntBtn);
+        Button signInbtn = findViewById(R.id.signInBtn);
+
+        ProgressBar loginSpin = findViewById(R.id.loggingInSpinner);
+        TextView txtLoggin = findViewById(R.id.loggingInText);
+        int main = 0;
+        int opposite = 0;
+        if (on) {
+            main = View.INVISIBLE;
+            opposite = View.VISIBLE;
+        } else {
+            main = View.VISIBLE;
+            opposite = View.INVISIBLE;
+        }
+        txtLogin.setVisibility(main);
+        txtEmnail.setVisibility(main);
+        txtPassword.setVisibility(main);
+        txtCreate.setVisibility(main);
+        editEmail.setVisibility(main);
+        editPassword.setVisibility(main);
+        createAccountbtn.setVisibility(main);
+        signInbtn.setVisibility(main);
+
+        loginSpin.setVisibility(opposite);
+        txtLoggin.setVisibility(opposite);
+
     }
 
     private void toggleSpinner(int visibility) {
@@ -206,16 +219,5 @@ public class Login extends BaseActivity {
         runOnUiThread(() -> spinner.setVisibility(visibility));
     }
 
-    private void setupCreateAccountButton() {
-        Button btn = findViewById(R.id.createAccntBtn);
-        btn.setOnClickListener(v -> {
-            Intent intent = CreateAccount.makeIntent(Login.this);
-            startActivity(intent);
-            finish();
-        });
-    }
-
-    public static Intent makeIntent(Context context){
-        return new Intent(context, Login.class);
-    }
 }
+
