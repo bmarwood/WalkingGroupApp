@@ -1,16 +1,17 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Simple User class to store the data the server expects and returns.
  * (Incomplete: Needs support for monitoring and groups).
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     private Long id;
     private String name;
@@ -23,7 +24,7 @@ public class User {
     private List<User> monitorsUsers = new ArrayList<>();
 
     private String href;
-    
+
     public User() {
     }
 

@@ -62,4 +62,8 @@
     </string>
     <string name="invalid_email">Email address is invalid</string>
     <string name="empty_password">Password is empty</string>
+
+    <string name="email_or_password_is_incorrect">Email or Password is Incorrect</string>
+    <string name="logging_in">Logging In…</string>
+    <string name="there_was_an_issue_autosigning_in_please_try_again">There was an Issue AutoSigning in, please try again</string>
 </resources>

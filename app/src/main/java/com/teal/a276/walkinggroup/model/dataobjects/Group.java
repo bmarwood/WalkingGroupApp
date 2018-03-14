@@ -1,11 +1,17 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Holds Group information
+ */
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Group {
 
     private Long id;

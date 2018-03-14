@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -19,10 +18,12 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import retrofit2.Call;
+
+/**
+ * Creates User Account and sends information to the server
+ */
 
 public class CreateAccount extends AppCompatActivity {
 
@@ -46,7 +47,6 @@ public class CreateAccount extends AppCompatActivity {
 
             ArrayList<String> errors =  checkCreateInputs(firstName, lastName, email, password);
 
-
             if(!errors.isEmpty()) {
                 ErrorStringGen(errors);
                 return;
@@ -56,14 +56,22 @@ public class CreateAccount extends AppCompatActivity {
 
                 ServerProxy proxy = ServerManager.getServerRequest();
                 Call<User> caller = proxy.createNewUser(user);
-                ServerManager.serverRequest(caller, CreateAccount.this::successfulResult,
+                ServerManager.serverRequest(caller, result -> successfulResult(result, password),
                         CreateAccount.this::errorCreateAccount);
         });
     }
 
-    private void successfulResult(User user) {
-        Intent intent = MapsActivity.makeIntent(CreateAccount.this);
+    private void successfulResult(User user, String password) {
+        user.setPassword(password);
 
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<Void> caller = proxy.login(user);
+        ServerManager.serverRequest(caller, CreateAccount.this::successfulLogin,
+                CreateAccount.this::errorCreateAccount);
+    }
+
+    private void successfulLogin(Void ans) {
+        Intent intent = MapsActivity.makeIntent(CreateAccount.this);
         toggleSpinner(View.INVISIBLE);
         startActivity(intent);
         finish();
