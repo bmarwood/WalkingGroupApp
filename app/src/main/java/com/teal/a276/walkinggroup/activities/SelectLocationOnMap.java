@@ -35,7 +35,6 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
     private double lat;
     private double lng;
 
-    //private boolean dragged = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +84,6 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
             }
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                //dragged=true;
                 LatLng afterDrag = marker.getPosition();
 
                 Log.d("after moved", "Lat" + afterDrag.latitude + "Lng" + afterDrag.longitude);

@@ -60,7 +60,7 @@
     <string name="useThisLocation">Use this location?</string>
     <string name="create_new_group">Create New Group</string>
     <string name="map">Map</string>
-    <string name="leader_s_email">Leader\'s Email</string>
+    <string name="leader_s_email">Leader\'s Email:</string>
     <string name="empty_name">Name is Empty</string>
 
     <!-- Error handling string -->
@@ -74,6 +74,7 @@
 
 
     <string name="empty_group_name">Empty Group Name</string>
+    <string name="email_or_password_is_incorrect">Email or Password is Incorrect</string>
 
 
 </resources>

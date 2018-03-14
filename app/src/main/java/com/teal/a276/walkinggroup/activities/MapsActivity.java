@@ -326,14 +326,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     @Override
     public void onResume() {
         super.onResume();
-        //activeGroups = ModelFacade.getInstance().getGroupManager().getActiveGroups();
-//        if (googleApiClient.isConnected() && !locationUpdateState) {
-//            startLocationUpdates();
-//        }
-//
-//        if(googleApiClient.isConnected()) {
-//            populateGroupsOnMap();
-//        }
     }
 
     @Override
