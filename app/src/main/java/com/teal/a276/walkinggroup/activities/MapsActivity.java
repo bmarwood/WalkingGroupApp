@@ -279,7 +279,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
     // Handles any changes to be made based on the current state of the user’s location settings
     protected void createLocationRequest() {
-        locationRequest = new LocationRequest();//
+        locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
