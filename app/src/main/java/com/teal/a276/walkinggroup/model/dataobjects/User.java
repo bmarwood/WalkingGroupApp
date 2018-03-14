@@ -3,6 +3,8 @@ package com.teal.a276.walkinggroup.model.dataobjects;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Simple User class to store the data the server expects and returns.
@@ -166,5 +168,10 @@ public class User {
     public User getMonitorsUser(int index){
         validateIndexWithExceptionMonitors(index);
         return monitorsUsers.get(index);
+    }
+
+    public static boolean validateEmail(String email) {
+        Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        return p.matcher(email).matches();
     }
 }

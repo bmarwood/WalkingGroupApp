@@ -1,6 +1,7 @@
 package com.teal.a276.walkinggroup.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -107,17 +108,18 @@ public class Monitor extends BaseActivity {
         btn.setOnClickListener(v -> {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(Monitor.this);
             alertDialog.setTitle(res.getString(titleId));
+            alertDialog.setCancelable(false);
 
             final EditText input = new EditText(Monitor.this);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             alertDialog.setView(input);
 
-            alertDialog.setNegativeButton("Cancel", null);
-            alertDialog.setPositiveButton("Add", (dialog, which) -> {
+            alertDialog.setNegativeButton(R.string.cancel, null);
+            alertDialog.setPositiveButton(R.string.add, (dialog, which) -> {
                 String email = input.getText().toString();
-                Log.i("CHECK", email);
                 observableCallback.makeRequest(email);
             });
+
             alertDialog.show();
         });
     }

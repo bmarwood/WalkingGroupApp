@@ -45,10 +45,22 @@
     <string name="lat">Lat</string>
     <string name="lng">Lng</string>
 
+    <!-- Monitoring activity -->
     <string name="add_user_to_be_monitored_by">Add user to be monitored by</string>
     <string name="add_user_to_monitor">Add user to monitor</string>
+
+    <!-- General dialog strings -->
     <string name="ok">OK</string>
+    <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <string name="logout">Logout</string>
     <string name="title_activity_select_location_on_map">Map</string>
+
+    <!-- Error handling string -->
+    <string name="error">Error</string>
+    <string name="connection_error">Server connecting to the server.
+        Please check that you are connected to the internet.
+    </string>
+    <string name="invalid_email">Email address is invalid</string>
+    <string name="empty_password">Password is empty</string>
 </resources>
