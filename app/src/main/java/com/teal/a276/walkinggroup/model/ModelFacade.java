@@ -6,6 +6,7 @@ import com.teal.a276.walkinggroup.model.dataobjects.User;
 /**
  * Singleton for accessing groups/users
  */
+
 public class ModelFacade {
 
     private static ModelFacade instance;

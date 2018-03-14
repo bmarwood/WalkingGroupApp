@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -59,30 +60,13 @@ public class Monitor extends BaseActivity {
     }
 
     private void initializeListViews() {
-        monitorsAdapter = new ListItemAdapter(this, user.getMonitorsUsers());
-
+        monitorsAdapter = new ListItemAdapter(this, user.getMonitorsUsers(), true);
         ListView monitoringList = findViewById(R.id.monitoringListView);
         monitoringList.setAdapter(monitorsAdapter);
-        monitoringList.setOnItemClickListener((adapterView, view, i, l) -> {
-            User selectedUser = user.getMonitorsUser(i);
 
-            ServerProxy proxy = ServerManager.getServerRequest();
-            Call<Void> call = proxy.endMonitoring(user.getId(), selectedUser.getId());
-            ServerManager.serverRequest(call, result -> removeMonitoree(result, selectedUser), Monitor.this::error);
-        });
-
-
-        monitoredByAdapter = new ListItemAdapter(this, user.getMonitoredByUsers());
-
+        monitoredByAdapter = new ListItemAdapter(this, user.getMonitoredByUsers(), false);
         ListView monitoredBy = findViewById(R.id.monitoredByListView);
         monitoredBy.setAdapter(monitoredByAdapter);
-        monitoredBy.setOnItemClickListener((adapterView, view, i, l) -> {
-            User selectedMonitor = user.getMonitoredByUser(i);
-
-            ServerProxy proxy = ServerManager.getServerRequest();
-            Call<Void> call = proxy.endMonitoring(selectedMonitor.getId(), user.getId());
-            ServerManager.serverRequest(call, result -> removeMonitor(result, selectedMonitor), Monitor.this::error);
-        });
     }
 
     private void removeMonitoree(Void ans, User user) {
@@ -162,11 +146,13 @@ public class Monitor extends BaseActivity {
     private class ListItemAdapter extends ArrayAdapter<User> {
         private final List<User> listItems;
         private final Context context;
+        private boolean monitorList;
 
-        public ListItemAdapter(Context context, List<User> listItems) {
+        public ListItemAdapter(Context context, List<User> listItems, boolean monitorList) {
             super(context, R.layout.list_item, listItems);
             this.listItems = listItems;
             this.context = context;
+            this.monitorList = monitorList;
         }
 
         @Override
@@ -178,12 +164,24 @@ public class Monitor extends BaseActivity {
                 itemView = inflater.inflate(R.layout.list_item, parent, false);
             }
 
-            User user = listItems.get(position);
+            User selectedUser = listItems.get(position);
             TextView emailTextView = itemView.findViewById(R.id.userEmail);
-            emailTextView.setText(user.getEmail());
+            emailTextView.setText(selectedUser.getEmail());
 
             TextView nameTextView = itemView.findViewById(R.id.userName);
-            nameTextView.setText(user.getName());
+            nameTextView.setText(selectedUser.getName());
+
+            ImageView removeView = itemView.findViewById(R.id.removeUser);
+            removeView.setOnClickListener(view -> {
+                ServerProxy proxy = ServerManager.getServerRequest();
+                if (monitorList) {
+                    Call<Void> call = proxy.endMonitoring(user.getId(), selectedUser.getId());
+                    ServerManager.serverRequest(call, result -> removeMonitoree(result, selectedUser), Monitor.this::error);
+                } else {
+                    Call<Void> call = proxy.endMonitoring(selectedUser.getId(), user.getId());
+                    ServerManager.serverRequest(call, result -> removeMonitor(result, selectedUser), Monitor.this::error);
+                }
+            });
 
             return itemView;
         }

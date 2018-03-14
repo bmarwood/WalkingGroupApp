@@ -3,7 +3,9 @@ package com.teal.a276.walkinggroup.model.dataobjects;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Manages joining groups, and groups the user could join
+ */
 public class GroupManager {
 
    // private final AbstractServerManager serverManager;

@@ -5,6 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.teal.a276.walkinggroup.R;
 
+/**
+ * Class that other activities derive off of.
+ * Has Shared Error Handling
+ */
+
 abstract class BaseActivity extends AppCompatActivity {
 
     protected void error(String error) {
