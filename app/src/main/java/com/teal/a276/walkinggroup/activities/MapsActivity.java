@@ -73,7 +73,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private boolean locationUpdateState;
     private List<Group> activeGroups = new ArrayList<Group>();
     GroupManager groupManager = new GroupManager();
-
+    Group selectedGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -366,10 +366,15 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
             String groupTitle = activeGroups.get(i).getGroupDescription();
             if (title.equals(groupTitle)) {
 
-                // Join user to the selected group
-                Group group = activeGroups.get(i);
+                // Get selected group
+                selectedGroup = activeGroups.get(i);
 
-                User user = ModelFacade.getInstance().getCurrentUser();
+                //Before dialog opens, check if the group is already joined
+                if(groupManager.checkIfUserAlreadyInSameGroup(selectedGroup)){
+                    Toast.makeText(MapsActivity.this, "Already joined group " + title, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);
                 alertDialogBuilder.setTitle("Join Group " + title + "?");
 
@@ -377,22 +382,20 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 alertDialogBuilder.setPositiveButton("Join", new AlertDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        Group group;
-//                        group = groupManager.getJoinGroup(joinPosition);
-//
-//                        ServerProxy proxy = ServerManager.getServerRequest();
-//                        Call<List<User>> call = proxy.addUserToGroup(group.getId(), ModelFacade.getInstance().getCurrentUser());
-//                        ServerManager.serverRequest(call, result -> addGroupMemberResult(result, group), MapsActivity.this::error);
+                        ServerProxy proxy = ServerManager.getServerRequest();
+                        Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), ModelFacade.getInstance().getCurrentUser());
+                        ServerManager.serverRequest(call, result -> addGroupMemberResult(result, selectedGroup), MapsActivity.this::error);
 
                     }});
                 alertDialogBuilder.show();
-
-
-
-
                 return false;
             }
         }
         return false;
+    }
+
+    private void addGroupMemberResult(List<User> users, Group group) {
+        group.setMemberUsers(users);
+        groupManager.addJoinedGroup(group);
     }
 }
