@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -19,10 +18,12 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import retrofit2.Call;
+
+/**
+ * Creates User Account and sends information to the server
+ */
 
 public class CreateAccount extends AppCompatActivity {
 
@@ -45,7 +46,6 @@ public class CreateAccount extends AppCompatActivity {
             toggleSpinner(View.VISIBLE);
 
             ArrayList<String> errors =  checkCreateInputs(firstName, lastName, email, password);
-
 
             if(!errors.isEmpty()) {
                 ErrorStringGen(errors);

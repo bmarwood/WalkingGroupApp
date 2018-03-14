@@ -51,6 +51,10 @@ import java.util.List;
 
 import retrofit2.Call;
 
+/**
+ * Displays Google maps interface for user to interact with
+ */
+
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
