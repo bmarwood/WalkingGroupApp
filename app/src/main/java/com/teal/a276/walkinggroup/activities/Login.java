@@ -190,13 +190,13 @@ public class Login extends BaseActivity {
         ProgressBar loginSpin = findViewById(R.id.loggingInSpinner);
         TextView txtLogIn = findViewById(R.id.loggingInText);
         int main;
-        int opposite;
+        int loadingScreen;
         if (currLoggingIn) {
             main = View.INVISIBLE;
-            opposite = View.VISIBLE;
+            loadingScreen = View.VISIBLE;
         } else {
             main = View.VISIBLE;
-            opposite = View.INVISIBLE;
+            loadingScreen = View.INVISIBLE;
         }
         txtLogin.setVisibility(main);
         txtEmail.setVisibility(main);
@@ -207,8 +207,8 @@ public class Login extends BaseActivity {
         createAccountBtn.setVisibility(main);
         signInBtn.setVisibility(main);
 
-        loginSpin.setVisibility(opposite);
-        txtLogIn.setVisibility(opposite);
+        loginSpin.setVisibility(loadingScreen);
+        txtLogIn.setVisibility(loadingScreen);
 
     }
 

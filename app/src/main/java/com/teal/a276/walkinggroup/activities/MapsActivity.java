@@ -61,6 +61,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private static final int REQUEST_CHECK_SETTINGS = 2;
     public static final int MAX_RESULTS = 1;
 
+    private static final String sharePrefLogger = "Logger";
+    private static final String sharePrefUser = "userName";
+
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
@@ -148,10 +151,10 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     private void logoutPrefs() {
-        SharedPreferences prefs = getSharedPreferences("loggedIn",MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(sharePrefLogger,MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("Logged in", false);
-        editor.commit();
+        editor.putString(sharePrefUser, null);
+        editor.apply();
     }
 
     public static Intent makeIntent(Context context) {
