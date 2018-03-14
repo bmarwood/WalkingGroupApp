@@ -308,7 +308,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     @Override
     protected void onPause() {
         super.onPause();
-//        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
     }
 
     @Override
