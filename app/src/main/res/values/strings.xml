@@ -63,4 +63,8 @@
     </string>
     <string name="invalid_email">Email address is invalid</string>
     <string name="empty_password">Password is empty</string>
+    <string name="useThisLocation">Use this location?</string>
+    <string name="create_new_group">Create New Group</string>
+    <string name="map">Map</string>
+    <string name="leader_s_email">Leader\'s Email</string>
 </resources>

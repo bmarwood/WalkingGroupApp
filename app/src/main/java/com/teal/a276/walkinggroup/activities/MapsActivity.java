@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -133,6 +132,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 break;
             case R.id.addNewGroup:
                 startActivity(CreateNewGroup.makeIntent(this));
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

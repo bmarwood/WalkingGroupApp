@@ -30,8 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.JoinGroup" />
-        <activity android:name=".activities.AddNewGroup" />
         <activity android:name=".activities.Monitor" />
 
         <meta-data

@@ -21,6 +21,9 @@ import java.util.List;
 
 import retrofit2.Call;
 
+import static com.teal.a276.walkinggroup.activities.SelectLocationOnMap.EXTRA_LATITUDE;
+import static com.teal.a276.walkinggroup.activities.SelectLocationOnMap.EXTRA_LONGITUDE;
+
 /**
  * Activity to create a new group: Users are able to set group name, set leader's ID, and
  * select the meeting location on the map by dragging the marker to the desired destination.
@@ -28,7 +31,11 @@ import retrofit2.Call;
 
 public class CreateNewGroup extends BaseActivity {
 
-    //for lat, lng retrieval
+    interface ObservableCallback{
+        void makeRequest(String email);
+    }
+
+    public static final int REQUEST_CODE_MAP = 1010;
     double lat=0;
     double lng=0;
 
@@ -46,24 +53,20 @@ public class CreateNewGroup extends BaseActivity {
         Button btn = findViewById(R.id.meetingMapBtn);
         btn.setOnClickListener(v -> {
             Intent intent = SelectLocationOnMap.makeIntent(CreateNewGroup.this);
-            startActivityForResult(intent, 1010);
+            startActivityForResult(intent, REQUEST_CODE_MAP);
         });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         switch(requestCode){
-            case 1010:
+            case REQUEST_CODE_MAP:
                 if(resultCode == Activity.RESULT_OK){
-                    //double lat = data.getExtras().getDouble(EXTRA_LAT);
-                    lat = data.getDoubleExtra("latitude", 0);
-                    lng = data.getDoubleExtra("longitude", 0);
 
-                    Toast.makeText(
-                            CreateNewGroup.this,
-                            "Lat " + lat + "\nLong " +
-                                    lng,
-                            Toast.LENGTH_SHORT).show();
+                    lat = data.getDoubleExtra(EXTRA_LATITUDE, 0);
+                    lng = data.getDoubleExtra(EXTRA_LONGITUDE, 0);
+
+                    Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
                 }
         }
     }
@@ -79,11 +82,14 @@ public class CreateNewGroup extends BaseActivity {
             EditText leadersEmailVal = findViewById(R.id.createGroupEmailEdit);
             String leadersEmailStr = leadersEmailVal.getText().toString();
 
-            EditText destinationVal = findViewById(R.id.createDestinationEdit);
-            String  destination = destinationVal.getText().toString();
-
-
             //Input checking: If there are empty fields
+            if(!User.validateEmail(leadersEmailStr)){
+                Toast.makeText(
+                        CreateNewGroup.this,
+                        "Email is in incorrect format!",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
             if(leadersEmailStr.isEmpty() || nameValStr.isEmpty()){
                 Toast.makeText(
                         CreateNewGroup.this,
@@ -100,15 +106,38 @@ public class CreateNewGroup extends BaseActivity {
             }
 
             //If passed all input checking, continue to push group to server
+//            ObservableCallback.makeRequest(leadersEmailStr);
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<User> call = proxy.getUserByEmail(leadersEmailStr);
             ServerManager.serverRequest(call, result -> userFromEmail(result,
                     nameValStr, lat, lng), CreateNewGroup.this::error);
 
+//            CreateGroupRequest request = new CreateGroupRequest(leadersEmailStr, nameValStr);
+//            request.makeServerRequest();
+//            request.addObserver((observable, o) -> {
+//                Group group = (Group)o;
+//
+//
+//
+//
+//
+//
+ //                   })
+
+
+
+
+
+
+
             finish();
         });
 
     }
+
+
+
+
 
     private void userFromEmail(User user, String groupDes, double Lat, double Lng){
         Group group = new Group();

@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,6 +26,12 @@ import com.teal.a276.walkinggroup.R;
 
 public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallback {
 
+    public static final String EXTRA_LATITUDE = "latitude-extra";
+    public static final String EXTRA_LONGITUDE = "longitude-extra";
+    public static final int ZOOM = 15;
+    public static final int BEARING = 0;
+    public static final int TILT = 0;
+    public static final int VIEW = 13;
     private GoogleMap mMap;
 
     @Override
@@ -56,16 +63,8 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
         //add marker on current position and make it draggable
         Marker currMarker = mMap.addMarker(new MarkerOptions().
                 position(currentPosition).
-                //title("Current Position").
                 draggable(true));
 
-        //TODO: delete this later, only for debug
-        LatLng getNewPosition = currMarker.getPosition();
-        Toast.makeText(
-                SelectLocationOnMap.this,
-                "Lat " + getNewPosition.latitude + "\nLong " +
-                        getNewPosition.longitude,
-                Toast.LENGTH_SHORT).show();
 
         //Listens to drags the user makes
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -93,19 +92,15 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
             double lng = marker.getPosition().longitude;
             String latStr = String.valueOf(lat);
             String lonStr = String.valueOf(lng);
-            Toast.makeText(
-                    SelectLocationOnMap.this,
-                    "LAT: " + latStr + "\nLNG: " +
-                            lonStr,
-                    Toast.LENGTH_SHORT).show();
+            Log.d("After Moved Coordinates", "Lat" + latStr + "Lng" + lonStr);
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(SelectLocationOnMap.this);
-            alertDialog.setTitle("Use this location?");
-            alertDialog.setNegativeButton("Cancel", null);
-            alertDialog.setPositiveButton("Ok", (dialog, which) -> {
+            alertDialog.setTitle(R.string.useThisLocation);
+            alertDialog.setNegativeButton((R.string.cancel), null);
+            alertDialog.setPositiveButton((R.string.ok), (dialog, which) -> {
 
                 Intent intent = new Intent();
-                intent.putExtra("latitude", lat);
-                intent.putExtra("longitude", lng);
+                intent.putExtra(EXTRA_LATITUDE, lat);
+                intent.putExtra(EXTRA_LONGITUDE, lng);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
 
@@ -128,26 +123,18 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //  Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            //return;
         }
       Location location = locationManager.getLastKnownLocation(
               locationManager.getBestProvider(criteria, false));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
-                    location.getLongitude()), 13));
+                    location.getLongitude()), VIEW));
 
       CameraPosition cameraPosition = new CameraPosition.Builder()
               .target(new LatLng(location.getLatitude(), location.getLongitude()))  // Sets the center of the map to location user
-              .zoom(15)                   // Sets the zoom
-              .bearing(0)                // Sets the orientation of the camera to east
-              .tilt(0)                    // Sets the tilt of the camera to 30 degrees
-              .build();                   // Creates a CameraPosition from the builder
+              .zoom(ZOOM)
+              .bearing(BEARING)
+              .tilt(TILT)
+              .build();
 
         LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
