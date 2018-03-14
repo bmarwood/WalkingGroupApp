@@ -93,7 +93,7 @@ public class User {
         return leadsGroups;
     }
 
-    public void setLeadsGroups(ArrayList<Group> leadsGroups) {
+    public void setLeadsGroups(List<Group> leadsGroups) {
         this.leadsGroups = leadsGroups;
     }
 
@@ -173,5 +173,19 @@ public class User {
     public static boolean validateEmail(String email) {
         Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         return p.matcher(email).matches();
+    }
+
+    public User copyUser(User user) {
+        User newUser = new User();
+        newUser.setId(user.getId());
+        newUser.setName(user.getName());
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(user.getPassword());
+        newUser.setMemberOfGroups(user.getMemberOfGroups());
+        newUser.setLeadsGroups(user.getLeadsGroups());
+        newUser.setMonitoredByUsers(user.getMonitoredByUsers());
+        newUser.setMonitorsUsers(user.getMonitorsUsers());
+        newUser.setHref(user.getHref());
+        return newUser;
     }
 }

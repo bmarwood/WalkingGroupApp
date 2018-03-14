@@ -15,10 +15,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -70,7 +76,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private LocationRequest locationRequest;
     private boolean locationUpdateState;
     private List<Group> activeGroups = new ArrayList<Group>();
-    Group selectedGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,7 +205,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
             if (lastLocation != null) {
                 LatLng currentLocation = locationToLatLng();
                 placeMarkerOnMap(currentLocation);
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 20));
             }
         }
     }
@@ -214,7 +219,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
         // Create a MarkerOptions object and sets the user’s current location as the position for the marker
         MarkerOptions markerOptions = new MarkerOptions().position(location);
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10));
 
         // Add address to marker
         String titleStr = getAddress(location);
@@ -329,7 +334,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     @Override
     protected void onPause() {
         super.onPause();
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        if (googleApiClient.isConnected() && !locationUpdateState) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        }
     }
 
     @Override
@@ -373,6 +380,8 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        List<String> userNames = new ArrayList<String>();
+
         // Make only the group markers clickable
         String title = marker.getTitle();
 
@@ -382,18 +391,49 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
             if (title.equals(groupTitle)) {
 
                 // Get selected group
-                selectedGroup = activeGroups.get(i);
+                Group selectedGroup = activeGroups.get(i);
 
-                // Build the alert dialog box
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);
-                alertDialogBuilder.setTitle("Join Group " + title + "?");
+                User user = ModelFacade.getInstance().getCurrentUser();
+                List<User> currentUsers = new ArrayList<>(user.getMonitoredByUsers().size() + 1);
+                currentUsers.addAll(user.getMonitorsUsers());
+                currentUsers.add(user);
+                final User userToJoinRemove = new User();
+
+                // Put user and monitorees names in array for spinner
+                for (int j = 0; j < currentUsers.size(); j++) {
+                    userNames.add(currentUsers.get(j).getName());
+                }
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                LayoutInflater inflater = this.getLayoutInflater();
+                final View myView = inflater.inflate(R.layout.join_leave_alertdialog, null);
+                alertDialogBuilder.setView(myView);
+                Spinner spinner = (Spinner) myView .findViewById(R.id.groupsSpinner);
+
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
+                        android.R.layout.simple_spinner_item, userNames);
+
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(dataAdapter);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        Toast.makeText(getBaseContext(), adapterView.getItemIdAtPosition(i) + "", Toast.LENGTH_LONG).show();
+                        userToJoinRemove.copyUser(currentUsers.get(i));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
 
                 alertDialogBuilder.setPositiveButton("Join", new AlertDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        User user = ModelFacade.getInstance().getCurrentUser();
+//                        User user = ModelFacade.getInstance().getCurrentUser();
                         ServerProxy proxy = ServerManager.getServerRequest();
-                        Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), user);
+                        Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), userToJoinRemove);
                         ServerManager.serverRequest(call, MapsActivity.this::addGroupMemberResult, MapsActivity.this::error);
                     }});
 
@@ -402,9 +442,11 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                     public void onClick(DialogInterface dialog, int which) {
                         User user = ModelFacade.getInstance().getCurrentUser();
                         ServerProxy proxy = ServerManager.getServerRequest();
-                        Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), user.getId());
+                        Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), userToJoinRemove.getId());
                         ServerManager.serverRequest(call, MapsActivity.this::removeGroupMemberResult, MapsActivity.this::error);
                     }});
+
+                alertDialogBuilder.setNeutralButton("Cancel", null);
                 alertDialogBuilder.show();
 
                 return false;
