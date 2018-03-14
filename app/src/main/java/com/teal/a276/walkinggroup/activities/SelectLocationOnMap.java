@@ -12,7 +12,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,7 +32,10 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
     public static final int TILT = 0;
     public static final int VIEW = 13;
     private GoogleMap mMap;
+    private double lat;
+    private double lng;
 
+    //private boolean dragged = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,7 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
         //get current GPS location and put the Lat, Long in currentPosition
         LatLng currentPosition = moveToCurrentLocation();
 
@@ -65,34 +68,40 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
                 position(currentPosition).
                 draggable(true));
 
+        lat = currentPosition.latitude;
+        lng = currentPosition.longitude;
+
+        Log.d("current location", "Lat: " + currentPosition.latitude + "Lng: " + currentPosition.longitude);
+
 
         //Listens to drags the user makes
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
+
             }
             @Override
             public void onMarkerDrag(Marker marker) {
             }
             @Override
             public void onMarkerDragEnd(Marker marker) {
-
+                //dragged=true;
                 LatLng afterDrag = marker.getPosition();
-                Toast.makeText(
-                        SelectLocationOnMap.this,
-                        "Lat " + afterDrag.latitude + "\nLong " +
-                                afterDrag.longitude,
-                        Toast.LENGTH_SHORT).show();
+
+                Log.d("after moved", "Lat" + afterDrag.latitude + "Lng" + afterDrag.longitude);
+                        LatLng latLng = marker.getPosition();
+
+                lat = latLng.latitude;
+                lng = latLng.longitude;
             }
         });
 
         //Upon click, asks user if this is the location they want.
         mMap.setOnMarkerClickListener(marker -> {
-            double lat = marker.getPosition().latitude;
-            double lng = marker.getPosition().longitude;
+
             String latStr = String.valueOf(lat);
             String lonStr = String.valueOf(lng);
-            Log.d("After Moved Coordinates", "Lat" + latStr + "Lng" + lonStr);
+            Log.d("click listener", "Lat" + latStr + "Lng" + lonStr);
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(SelectLocationOnMap.this);
             alertDialog.setTitle(R.string.useThisLocation);
             alertDialog.setNegativeButton((R.string.cancel), null);
@@ -110,7 +119,6 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
             return false;
         });
     }
-
 
 
     // https://stackoverflow.com/questions/18425141/android-google-maps-api-v2-zoom-to-current-location/20930874

@@ -10,16 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
-import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
-import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CreateGroupRequest;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
+import java.util.Observer;
 
 import static com.teal.a276.walkinggroup.activities.SelectLocationOnMap.EXTRA_LATITUDE;
 import static com.teal.a276.walkinggroup.activities.SelectLocationOnMap.EXTRA_LONGITUDE;
@@ -31,13 +27,12 @@ import static com.teal.a276.walkinggroup.activities.SelectLocationOnMap.EXTRA_LO
 
 public class CreateNewGroup extends BaseActivity {
 
-    interface ObservableCallback{
-        void makeRequest(String email);
-    }
-
     public static final int REQUEST_CODE_MAP = 1010;
     double lat=0;
     double lng=0;
+    LatLng latlng;
+    private static Observer newGroupObserver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +60,11 @@ public class CreateNewGroup extends BaseActivity {
 
                     lat = data.getDoubleExtra(EXTRA_LATITUDE, 0);
                     lng = data.getDoubleExtra(EXTRA_LONGITUDE, 0);
-
+                    latlng = new LatLng(lat, lng);
                     Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
                 }
         }
     }
-
 
 
     private void setCreateNewGroupButton() {
@@ -83,90 +77,29 @@ public class CreateNewGroup extends BaseActivity {
             String leadersEmailStr = leadersEmailVal.getText().toString();
 
             //Input checking: If there are empty fields
-            if(!User.validateEmail(leadersEmailStr)){
-                Toast.makeText(
-                        CreateNewGroup.this,
-                        "Email is in incorrect format!",
-                        Toast.LENGTH_SHORT).show();
+            if(nameValStr.isEmpty()){
+                nameVal.setError(getString(R.string.empty_group_name));
                 return;
             }
-            if(leadersEmailStr.isEmpty() || nameValStr.isEmpty()){
-                Toast.makeText(
-                        CreateNewGroup.this,
-                        "Name or Email empty",
-                        Toast.LENGTH_SHORT).show();
+            if(!User.validateEmail(leadersEmailStr)){
+                leadersEmailVal.setError(getString(R.string.invalid_email));
                 return;
             }
             if((lat==0) && (lng==0)) {
                 Toast.makeText(
                         CreateNewGroup.this,
-                        "Lat/Lng NOT set",
+                        "Location NOT set",
                         Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            //If passed all input checking, continue to push group to server
-//            ObservableCallback.makeRequest(leadersEmailStr);
-            ServerProxy proxy = ServerManager.getServerRequest();
-            Call<User> call = proxy.getUserByEmail(leadersEmailStr);
-            ServerManager.serverRequest(call, result -> userFromEmail(result,
-                    nameValStr, lat, lng), CreateNewGroup.this::error);
-
-//            CreateGroupRequest request = new CreateGroupRequest(leadersEmailStr, nameValStr);
-//            request.makeServerRequest();
-//            request.addObserver((observable, o) -> {
-//                Group group = (Group)o;
-//
-//
-//
-//
-//
-//
- //                   })
-
-
-
-
-
-
+            CreateGroupRequest request = new CreateGroupRequest(leadersEmailStr, nameValStr, latlng, CreateNewGroup.this::error);
+            request.makeServerRequest();
+            request.addObserver(newGroupObserver);
 
             finish();
         });
 
-    }
-
-
-
-
-
-    private void userFromEmail(User user, String groupDes, double Lat, double Lng){
-        Group group = new Group();
-        group.setLeader(user);
-
-        //TODO: Remove this line of code after new server has been pushed.
-        group.setId(-1L);
-
-        group.setGroupDescription(groupDes);
-
-
-        List<Double> latArray = new ArrayList<>();
-        List<Double> lngArray = new ArrayList<>();
-
-        latArray.add(Lat);
-        lngArray.add(Lng);
-
-        group.setRouteLatArray(latArray);
-        group.setRouteLngArray(lngArray);
-
-        ServerProxy proxy = ServerManager.getServerRequest() ;
-        Call<Group> call = proxy.createGroup(group);
-        ServerManager.serverRequest(call, this::groupCreated, this::error);
-
-
-
-    }
-    private void groupCreated(Group group){
-        Log.d("Group Created", group.toString());
     }
 
     @Override
@@ -176,5 +109,9 @@ public class CreateNewGroup extends BaseActivity {
 
     public static Intent makeIntent(Context context){
         return new Intent(context, CreateNewGroup.class);
+    }
+
+    public static void setGroupResultCallback(Observer obs) {
+        newGroupObserver = obs;
     }
 }

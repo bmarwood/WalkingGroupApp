@@ -1,9 +1,8 @@
-/*
 package com.teal.a276.walkinggroup.model.serverrequest.requestimplementation;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
@@ -19,27 +18,25 @@ import retrofit2.Call;
 
 public class CreateGroupRequest extends AbstractServerRequest {
 
-    private Group group;
+    private LatLng latlng;
+    private String leaderEmail;
+    private String groupDes;
 
-    public CreateGroupRequest(String leaderEmail, String groupDes, double Lat, double Lng , @NonNull ServerError errorCallback) {
-        super(currentUser, errorCallback);
+
+    public CreateGroupRequest(String leaderEmail, String groupDes, LatLng latLng, @NonNull ServerError errorCallback) {
+        super(null, errorCallback);
+        this.leaderEmail = leaderEmail;
+        this.groupDes = groupDes;
+        this.latlng = latLng;
     }
 
     @Override
     public void makeServerRequest() {
-        getUserFromEmail(email, this::userFromEmail);
+        getUserForEmail(leaderEmail, this::userFromEmail);
 
     }
 
-//    private void userResult(User) {
-//        ServerProxy proxy = ServerManager.getServerRequest();
-//        Call<User> call = proxy.getUserByEmail(leadersEmail);
-//        ServerManager.serverRequest(call, result -> userFromEmail(result,
-//                nameValStr, lat, lng), errorCallback);
-//
-//    }
-
-    private void userFromEmail(User user, String groupDes, double Lat, double Lng) {
+    private void userFromEmail(User user) {
         Group group = new Group();
         group.setLeader(user);
 
@@ -48,28 +45,21 @@ public class CreateGroupRequest extends AbstractServerRequest {
 
         group.setGroupDescription(groupDes);
 
-
         List<Double> latArray = new ArrayList<>();
         List<Double> lngArray = new ArrayList<>();
 
-        latArray.add(Lat);
-        lngArray.add(Lng);
+        latArray.add(latlng.latitude);
+        lngArray.add(latlng.longitude);
 
         group.setRouteLatArray(latArray);
         group.setRouteLngArray(lngArray);
 
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<Group> call = proxy.createGroup(group);
-        ServerManager.serverRequest(call, this::groupCreated, errorCallback);
-    }
-    private void groupCreated(Group group){
-        Log.d("Group Created", group.toString());
+        ServerManager.serverRequest(call, this::groupResult, errorCallback);
     }
 
     private void groupResult(Group group){
         setDataChanged(group);
-
-
     }
 }
-*/

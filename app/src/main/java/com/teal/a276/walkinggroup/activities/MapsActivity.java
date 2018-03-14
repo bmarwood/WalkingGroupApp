@@ -91,23 +91,29 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
     private void populateGroupsOnMap(){
 
-        for(int i = 0; i < activeGroups.size(); i++) {
-            Group group = activeGroups.get(i);
-            List<Double> routeLatArray = group.getRouteLatArray();
-            List<Double> routeLngArray = group.getRouteLngArray();
+        for(Group group : activeGroups) {
+            addMarker(group);
+        }
+    }
 
-            for (int j = 0; j < routeLatArray.size(); j++){
-                LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
-                MarkerOptions markerOptions = new MarkerOptions().position(marker);
-                String titleStr = group.getGroupDescription();
-                markerOptions.title(titleStr);
-                map.addMarker(markerOptions);
-            }
+    private void addMarker(Group group) {
+        List<Double> routeLatArray = group.getRouteLatArray();
+        List<Double> routeLngArray = group.getRouteLngArray();
+
+        for (int j = 0; j < routeLatArray.size(); j++){
+            LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
+            MarkerOptions markerOptions = new MarkerOptions().position(marker);
+            String titleStr = group.getGroupDescription();
+            markerOptions.title(titleStr);
+            map.addMarker(markerOptions);
         }
     }
 
     private void groupsResult(List<Group> groups) {
         activeGroups = groups;
+        if(googleApiClient.isConnected() && map != null) {
+            populateGroupsOnMap();
+        }
     }
 
     @Override
@@ -131,6 +137,14 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 startActivity(Monitor.makeIntent(this));
                 break;
             case R.id.addNewGroup:
+                //TODO: FIX THIS
+                CreateNewGroup.setGroupResultCallback((o, arg) -> {
+                    Group group = (Group) arg;
+                    activeGroups.add(group);
+                    if(map != null && googleApiClient.isConnected()) {
+                        addMarker(group);
+                    }
+                });
                 startActivity(CreateNewGroup.makeIntent(this));
                 break;
             default:
@@ -312,9 +326,14 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     @Override
     public void onResume() {
         super.onResume();
-        if (googleApiClient.isConnected() && !locationUpdateState) {
-            startLocationUpdates();
-        }
+        //activeGroups = ModelFacade.getInstance().getGroupManager().getActiveGroups();
+//        if (googleApiClient.isConnected() && !locationUpdateState) {
+//            startLocationUpdates();
+//        }
+//
+//        if(googleApiClient.isConnected()) {
+//            populateGroupsOnMap();
+//        }
     }
 
     @Override

@@ -34,16 +34,4 @@ public class ModelFacade {
         this.currentUser = newCurrentUser;
     }
 
-
-    public GroupManager getGroupManager() {
-        if (manager == null) {
-            throw new IllegalStateException("GroupManager was not set before calling getGroupManager");
-        }
-
-        return manager;
-    }
-
-    public void setGroupManager(GroupManager manager) {
-        this.manager = manager;
-    }
 }
