@@ -75,6 +75,8 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private static final int REQUEST_CHECK_SETTINGS = 2;
     public static final int MAX_RESULTS = 1;
 
+    private final int ZOOM_LEVEL = 20;
+
     private static final String sharePrefLogger = "Logger";
     private static final String sharePrefUser = "userName";
 
@@ -116,11 +118,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
             List<Double> routeLatArray = group.getRouteLatArray();
             List<Double> routeLngArray = group.getRouteLngArray();
 
-            // TODO: test that this works correctly / extract a method
             for (int j = 0; j < routeLatArray.size(); j++){
-                // Even: The fist set of locations in the arrays represents the start of the route
-                if ( j % 2 == 0 ) {
-                    // even...
                     LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
                     MarkerOptions markerOptions = new MarkerOptions().position(marker);
                     String titleStr = group.getGroupDescription();
@@ -128,16 +126,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                     markerOptions.icon(BitmapDescriptorFactory
                             .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     map.addMarker(markerOptions);
-                } else {
-                    // Odd: The second set of locations repents the finish
-                    LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
-                    MarkerOptions markerOptions = new MarkerOptions().position(marker);
-                    String titleStr = group.getGroupDescription();
-                    markerOptions.title(titleStr);
-                    markerOptions.icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                    map.addMarker(markerOptions);
-                }
+
             }
         }
     }
@@ -224,7 +213,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
             if (lastLocation != null) {
                 LatLng currentLocation = locationToLatLng();
                 placeMarkerOnMap(currentLocation);
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 20));
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, ZOOM_LEVEL));
             }
         }
     }
@@ -232,28 +221,19 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     protected void placeMarkerOnMap(LatLng location) {
 
         map.clear();
-
         populateGroupsOnMap();
 
-        // Create a MarkerOptions object and sets the user’s current location as the position for the marker
         MarkerOptions markerOptions = new MarkerOptions().position(location);
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, ZOOM_LEVEL));
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10));
-
-        // Add address to marker
         String titleStr = getAddress(location);
         markerOptions.title(titleStr);
-
-        // Create a marker with a custom icon
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource
                 (getResources(), R.mipmap.ic_user_location)));
-
-        // Add the marker to the map
         map.addMarker(markerOptions);
     }
 
     private String getAddress(LatLng latLng) {
-        // Creates a Geocoder object to turn a latitude and longitude coordinate into an address
         Geocoder geocoder = new Geocoder(this);
         StringBuilder addressText = new StringBuilder();
         List<Address> addresses = null;
@@ -265,9 +245,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
         }
 
         try {
-            // Asks the geocoder to get the address from the location passed to the method.
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, MAX_RESULTS);
-            // If the response contains any address, then append it to a string and return.
             if (null != addresses && !addresses.isEmpty()) {
                 address = addresses.get(0);
                 addressText = addressText.append(address.getAddressLine(0));
@@ -398,17 +376,12 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        List<String> userNames = new ArrayList<String>();
-
-        // Make only the group markers clickable
         String title = marker.getTitle();
 
         // Find the group that matches the title
         for (int i = 0; i < activeGroups.size(); i++) {
             String groupTitle = activeGroups.get(i).getGroupDescription();
             if (title.equals(groupTitle)) {
-
-                // Get selected group
                 Group selectedGroup = activeGroups.get(i);
 
                 User user = ModelFacade.getInstance().getCurrentUser();
@@ -417,7 +390,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 currentUsers.add(user);
                 final User userToJoinRemove = new User();
 
-                // Put user and monitorees names in array for spinner
+                List<String> userNames = new ArrayList<>();
                 for (int j = 0; j < currentUsers.size(); j++) {
                     userNames.add(currentUsers.get(j).getName());
                 }
@@ -426,7 +399,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 LayoutInflater inflater = this.getLayoutInflater();
                 final View myView = inflater.inflate(R.layout.join_leave_alertdialog, null);
                 alertDialogBuilder.setView(myView);
-                Spinner spinner = (Spinner) myView .findViewById(R.id.groupsSpinner);
+                Spinner spinner = myView .findViewById(R.id.groupsSpinner);
 
                 ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
                         android.R.layout.simple_spinner_item, userNames);
@@ -446,25 +419,19 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                     }
                 });
 
-                alertDialogBuilder.setPositiveButton("Join", new AlertDialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-//                        User user = ModelFacade.getInstance().getCurrentUser();
-                        ServerProxy proxy = ServerManager.getServerRequest();
-                        Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), userToJoinRemove);
-                        ServerManager.serverRequest(call, MapsActivity.this::addGroupMemberResult, MapsActivity.this::error);
-                    }});
+                alertDialogBuilder.setPositiveButton(getString(R.string.add_user), (dialog, which) -> {
+                    ServerProxy proxy = ServerManager.getServerRequest();
+                    Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), userToJoinRemove);
+                    ServerManager.serverRequest(call, MapsActivity.this::addGroupMemberResult, MapsActivity.this::error);
+                });
 
-                alertDialogBuilder.setNegativeButton("Leave", new AlertDialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        User user = ModelFacade.getInstance().getCurrentUser();
-                        ServerProxy proxy = ServerManager.getServerRequest();
-                        Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), userToJoinRemove.getId());
-                        ServerManager.serverRequest(call, MapsActivity.this::removeGroupMemberResult, MapsActivity.this::error);
-                    }});
+                alertDialogBuilder.setNegativeButton(getString(R.string.remove_user), (dialog, which) -> {
+                    ServerProxy proxy = ServerManager.getServerRequest();
+                    Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), userToJoinRemove.getId());
+                    ServerManager.serverRequest(call, MapsActivity.this::removeGroupMemberResult, MapsActivity.this::error);
+                });
 
-                alertDialogBuilder.setNeutralButton("Cancel", null);
+                alertDialogBuilder.setNeutralButton(getString(R.string.cancel), null);
                 alertDialogBuilder.show();
 
                 return false;
