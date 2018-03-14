@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
@@ -21,7 +21,6 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CompleteUserRequest;
 
-import org.w3c.dom.Text;
 
 import retrofit2.Call;
 
@@ -68,7 +67,6 @@ public class Login extends BaseActivity {
         layoutSwitchForLogin = extractedBool;
         String userName = prefs.getString("email", null);
         String password = prefs.getString("password", null);
-        Toast.makeText(this, extractedBool.toString(), Toast.LENGTH_SHORT).show();
 
         if (extractedBool) {
             LayoutLoggingIn(true);
