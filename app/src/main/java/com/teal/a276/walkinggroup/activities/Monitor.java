@@ -111,7 +111,7 @@ public class Monitor extends BaseActivity {
             alertDialog.setCancelable(false);
 
             final EditText input = new EditText(Monitor.this);
-            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            input.setInputType(InputType.TYPE_CLASS_TEXT| InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
             alertDialog.setView(input);
 
             alertDialog.setNegativeButton(R.string.cancel, null);

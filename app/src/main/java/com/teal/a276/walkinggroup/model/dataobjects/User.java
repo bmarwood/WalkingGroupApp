@@ -23,7 +23,7 @@ public class User {
     private List<User> monitorsUsers = new ArrayList<>();
 
     private String href;
-    
+
     public User() {
     }
 
