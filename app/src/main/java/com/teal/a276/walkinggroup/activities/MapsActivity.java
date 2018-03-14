@@ -19,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,7 +44,6 @@ import com.google.android.gms.location.LocationListener;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
-import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -72,7 +70,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private LocationRequest locationRequest;
     private boolean locationUpdateState;
     private List<Group> activeGroups = new ArrayList<Group>();
-    GroupManager groupManager = new GroupManager();
     Group selectedGroup;
 
     @Override
@@ -369,22 +366,28 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 // Get selected group
                 selectedGroup = activeGroups.get(i);
 
-                //Before dialog opens, check if the group is already joined
-                if(groupManager.checkIfUserAlreadyInSameGroup(selectedGroup)){
-                    Toast.makeText(MapsActivity.this, "Already joined group " + title, Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);
                 alertDialogBuilder.setTitle("Join Group " + title + "?");
 
-                alertDialogBuilder.setNegativeButton("Cancel", null);
+                alertDialogBuilder.setNegativeButton("Leave", null);
                 alertDialogBuilder.setPositiveButton("Join", new AlertDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ServerProxy proxy = ServerManager.getServerRequest();
-                        Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), ModelFacade.getInstance().getCurrentUser());
-                        ServerManager.serverRequest(call, result -> addGroupMemberResult(result, selectedGroup), MapsActivity.this::error);
+                        User user = ModelFacade.getInstance().getCurrentUser();
+
+                        switch(which){
+                            case DialogInterface.BUTTON_POSITIVE:
+
+                                ServerProxy proxy = ServerManager.getServerRequest();
+                                Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), user);
+                                ServerManager.serverRequest(call, MapsActivity.this::addGroupMemberResult, MapsActivity.this::error);
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                ServerProxy proxy2 = ServerManager.getServerRequest();
+                                Call<Void> call2 = proxy2.deleteUserFromGroup(selectedGroup.getId(), user.getId());
+                                ServerManager.serverRequest(call2, MapsActivity.this::removeGroupMemberResult, MapsActivity.this::error);
+                        }
 
                     }});
                 alertDialogBuilder.show();
@@ -394,8 +397,13 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
         return false;
     }
 
-    private void addGroupMemberResult(List<User> users, Group group) {
-        group.setMemberUsers(users);
-        groupManager.addJoinedGroup(group);
+    private void addGroupMemberResult(List<User> users) {
+        // Do nothing
     }
+
+    private void removeGroupMemberResult(Void aVoid) {
+        // Do nothing
+    }
+
+
 }
