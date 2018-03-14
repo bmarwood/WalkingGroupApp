@@ -250,7 +250,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
         // Add the marker to the map
         map.addMarker(markerOptions);
-
     }
 
     private String getAddress(LatLng latLng) {
