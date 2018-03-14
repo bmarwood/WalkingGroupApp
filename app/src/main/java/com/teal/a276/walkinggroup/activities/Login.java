@@ -177,7 +177,7 @@ public class Login extends BaseActivity {
         }
     }
 
-    private void layoutLoggingIn(boolean on) {
+    private void layoutLoggingIn(boolean currLoggingIn) {
         TextView txtLogin = findViewById(R.id.loginText);
         TextView txtEmail = findViewById(R.id.emailTxt);
         TextView txtPassword = findViewById(R.id.passwordTxt);
@@ -191,7 +191,7 @@ public class Login extends BaseActivity {
         TextView txtLogIn = findViewById(R.id.loggingInText);
         int main;
         int opposite;
-        if (on) {
+        if (currLoggingIn) {
             main = View.INVISIBLE;
             opposite = View.VISIBLE;
         } else {

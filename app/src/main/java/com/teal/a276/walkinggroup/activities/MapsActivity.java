@@ -131,7 +131,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.groupItem:
-                startActivity(Login.makeIntent(this));
+                startActivity(JoinGroup.makeIntent(this));
                 break;
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));
