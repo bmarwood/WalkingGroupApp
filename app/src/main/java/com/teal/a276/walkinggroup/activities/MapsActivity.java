@@ -3,6 +3,7 @@ package com.teal.a276.walkinggroup.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -130,16 +131,27 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.groupItem:
-                startActivity(JoinGroup.makeIntent(this));
+                startActivity(Login.makeIntent(this));
                 break;
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));
+                break;
+            case R.id.logoutItem:
+                logoutPrefs();
+                startActivity(Login.makeIntent(this));
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
         return true;
+    }
+
+    private void logoutPrefs() {
+        SharedPreferences prefs = getSharedPreferences("loggedIn",MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("Logged in", false);
+        editor.commit();
     }
 
     public static Intent makeIntent(Context context) {

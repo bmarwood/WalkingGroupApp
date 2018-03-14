@@ -1,6 +1,8 @@
 package com.teal.a276.walkinggroup.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
@@ -29,6 +32,7 @@ public class Login extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkForLogin();
         setContentView(R.layout.activity_login);
 
         errorsForUser = findViewById(R.id.errorInput);
@@ -37,6 +41,22 @@ public class Login extends BaseActivity {
         setUpPermissions();
         setUpLoginButton();
         setupCreateAccountButton();
+    }
+
+    private void checkForLogin() {
+        SharedPreferences prefs = getSharedPreferences("loggedIn",MODE_PRIVATE);
+        Boolean extractedBool = prefs.getBoolean("Logged in", false);
+        String userName = prefs.getString("email", null);
+        String password = prefs.getString("password", null);
+        Toast.makeText(this, extractedBool.toString(), Toast.LENGTH_SHORT).show();
+
+        if(extractedBool){
+            user.setEmail(userName);
+            user.setPassword(password);
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<Void> caller = proxy.login(user);
+            ServerManager.serverRequest(caller, Login.this::successLogin, Login.this::errorLogin);
+        }
     }
 
     private void setUpPermissions() {
@@ -97,10 +117,27 @@ public class Login extends BaseActivity {
         request.addObserver((observable, o) -> {
             ModelFacade.getInstance().setCurrentUser((User)o);
 
+            storeLogin();
+
             Intent intent = MapsActivity.makeIntent(Login.this);
             startActivity(intent);
             finish();
         });
+    }
+
+    private void storeLogin() {
+        EditText emailInput = findViewById(R.id.emailEditText);
+        EditText passwordInput = findViewById(R.id.passwordEditText);
+
+        String email = emailInput.getText().toString();
+        String password = passwordInput.getText().toString();
+
+        SharedPreferences prefs = getSharedPreferences("loggedIn",MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("Logged in", true);
+        editor.putString("email", email);
+        editor.putString("password", password);
+        editor.commit();
     }
 
     private void errorLogin(String error) {
@@ -121,5 +158,9 @@ public class Login extends BaseActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    public static Intent makeIntent(Context context){
+        return new Intent(context, Login.class);
     }
 }
