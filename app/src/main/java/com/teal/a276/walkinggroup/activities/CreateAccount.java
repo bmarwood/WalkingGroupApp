@@ -56,14 +56,22 @@ public class CreateAccount extends AppCompatActivity {
 
                 ServerProxy proxy = ServerManager.getServerRequest();
                 Call<User> caller = proxy.createNewUser(user);
-                ServerManager.serverRequest(caller, CreateAccount.this::successfulResult,
+                ServerManager.serverRequest(caller, result -> successfulResult(result, password),
                         CreateAccount.this::errorCreateAccount);
         });
     }
 
-    private void successfulResult(User user) {
-        Intent intent = MapsActivity.makeIntent(CreateAccount.this);
+    private void successfulResult(User user, String password) {
+        user.setPassword(password);
 
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<Void> caller = proxy.login(user);
+        ServerManager.serverRequest(caller, CreateAccount.this::successfulLogin,
+                CreateAccount.this::errorCreateAccount);
+    }
+
+    private void successfulLogin(Void ans) {
+        Intent intent = MapsActivity.makeIntent(CreateAccount.this);
         toggleSpinner(View.INVISIBLE);
         startActivity(intent);
         finish();
