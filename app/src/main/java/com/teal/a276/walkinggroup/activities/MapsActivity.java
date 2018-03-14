@@ -1,6 +1,8 @@
 package com.teal.a276.walkinggroup.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -17,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,7 +43,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationListener;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
+import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
+import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
@@ -66,6 +72,8 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private LocationRequest locationRequest;
     private boolean locationUpdateState;
     private List<Group> activeGroups = new ArrayList<Group>();
+    GroupManager groupManager = new GroupManager();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -262,9 +270,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     protected void createLocationRequest() {
         locationRequest = new LocationRequest();
         // Specifies the rate at which your app will like to receive updates
-        locationRequest.setInterval(10000);
+        locationRequest.setInterval(100000);
         // Specifies the fastest rate at which the app can handle updates
-        locationRequest.setFastestInterval(5000);
+        locationRequest.setFastestInterval(50000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -352,6 +360,39 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        // Make only the group markers clickable
+        String title = marker.getTitle();
+        for (int i = 0; i < activeGroups.size(); i++) {
+            String groupTitle = activeGroups.get(i).getGroupDescription();
+            if (title.equals(groupTitle)) {
+
+                // Join user to the selected group
+                Group group = activeGroups.get(i);
+
+                User user = ModelFacade.getInstance().getCurrentUser();
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);
+                alertDialogBuilder.setTitle("Join Group " + title + "?");
+
+                alertDialogBuilder.setNegativeButton("Cancel", null);
+                alertDialogBuilder.setPositiveButton("Join", new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        Group group;
+//                        group = groupManager.getJoinGroup(joinPosition);
+//
+//                        ServerProxy proxy = ServerManager.getServerRequest();
+//                        Call<List<User>> call = proxy.addUserToGroup(group.getId(), ModelFacade.getInstance().getCurrentUser());
+//                        ServerManager.serverRequest(call, result -> addGroupMemberResult(result, group), MapsActivity.this::error);
+
+                    }});
+                alertDialogBuilder.show();
+
+
+
+
+                return false;
+            }
+        }
         return false;
     }
 }
