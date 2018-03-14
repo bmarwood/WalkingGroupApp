@@ -101,7 +101,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
             for (int j = 0; j < routeLatArray.size(); j++){
                 LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
                 MarkerOptions markerOptions = new MarkerOptions().position(marker);
-                String titleStr = group.getGroupName();
+                String titleStr = group.getGroupDescription();
                 markerOptions.title(titleStr);
                 map.addMarker(markerOptions);
             }
