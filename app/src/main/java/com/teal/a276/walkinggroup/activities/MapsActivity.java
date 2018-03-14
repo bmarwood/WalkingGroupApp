@@ -103,12 +103,28 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
             List<Double> routeLatArray = group.getRouteLatArray();
             List<Double> routeLngArray = group.getRouteLngArray();
 
+            // TODO: test that this works correctly / extract a method
             for (int j = 0; j < routeLatArray.size(); j++){
-                LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
-                MarkerOptions markerOptions = new MarkerOptions().position(marker);
-                String titleStr = group.getGroupDescription();
-                markerOptions.title(titleStr);
-                map.addMarker(markerOptions);
+                // Even: The fist set of locations in the arrays represents the start of the route
+                if ( j % 2 == 0 ) {
+                    // even...
+                    LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
+                    MarkerOptions markerOptions = new MarkerOptions().position(marker);
+                    String titleStr = group.getGroupDescription();
+                    markerOptions.title(titleStr);
+                    markerOptions.icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    map.addMarker(markerOptions);
+                } else {
+                    // Odd: The second set of locations repents the finish
+                    LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
+                    MarkerOptions markerOptions = new MarkerOptions().position(marker);
+                    String titleStr = group.getGroupDescription();
+                    markerOptions.title(titleStr);
+                    markerOptions.icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    map.addMarker(markerOptions);
+                }
             }
         }
     }
@@ -359,6 +375,8 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     public boolean onMarkerClick(Marker marker) {
         // Make only the group markers clickable
         String title = marker.getTitle();
+
+        // Find the group that matches the title
         for (int i = 0; i < activeGroups.size(); i++) {
             String groupTitle = activeGroups.get(i).getGroupDescription();
             if (title.equals(groupTitle)) {
@@ -366,31 +384,29 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 // Get selected group
                 selectedGroup = activeGroups.get(i);
 
+                // Build the alert dialog box
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);
                 alertDialogBuilder.setTitle("Join Group " + title + "?");
 
-                alertDialogBuilder.setNegativeButton("Leave", null);
                 alertDialogBuilder.setPositiveButton("Join", new AlertDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         User user = ModelFacade.getInstance().getCurrentUser();
+                        ServerProxy proxy = ServerManager.getServerRequest();
+                        Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), user);
+                        ServerManager.serverRequest(call, MapsActivity.this::addGroupMemberResult, MapsActivity.this::error);
+                    }});
 
-                        switch(which){
-                            case DialogInterface.BUTTON_POSITIVE:
-
-                                ServerProxy proxy = ServerManager.getServerRequest();
-                                Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), user);
-                                ServerManager.serverRequest(call, MapsActivity.this::addGroupMemberResult, MapsActivity.this::error);
-                                break;
-
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                ServerProxy proxy2 = ServerManager.getServerRequest();
-                                Call<Void> call2 = proxy2.deleteUserFromGroup(selectedGroup.getId(), user.getId());
-                                ServerManager.serverRequest(call2, MapsActivity.this::removeGroupMemberResult, MapsActivity.this::error);
-                        }
-
+                alertDialogBuilder.setNegativeButton("Leave", new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        User user = ModelFacade.getInstance().getCurrentUser();
+                        ServerProxy proxy = ServerManager.getServerRequest();
+                        Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), user.getId());
+                        ServerManager.serverRequest(call, MapsActivity.this::removeGroupMemberResult, MapsActivity.this::error);
                     }});
                 alertDialogBuilder.show();
+
                 return false;
             }
         }
@@ -404,6 +420,4 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private void removeGroupMemberResult(Void aVoid) {
         // Do nothing
     }
-
-
 }
