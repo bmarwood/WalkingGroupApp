@@ -20,6 +20,7 @@ import retrofit2.http.Query;
  *
  * When a method returns Void the result method in the ServerResult Interface should be empty
  */
+
 public interface ServerProxy {
     /**
      *

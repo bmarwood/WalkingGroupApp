@@ -6,6 +6,7 @@ package com.teal.a276.walkinggroup.model.serverproxy;
  *
  * @param <T> The Object type to pass to result
  */
+
 public interface ServerResult<T> {
     void result(T ans);
 }

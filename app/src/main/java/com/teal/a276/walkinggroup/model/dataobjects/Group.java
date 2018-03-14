@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Holds Group information
+ */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Group {
 

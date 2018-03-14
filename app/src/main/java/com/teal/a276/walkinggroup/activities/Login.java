@@ -23,6 +23,11 @@ import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.Comp
 
 import retrofit2.Call;
 
+
+/**
+ * Checks Server and validates login information
+ */
+
 public class Login extends BaseActivity {
     User user = new User();
     TextView errorsForUser;
