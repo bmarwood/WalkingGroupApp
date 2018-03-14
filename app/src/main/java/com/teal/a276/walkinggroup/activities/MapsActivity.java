@@ -3,6 +3,7 @@ package com.teal.a276.walkinggroup.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -59,6 +60,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
     public static final int MAX_RESULTS = 1;
+
+    private static final String sharePrefLogger = "Logger";
+    private static final String sharePrefUser = "userName";
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
@@ -135,11 +139,22 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));
                 break;
+            case R.id.logoutItem:
+                logoutPrefs();
+                startActivity(Login.makeIntent(this));
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
         return true;
+    }
+
+    private void logoutPrefs() {
+        SharedPreferences prefs = getSharedPreferences(sharePrefLogger,MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(sharePrefUser, null);
+        editor.apply();
     }
 
     public static Intent makeIntent(Context context) {
