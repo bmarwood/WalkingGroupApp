@@ -8,7 +8,7 @@ import java.util.List;
 
 
 /**
- * Holds Group information applicable to current User
+ * Holds Group information
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
