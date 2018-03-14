@@ -68,7 +68,9 @@ public class ServerManager {
                     }
 
                     T body = response.body();
-                    Log.d("server response:", body.toString());
+                    if(body != null) {
+                        Log.d("server response:", body.toString());
+                    }
                     resultCallback.result(body);
 
                 } else {
