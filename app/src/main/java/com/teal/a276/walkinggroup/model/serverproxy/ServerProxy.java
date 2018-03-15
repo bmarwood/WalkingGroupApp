@@ -167,5 +167,5 @@ public interface ServerProxy {
      * @return Placeholder void object, can be ignored
      */
     @DELETE("/groups/{groupId}/memberUsers/{userId}")
-    Call<Void> addUserToGroup(@Path("groupId") Long groupId, @Path("userId") Long userId);
+    Call<Void> deleteUserFromGroup(@Path("groupId") Long groupId, @Path("userId") Long userId);
 }
