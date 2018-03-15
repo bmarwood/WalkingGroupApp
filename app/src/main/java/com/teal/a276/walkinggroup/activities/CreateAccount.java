@@ -2,6 +2,7 @@ package com.teal.a276.walkinggroup.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +27,11 @@ import retrofit2.Call;
  */
 
 public class CreateAccount extends AppCompatActivity {
+
+    private static final String sharePrefLogger = "Logger";
+    private static final String sharePrefUser = "userName";
+    private static final String sharePrefPassword = "password";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +70,25 @@ public class CreateAccount extends AppCompatActivity {
     private void successfulResult(User user, String password) {
         user.setPassword(password);
 
+        storeLogin();
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<Void> caller = proxy.login(user);
         ServerManager.serverRequest(caller, CreateAccount.this::successfulLogin,
                 CreateAccount.this::errorCreateAccount);
+    }
+
+    private void storeLogin() {
+        EditText emailInput = findViewById(R.id.email);
+        EditText passwordInput = findViewById(R.id.password);
+
+        String email = emailInput.getText().toString();
+        String password = passwordInput.getText().toString();
+
+        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(sharePrefUser, email);
+        editor.putString(sharePrefPassword, password);
+        editor.apply();
     }
 
     private void successfulLogin(Void ans) {
