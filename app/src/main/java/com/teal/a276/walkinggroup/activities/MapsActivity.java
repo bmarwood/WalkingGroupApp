@@ -76,7 +76,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private static final int REQUEST_CHECK_SETTINGS = 2;
     public static final int MAX_RESULTS = 1;
 
-    private final int ZOOM_LEVEL = 20;
+    private final int ZOOM_LEVEL = 10;
 
     private static final String sharePrefLogger = "Logger";
     private static final String sharePrefUser = "userName";
