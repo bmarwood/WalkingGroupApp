@@ -76,6 +76,11 @@ public class Login extends BaseActivity {
         if (userName != null) {
             loginLayout = true;
             layoutLoggingIn(true);
+            EditText emailInput = findViewById(R.id.emailEditText);
+            EditText passwordInput = findViewById(R.id.passwordEditText);
+            emailInput.setText(userName, TextView.BufferType.EDITABLE);
+            passwordInput.setText(password, TextView.BufferType.EDITABLE);
+
             user.setEmail(userName);
             user.setPassword(password);
             ServerProxy proxy = ServerManager.getServerRequest();
@@ -85,6 +90,7 @@ public class Login extends BaseActivity {
     }
 
     private void storeLogin() {
+
         EditText emailInput = findViewById(R.id.emailEditText);
         EditText passwordInput = findViewById(R.id.passwordEditText);
 
@@ -93,6 +99,7 @@ public class Login extends BaseActivity {
 
         SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
+
         editor.putString(sharePrefUser, email);
         editor.putString(sharePrefPassword, password);
         editor.apply();
