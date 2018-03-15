@@ -30,8 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.JoinGroup" />
-        <activity android:name=".activities.AddNewGroup" />
         <activity android:name=".activities.Monitor" />
 
         <meta-data
@@ -42,8 +40,11 @@
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps">
         </activity>
-
         <activity android:name=".activities.CreateAccount" />
+        <activity android:name=".activities.CreateNewGroup" />
+        <activity
+            android:name=".activities.SelectLocationOnMap"
+            android:label="@string/title_activity_select_location_on_map"/>
     </application>
 
 </manifest>

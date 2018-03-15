@@ -11,12 +11,14 @@ import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,6 +35,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -46,8 +49,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.location.LocationListener;
-
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
@@ -113,10 +114,14 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
     private void populateGroupsOnMap(){
 
-        for(int i = 0; i < activeGroups.size(); i++) {
-            Group group = activeGroups.get(i);
-            List<Double> routeLatArray = group.getRouteLatArray();
-            List<Double> routeLngArray = group.getRouteLngArray();
+        for(Group group : activeGroups) {
+            addMarker(group);
+        }
+    }
+
+    private void addMarker(Group group) {
+        List<Double> routeLatArray = group.getRouteLatArray();
+        List<Double> routeLngArray = group.getRouteLngArray();
 
             for (int j = 0; j < routeLatArray.size(); j++){
                     LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
@@ -127,11 +132,13 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                             .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     map.addMarker(markerOptions);
             }
-        }
     }
 
     private void groupsResult(List<Group> groups) {
         activeGroups = groups;
+        if(googleApiClient.isConnected() && map != null) {
+            populateGroupsOnMap();
+        }
     }
 
     @Override
@@ -151,11 +158,19 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.groupItem:
-                startActivity(JoinGroup.makeIntent(this));
-                break;
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));
+                break;
+            case R.id.addNewGroup:
+                //TODO: FIX THIS
+                CreateNewGroup.setGroupResultCallback((o, arg) -> {
+                    Group group = (Group) arg;
+                    activeGroups.add(group);
+                    if(map != null && googleApiClient.isConnected()) {
+                        addMarker(group);
+                    }
+                });
+                startActivity(CreateNewGroup.makeIntent(this));
                 break;
             case R.id.logoutItem:
                 logoutPrefs();
@@ -280,11 +295,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
     // Handles any changes to be made based on the current state of the user’s location settings
     protected void createLocationRequest() {
-        locationRequest = new LocationRequest();
-        // Specifies the rate at which your app will like to receive updates
-        locationRequest.setInterval(100000);
-        // Specifies the fastest rate at which the app can handle updates
-        locationRequest.setFastestInterval(50000);
+        locationRequest = new LocationRequest();;
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -294,24 +305,21 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 LocationServices.SettingsApi.checkLocationSettings(googleApiClient,
                         builder.build());
 
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(@NonNull LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        locationUpdateState = true;
-                        startLocationUpdates();
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        try {
-                            status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        break;
-                }
+        result.setResultCallback(result1 -> {
+            final Status status = result1.getStatus();
+            switch (status.getStatusCode()) {
+                case LocationSettingsStatusCodes.SUCCESS:
+                    locationUpdateState = true;
+                    startLocationUpdates();
+                    break;
+                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                    try {
+                        status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException e) {
+                    }
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    break;
             }
         });
     }
@@ -336,9 +344,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     @Override
     public void onResume() {
         super.onResume();
-        if (googleApiClient.isConnected() && !locationUpdateState) {
-            startLocationUpdates();
-        }
     }
 
     @Override
