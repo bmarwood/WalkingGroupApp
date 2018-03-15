@@ -176,17 +176,15 @@ public class User {
         return p.matcher(email).matches();
     }
 
-    public User copyUser(User user) {
-        User newUser = new User();
-        newUser.setId(user.getId());
-        newUser.setName(user.getName());
-        newUser.setEmail(user.getEmail());
-        newUser.setPassword(user.getPassword());
-        newUser.setMemberOfGroups(user.getMemberOfGroups());
-        newUser.setLeadsGroups(user.getLeadsGroups());
-        newUser.setMonitoredByUsers(user.getMonitoredByUsers());
-        newUser.setMonitorsUsers(user.getMonitorsUsers());
-        newUser.setHref(user.getHref());
-        return newUser;
+    public void copyUser(User user) {
+        setId(user.getId());
+        setName(user.getName());
+        setEmail(user.getEmail());
+        setPassword(user.getPassword());
+        setMemberOfGroups(user.getMemberOfGroups());
+        setLeadsGroups(user.getLeadsGroups());
+        setMonitoredByUsers(user.getMonitoredByUsers());
+        setMonitorsUsers(user.getMonitorsUsers());
+        setHref(user.getHref());
     }
 }

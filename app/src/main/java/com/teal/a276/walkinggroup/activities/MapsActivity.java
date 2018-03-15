@@ -85,7 +85,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private Location lastLocation;
     private LocationRequest locationRequest;
     private boolean locationUpdateState;
-    private List<Group> activeGroups = new ArrayList<Group>();
+    private List<Group> activeGroups = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +126,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                     markerOptions.icon(BitmapDescriptorFactory
                             .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     map.addMarker(markerOptions);
-
             }
         }
     }
@@ -177,8 +176,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     public static Intent makeIntent(Context context) {
-        Intent intent = new Intent(context, MapsActivity.class);
-        return intent;
+        return new Intent(context, MapsActivity.class);
     }
 
     @Override
@@ -236,8 +234,8 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     private String getAddress(LatLng latLng) {
         Geocoder geocoder = new Geocoder(this);
         StringBuilder addressText = new StringBuilder();
-        List<Address> addresses = null;
-        Address address = null;
+        List<Address> addresses;
+        Address address;
 
         if (!isValidLatLng(latLng.latitude, latLng.longitude)) {
             addressText = addressText.append("Address not available");
@@ -388,7 +386,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 List<User> currentUsers = new ArrayList<>(user.getMonitoredByUsers().size() + 1);
                 currentUsers.addAll(user.getMonitorsUsers());
                 currentUsers.add(user);
-                final User userToJoinRemove = new User();
+                final User selectedUser = new User();
 
                 List<String> userNames = new ArrayList<>();
                 for (int j = 0; j < currentUsers.size(); j++) {
@@ -409,8 +407,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        Toast.makeText(getBaseContext(), adapterView.getItemIdAtPosition(i) + "", Toast.LENGTH_LONG).show();
-                        userToJoinRemove.copyUser(currentUsers.get(i));
+                        selectedUser.copyUser(currentUsers.get(i));
                     }
 
                     @Override
@@ -421,13 +418,13 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
 
                 alertDialogBuilder.setPositiveButton(getString(R.string.add_user), (dialog, which) -> {
                     ServerProxy proxy = ServerManager.getServerRequest();
-                    Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), userToJoinRemove);
+                    Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), selectedUser);
                     ServerManager.serverRequest(call, MapsActivity.this::addGroupMemberResult, MapsActivity.this::error);
                 });
 
                 alertDialogBuilder.setNegativeButton(getString(R.string.remove_user), (dialog, which) -> {
                     ServerProxy proxy = ServerManager.getServerRequest();
-                    Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), userToJoinRemove.getId());
+                    Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), selectedUser.getId());
                     ServerManager.serverRequest(call, MapsActivity.this::removeGroupMemberResult, MapsActivity.this::error);
                 });
 
@@ -441,10 +438,10 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     private void addGroupMemberResult(List<User> users) {
-        // Do nothing
+        Toast.makeText(this, "User added to group", Toast.LENGTH_SHORT).show();
     }
 
     private void removeGroupMemberResult(Void aVoid) {
-        // Do nothing
+        Toast.makeText(this, "User removed to group", Toast.LENGTH_SHORT).show();
     }
 }
