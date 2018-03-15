@@ -31,7 +31,7 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
     public static final int BEARING = 0;
     public static final int TILT = 0;
     public static final int VIEW = 13;
-    private GoogleMap mMap;
+    private GoogleMap map;
     private double lat;
     private double lng;
 
@@ -45,25 +45,14 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
         mapFragment.getMapAsync(this);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        map = googleMap;
 
 
-        //get current GPS location and put the Lat, Long in currentPosition
         LatLng currentPosition = moveToCurrentLocation();
 
-        //add marker on current position and make it draggable
-        Marker currMarker = mMap.addMarker(new MarkerOptions().
+        map.addMarker(new MarkerOptions().
                 position(currentPosition).
                 draggable(true));
 
@@ -73,8 +62,7 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
         Log.d("current location", "Lat: " + currentPosition.latitude + "Lng: " + currentPosition.longitude);
 
 
-        //Listens to drags the user makes
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
 
@@ -95,7 +83,7 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
         });
 
         //Upon click, asks user if this is the location they want.
-        mMap.setOnMarkerClickListener(marker -> {
+        map.setOnMarkerClickListener(marker -> {
 
             String latStr = String.valueOf(lat);
             String lonStr = String.valueOf(lng);
@@ -125,17 +113,18 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
 
         Criteria criteria = new Criteria();
 
-        //this if statement is auto generated
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) || locationManager == null) {
+            return new LatLng(0, 0);
         }
-      Location location = locationManager.getLastKnownLocation(
+
+        Location location = locationManager.getLastKnownLocation(
               locationManager.getBestProvider(criteria, false));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
                     location.getLongitude()), VIEW));
 
-      CameraPosition cameraPosition = new CameraPosition.Builder()
+        CameraPosition cameraPosition = new CameraPosition.Builder()
               .target(new LatLng(location.getLatitude(), location.getLongitude()))  // Sets the center of the map to location user
               .zoom(ZOOM)
               .bearing(BEARING)
@@ -143,7 +132,7 @@ public class SelectLocationOnMap extends BaseActivity implements OnMapReadyCallb
               .build();
 
         LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         return currentPosition;
 
