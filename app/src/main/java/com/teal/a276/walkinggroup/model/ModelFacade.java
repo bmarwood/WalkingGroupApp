@@ -11,7 +11,6 @@ public class ModelFacade {
 
     private static ModelFacade instance;
     private User currentUser = null;
-    private GroupManager manager = null;
 
 
     private ModelFacade() {}
@@ -34,5 +33,4 @@ public class ModelFacade {
     public void setCurrentUser(User newCurrentUser) {
         this.currentUser = newCurrentUser;
     }
-
 }

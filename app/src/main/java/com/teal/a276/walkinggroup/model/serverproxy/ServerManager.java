@@ -129,5 +129,9 @@ public class ServerManager {
             return chain.proceed(modifiedRequest);
         }
     }
+
+    public static void logout() {
+        apiToken = null;
+    }
 }
 
