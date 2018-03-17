@@ -53,6 +53,8 @@ public class Login extends BaseActivity {
         setUpPermissions();
         setUpLoginButton();
         setupCreateAccountButton();
+
+        setupTempEmbeddedButton();
     }
 
     public static Intent makeIntent(Context context) {
@@ -229,5 +231,13 @@ public class Login extends BaseActivity {
         runOnUiThread(() -> spinner.setVisibility(visibility));
     }
 
+
+    private void setupTempEmbeddedButton(){
+        Button btn = findViewById(R.id.tempEmbedded);
+        btn.setOnClickListener(v-> {
+            Intent intent = EmbeddedCreateGroup.makeIntent(Login.this);
+            startActivity(intent);
+        });
+    }
 }
 
