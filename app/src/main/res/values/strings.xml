@@ -26,18 +26,14 @@
 
     <!-- Strings related to Create User -->
     <string name="first_name">First Name</string>
-    <string name="last_name">Last Name</string>
     <string name="name">Name</string>
     <string name="create">Create</string>
     <string name="valid_input_yes">Valid Input: Yes</string>
     <string name="hint_password">Password</string>
     <string name="hint_email">Email</string>
+    <string name="hint_name">Name</string>
     <string name="defaultuserpicture">defaultUserPicture</string>
     <string name="email_in_use">That email is already in use</string>
-    <string name="first_name_must_be_inputted">First Name must be inputted</string>
-    <string name="last_name_must_be_inputted">Last Name must be inputted</string>
-    <string name="email_must_be_inputted">Email must be inputted</string>
-    <string name="password_must_be_inputted">password must be inputted</string>
 
 
     <string name="monitor">Monitor</string>
@@ -68,16 +64,15 @@
     <string name="connection_error">Server connecting to the server.
         Please check that you are connected to the internet.
     </string>
-    <string name="invalid_email">Email address is invalid</string>
-    <string name="empty_password">Password is empty</string>
-
-
-
-    <string name="empty_group_name">Empty Group Name</string>
+    <string name="invalid_email">Email Address is Invalid</string>
+    <string name="empty_password">Password is Empty</string>
+    <string name="empty_group_name">Group Name is Empty</string>
+    <string name="empty_username">Name is Empty</string>
     <string name="email_or_password_is_incorrect">Email or Password is Incorrect</string>
 
-    <string name="logging_in">Logging In…</string>
+    <!-- Autosign in -->
     <string name="there_was_an_issue_autosigning_in_please_try_again">There was an Issue AutoSigning in, please try again</string>
+    <string name="logging_in">Logging In…</string>
 
     <!-- Strings related to map -->
     <string name="add_user">Add User</string>

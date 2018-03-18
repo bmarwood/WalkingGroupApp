@@ -28,27 +28,16 @@ import retrofit2.Call;
  * Checks Server and validates login information
  */
 
-public class Login extends BaseActivity {
-    User user = new User();
-    TextView errorsForUser;
-    TextView signInError;
-    Boolean loginLayout = false;
-    private static final String sharePrefLogger = "Logger";
-    private static final String sharePrefUser = "userName";
-    private static final String sharePrefPassword = "password";
-
+public class Login extends AuthenticationActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    Boolean loginLayout = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         checkForLogin();
-
-        errorsForUser = findViewById(R.id.errorInput);
-        errorsForUser.setTextColor(Color.RED);
-        signInError = findViewById(R.id.issueSignInTxt);
-        signInError.setTextColor(Color.RED);
 
         setUpPermissions();
         setUpLoginButton();
@@ -85,24 +74,8 @@ public class Login extends BaseActivity {
             user.setPassword(password);
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<Void> caller = proxy.login(user);
-            ServerManager.serverRequest(caller, Login.this::successLogin, Login.this::errorLogin);
+            ServerManager.serverRequest(caller, this::successfulLogin, this::errorLogin);
         }
-    }
-
-    private void storeLogin() {
-
-        EditText emailInput = findViewById(R.id.emailEditText);
-        EditText passwordInput = findViewById(R.id.passwordEditText);
-
-        String email = emailInput.getText().toString();
-        String password = passwordInput.getText().toString();
-
-        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putString(sharePrefUser, email);
-        editor.putString(sharePrefPassword, password);
-        editor.apply();
     }
 
     private void setUpLoginButton() {
@@ -131,7 +104,7 @@ public class Login extends BaseActivity {
 
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<Void> caller = proxy.login(user);
-            ServerManager.serverRequest(caller, Login.this::successLogin, Login.this::errorLogin);
+            ServerManager.serverRequest(caller, Login.this::successfulLogin, Login.this::errorLogin);
         });
     }
 
@@ -139,38 +112,6 @@ public class Login extends BaseActivity {
         Button btn = findViewById(R.id.createAccntBtn);
         btn.setOnClickListener(v -> {
             Intent intent = CreateAccount.makeIntent(Login.this);
-            startActivity(intent);
-            finish();
-        });
-    }
-
-    private boolean validInput(EditText emailInput, EditText passwordInput) {
-        boolean validInputs = true;
-
-        String password = passwordInput.getText().toString();
-        if (password.isEmpty()) {
-            passwordInput.setError(getString(R.string.empty_password));
-            validInputs = false;
-        }
-
-        String email = emailInput.getText().toString();
-        if (!User.validateEmail(email)) {
-            emailInput.setError(getString(R.string.invalid_email));
-            validInputs = false;
-        }
-
-        return validInputs;
-    }
-
-    private void successLogin(Void ans) {
-        CompleteUserRequest request = new CompleteUserRequest(user, this::error);
-        request.makeServerRequest();
-        request.addObserver((observable, o) -> {
-            ModelFacade.getInstance().setCurrentUser((User) o);
-
-            storeLogin();
-
-            Intent intent = MapsActivity.makeIntent(Login.this);
             startActivity(intent);
             finish();
         });
@@ -221,13 +162,6 @@ public class Login extends BaseActivity {
 
         loginSpin.setVisibility(loadingScreen);
         txtLogIn.setVisibility(loadingScreen);
-
     }
-
-    private void toggleSpinner(int visibility) {
-        final ProgressBar spinner = findViewById(R.id.progressBar);
-        runOnUiThread(() -> spinner.setVisibility(visibility));
-    }
-
 }
 
