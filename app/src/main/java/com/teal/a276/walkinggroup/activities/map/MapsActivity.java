@@ -36,6 +36,7 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -45,11 +46,11 @@ import retrofit2.Call;
  */
 
 public class MapsActivity extends AbstractMapActivity {
-    private static final int REQUEST_CHECK_SETTINGS = 2;
+    private final int REQUEST_CHECK_SETTINGS = 2;
+    private final String sharePrefLogger = "Logger";
+    private final String sharePrefUser = "userName";
 
-    private static final String sharePrefLogger = "Logger";
-    private static final String sharePrefUser = "userName";
-
+    private HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
     private List<Group> activeGroups = new ArrayList<>();
 
     @Override
@@ -62,7 +63,6 @@ public class MapsActivity extends AbstractMapActivity {
     }
 
     private void populateGroupsOnMap(){
-
         for(Group group : activeGroups) {
             addMarker(group);
         }
@@ -79,16 +79,21 @@ public class MapsActivity extends AbstractMapActivity {
             return;
         }
 
-
         for (int j = 0; j < routeLatArray.size(); j++){
-                LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
-                MarkerOptions markerOptions = new MarkerOptions().position(marker);
-                String titleStr = group.getGroupDescription();
-                markerOptions.title(titleStr);
-                markerOptions.icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                map.addMarker(markerOptions);
+                LatLng markerLocation = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
+                placeGroupMarker(markerLocation, group);
         }
+    }
+
+    private void placeGroupMarker(LatLng markerLocation, Group group) {
+        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
+        String titleStr = group.getGroupDescription();
+        markerOptions.title(titleStr);
+        markerOptions.icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+        Marker mapMarker = map.addMarker(markerOptions);
+        markerGroupHashMap.put(mapMarker, group);
     }
 
     private void groupsResult(List<Group> groups) {
@@ -179,67 +184,81 @@ public class MapsActivity extends AbstractMapActivity {
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        String title = marker.getTitle();
 
-        // Find the group that matches the title
-        for (int i = 0; i < activeGroups.size(); i++) {
-            String groupTitle = activeGroups.get(i).getGroupDescription();
-            if (title.equals(groupTitle)) {
-                Group selectedGroup = activeGroups.get(i);
-
-                User user = ModelFacade.getInstance().getCurrentUser();
-                List<User> currentUsers = new ArrayList<>(user.getMonitoredByUsers().size() + 1);
-                currentUsers.addAll(user.getMonitorsUsers());
-                currentUsers.add(user);
-                final User selectedUser = new User();
-
-                List<String> userNames = new ArrayList<>();
-                for (int j = 0; j < currentUsers.size(); j++) {
-                    userNames.add(currentUsers.get(j).getName());
-                }
-
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-                LayoutInflater inflater = this.getLayoutInflater();
-                final View myView = inflater.inflate(R.layout.join_leave_alertdialog, null);
-                alertDialogBuilder.setView(myView);
-                Spinner spinner = myView .findViewById(R.id.groupsSpinner);
-
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
-                        android.R.layout.simple_spinner_item, userNames);
-
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(dataAdapter);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        selectedUser.copyUser(currentUsers.get(i));
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
-                alertDialogBuilder.setPositiveButton(getString(R.string.add_user), (dialog, which) -> {
-                    ServerProxy proxy = ServerManager.getServerRequest();
-                    Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), selectedUser);
-                    ServerManager.serverRequest(call, result -> addGroupMemberResult(result, selectedUser), MapsActivity.this::error);
-                });
-
-                alertDialogBuilder.setNegativeButton(getString(R.string.remove_user), (dialog, which) -> {
-                    ServerProxy proxy = ServerManager.getServerRequest();
-                    Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), selectedUser.getId());
-                    ServerManager.serverRequest(call, result -> removeGroupMemberResult(result, selectedUser), MapsActivity.this::error);
-                });
-
-                alertDialogBuilder.setNeutralButton(getString(R.string.cancel), null);
-                alertDialogBuilder.show();
-
-                return true;
-            }
+        Group group = markerGroupHashMap.get(marker);
+        if (group == null) {
+            return false;
         }
-        return false;
+
+        User user = ModelFacade.getInstance().getCurrentUser();
+        List<User> currentUsers = new ArrayList<>(user.getMonitoredByUsers().size() + 1);
+        currentUsers.addAll(user.getMonitorsUsers());
+        currentUsers.add(user);
+
+        List<String> userNames = getUserNames();
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.join_leave_alertdialog, null);
+        final User selectedUser = new User();
+
+
+        initializeAlertDialogSpinner(dialogView, userNames, new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedUser.copyUser(currentUsers.get(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        alertDialogBuilder.setView(dialogView);
+        initializeAlertDialog(alertDialogBuilder, group, selectedUser);
+        return true;
+    }
+
+    private List<String> getUserNames() {
+        User user = ModelFacade.getInstance().getCurrentUser();
+        List<User> currentUsers = new ArrayList<>(user.getMonitoredByUsers().size() + 1);
+        currentUsers.addAll(user.getMonitorsUsers());
+        currentUsers.add(user);
+
+        List<String> userNames = new ArrayList<>();
+        for (int j = 0; j < currentUsers.size(); j++) {
+            userNames.add(currentUsers.get(j).getName());
+        }
+
+        return userNames;
+    }
+
+    private void initializeAlertDialogSpinner(View dialog, List<String> userNames, AdapterView.OnItemSelectedListener listener) {
+        Spinner spinner = dialog.findViewById(R.id.groupsSpinner);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, userNames);
+
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(listener);
+    }
+
+    private void initializeAlertDialog(AlertDialog.Builder builder, Group selectedGroup, User selectedUser) {
+        builder.setPositiveButton(getString(R.string.add_user), (dialog, which) -> {
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), selectedUser);
+            ServerManager.serverRequest(call, result -> addGroupMemberResult(result, selectedUser), MapsActivity.this::error);
+        });
+
+        builder.setNegativeButton(getString(R.string.remove_user), (dialog, which) -> {
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), selectedUser.getId());
+            ServerManager.serverRequest(call, result -> removeGroupMemberResult(result, selectedUser), MapsActivity.this::error);
+        });
+
+        builder.setNeutralButton(getString(R.string.cancel), null);
+        builder.show();
     }
 
     private void addGroupMemberResult(List<User> users, User user) {
