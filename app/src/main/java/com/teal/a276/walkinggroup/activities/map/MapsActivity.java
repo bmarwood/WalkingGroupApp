@@ -41,15 +41,14 @@ import java.util.List;
 
 import retrofit2.Call;
 
+import static com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity.sharePrefLogger;
+import static com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity.sharePrefUser;
+
 /**
  * Displays Google maps interface for user to interact with
  */
 
 public class MapsActivity extends AbstractMapActivity {
-    private final int REQUEST_CHECK_SETTINGS = 2;
-    private final String sharePrefLogger = "Logger";
-    private final String sharePrefUser = "userName";
-
     private HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
     private List<Group> activeGroups = new ArrayList<>();
 

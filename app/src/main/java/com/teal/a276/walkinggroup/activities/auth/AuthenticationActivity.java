@@ -18,8 +18,8 @@ import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.Comp
  */
 
 public abstract class AuthenticationActivity extends BaseActivity {
-    static final String sharePrefLogger = "Logger";
-    static final String sharePrefUser = "userName";
+    public static final String sharePrefLogger = "Logger";
+    public static final String sharePrefUser = "userName";
     static final String sharePrefPassword = "password";
 
     User user = new User();

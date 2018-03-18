@@ -47,11 +47,10 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
         GoogleMap.OnMarkerClickListener,
         LocationListener {
 
+    private static final int MAX_RESULTS = 1;
     protected final int ZOOM_LEVEL = 10;
     protected final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final int MAX_RESULTS = 1;
-
-
+    protected final int REQUEST_CHECK_SETTINGS = 2;
 
     protected GoogleMap map;
     protected GoogleApiClient googleApiClient;
@@ -99,7 +98,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
                     break;
                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                     try {
-                        status.startResolutionForResult(this, 2);
+                        status.startResolutionForResult(this, REQUEST_CHECK_SETTINGS);
                     } catch (IntentSender.SendIntentException e) {
                         Log.getStackTraceString(e);
                     }
