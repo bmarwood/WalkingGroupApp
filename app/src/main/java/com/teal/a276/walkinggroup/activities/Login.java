@@ -4,22 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.model.ModelFacade;
-import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
-import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CompleteUserRequest;
 
 import retrofit2.Call;
 
@@ -30,13 +26,16 @@ import retrofit2.Call;
 
 public class Login extends AuthenticationActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    Boolean loginLayout = false;
+    private Boolean autoLogin = false;
+    private ViewSwitcher switcher;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        switcher = findViewById(R.id.viewSwitcher);
         checkForLogin();
 
         setUpPermissions();
@@ -62,31 +61,27 @@ public class Login extends AuthenticationActivity {
         String userName = prefs.getString(sharePrefUser, null);
         String password = prefs.getString(sharePrefPassword, null);
 
-        if (userName != null) {
-            loginLayout = true;
-            layoutLoggingIn(true);
-            EditText emailInput = findViewById(R.id.emailEditText);
-            EditText passwordInput = findViewById(R.id.passwordEditText);
-            emailInput.setText(userName, TextView.BufferType.EDITABLE);
-            passwordInput.setText(password, TextView.BufferType.EDITABLE);
+        if (userName != null && !userName.isEmpty()) {
+            switcher.showNext();
+            autoLogin = true;
+//            EditText emailInput = findViewById(R.id.email);
+//            EditText passwordInput = findViewById(R.id.password);
+//            emailInput.setText(userName, TextView.BufferType.EDITABLE);
+//            passwordInput.setText(password, TextView.BufferType.EDITABLE);
 
             user.setEmail(userName);
             user.setPassword(password);
-            ServerProxy proxy = ServerManager.getServerRequest();
-            Call<Void> caller = proxy.login(user);
-            ServerManager.serverRequest(caller, this::successfulLogin, this::errorLogin);
+            login();
         }
     }
 
     private void setUpLoginButton() {
         Button btn = findViewById(R.id.signInBtn);
         btn.setOnClickListener(v -> {
-            EditText emailInput = findViewById(R.id.emailEditText);
-            EditText passwordInput = findViewById(R.id.passwordEditText);
+            EditText emailInput = findViewById(R.id.email);
+            EditText passwordInput = findViewById(R.id.password);
 
-            TextView errorsForUser = findViewById(R.id.errorInput);
-            errorsForUser.setVisibility(View.INVISIBLE);
-            TextView signInError = findViewById(R.id.issueSignInTxt);
+            TextView signInError = findViewById(R.id.autoSignInError);
             if (signInError.getVisibility() == View.VISIBLE) {
                 signInError.setVisibility(View.INVISIBLE);
             }
@@ -101,11 +96,14 @@ public class Login extends AuthenticationActivity {
 
             user.setEmail(email);
             user.setPassword(password);
-
-            ServerProxy proxy = ServerManager.getServerRequest();
-            Call<Void> caller = proxy.login(user);
-            ServerManager.serverRequest(caller, Login.this::successfulLogin, Login.this::errorLogin);
+            login();
         });
+    }
+
+    private void login() {
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<Void> caller = proxy.login(user);
+        ServerManager.serverRequest(caller, this::successfulLogin, this::errorLogin);
     }
 
     private void setupCreateAccountButton() {
@@ -118,50 +116,15 @@ public class Login extends AuthenticationActivity {
     }
 
     private void errorLogin(String error) {
-        if (loginLayout) {
-            layoutLoggingIn(false);
-            TextView signInError = findViewById(R.id.issueSignInTxt);
+        if (autoLogin) {
+            switcher.showNext();
+
+            TextView signInError = findViewById(R.id.autoSignInError);
             signInError.setVisibility(View.VISIBLE);
-            loginLayout = false;
+            autoLogin = false;
         } else {
-            TextView errorsForUser = findViewById(R.id.errorInput);
-            errorsForUser.setVisibility(View.VISIBLE);
-            toggleSpinner(View.INVISIBLE);
+            super.authError(error);
         }
-    }
-
-    private void layoutLoggingIn(boolean currLoggingIn) {
-        TextView txtLogin = findViewById(R.id.loginText);
-        TextView txtEmail = findViewById(R.id.emailTxt);
-        TextView txtPassword = findViewById(R.id.passwordTxt);
-        TextView txtCreate = findViewById(R.id.createAccountTxt);
-        EditText editEmail = findViewById(R.id.emailEditText);
-        EditText editPassword = findViewById(R.id.passwordEditText);
-        Button createAccountBtn = findViewById(R.id.createAccntBtn);
-        Button signInBtn = findViewById(R.id.signInBtn);
-
-        ProgressBar loginSpin = findViewById(R.id.loggingInSpinner);
-        TextView txtLogIn = findViewById(R.id.loggingInText);
-        int main;
-        int loadingScreen;
-        if (currLoggingIn) {
-            main = View.INVISIBLE;
-            loadingScreen = View.VISIBLE;
-        } else {
-            main = View.VISIBLE;
-            loadingScreen = View.INVISIBLE;
-        }
-        txtLogin.setVisibility(main);
-        txtEmail.setVisibility(main);
-        txtPassword.setVisibility(main);
-        txtCreate.setVisibility(main);
-        editEmail.setVisibility(main);
-        editPassword.setVisibility(main);
-        createAccountBtn.setVisibility(main);
-        signInBtn.setVisibility(main);
-
-        loginSpin.setVisibility(loadingScreen);
-        txtLogIn.setVisibility(loadingScreen);
     }
 }
 

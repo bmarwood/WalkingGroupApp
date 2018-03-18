@@ -2,6 +2,7 @@ package com.teal.a276.walkinggroup.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -69,6 +70,11 @@ public abstract class AuthenticationActivity extends BaseActivity {
         }
 
         return validInputs;
+    }
+
+    void authError(String error) {
+        toggleSpinner(View.INVISIBLE);
+        super.error(error);
     }
 
 }

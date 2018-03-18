@@ -42,7 +42,7 @@ public class CreateAccount extends AuthenticationActivity {
             }
 
             toggleSpinner(View.VISIBLE);
-            
+
             String name = userNameInput.getText().toString();
             String email = emailInput.getText().toString();
             String password = passwordInput.getText().toString();
@@ -51,7 +51,7 @@ public class CreateAccount extends AuthenticationActivity {
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<User> caller = proxy.createNewUser(user);
             ServerManager.serverRequest(caller, result -> successfulResult(result, password),
-                    CreateAccount.this::errorCreateAccount);
+                    CreateAccount.this::authError);
         });
     }
 
@@ -75,17 +75,7 @@ public class CreateAccount extends AuthenticationActivity {
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<Void> caller = proxy.login(user);
         ServerManager.serverRequest(caller, this::successfulLogin,
-                this::errorCreateAccount);
-    }
-
-    private void errorCreateAccount(String error) {
-        TextView errorsForUser = findViewById(R.id.badEmailOrPassword);
-
-        errorsForUser.setText(R.string.email_in_use);
-        errorsForUser.setVisibility(View.VISIBLE);
-        errorsForUser.setTextColor(Color.RED);
-
-        toggleSpinner(View.INVISIBLE);
+                this::authError);
     }
 
     public static Intent makeIntent(Context context) {

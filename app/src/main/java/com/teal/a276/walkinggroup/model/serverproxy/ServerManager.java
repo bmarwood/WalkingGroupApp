@@ -1,7 +1,10 @@
 package com.teal.a276.walkinggroup.model.serverproxy;
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Log;
+
+import com.teal.a276.walkinggroup.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,7 +84,8 @@ public class ServerManager {
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
                 Log.e("Server Connection Error", Log.getStackTraceString(t));
-                errorCallback.error("");
+                //TODO: proper error message here besides throwable
+                errorCallback.error(t.getLocalizedMessage());
             }
         });
     }
