@@ -40,9 +40,7 @@ import com.teal.a276.walkinggroup.activities.BaseActivity;
 public class SelectLocationOnMap extends AbstractMapActivity {
     public static final String EXTRA_LATITUDE = "latitude-extra";
     public static final String EXTRA_LONGITUDE = "longitude-extra";
-
-    private double lat;
-    private double lng;
+    private LatLng markerEndLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +62,9 @@ public class SelectLocationOnMap extends AbstractMapActivity {
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                LatLng afterDrag = marker.getPosition();
-
-                Log.d("after moved", "Lat" + afterDrag.latitude + "Lng" + afterDrag.longitude);
-                LatLng latLng = marker.getPosition();
-
-                lat = latLng.latitude;
-                lng = latLng.longitude;
+                markerEndLocation = marker.getPosition();
+                Log.d("after moved", "Lat" + markerEndLocation.latitude +
+                        "Lng" + markerEndLocation.longitude);
             }
         });
     }
@@ -90,23 +84,21 @@ public class SelectLocationOnMap extends AbstractMapActivity {
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        String latStr = String.valueOf(lat);
-        String lonStr = String.valueOf(lng);
-        Log.d("click listener", "Lat" + latStr + "Lng" + lonStr);
+        Log.d("click listener", "LatLng" + markerEndLocation);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(SelectLocationOnMap.this);
         alertDialog.setTitle(R.string.useThisLocation);
         alertDialog.setNegativeButton((R.string.cancel), null);
         alertDialog.setPositiveButton((R.string.ok), (dialog, which) -> {
 
             Intent intent = new Intent();
-            intent.putExtra(EXTRA_LATITUDE, lat);
-            intent.putExtra(EXTRA_LONGITUDE, lng);
+            intent.putExtra(EXTRA_LATITUDE, markerEndLocation.latitude);
+            intent.putExtra(EXTRA_LONGITUDE, markerEndLocation.longitude);
             setResult(Activity.RESULT_OK, intent);
             finish();
 
         });
         alertDialog.show();
 
-        return false;
+        return true;
     }
 }

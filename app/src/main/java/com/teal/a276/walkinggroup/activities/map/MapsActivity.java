@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -70,6 +71,14 @@ public class MapsActivity extends AbstractMapActivity {
     private void addMarker(Group group) {
         List<Double> routeLatArray = group.getRouteLatArray();
         List<Double> routeLngArray = group.getRouteLngArray();
+
+        if(routeLatArray.size() != routeLngArray.size()) {
+            Log.e("Array lengths error ", String.format("Expected matching lengths. " +
+                    "Got latArrayLength %d, lngArrayLength %d",
+                    routeLatArray.size(), routeLngArray.size()));
+            return;
+        }
+
 
         for (int j = 0; j < routeLatArray.size(); j++){
                 LatLng marker = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
@@ -215,29 +224,31 @@ public class MapsActivity extends AbstractMapActivity {
                 alertDialogBuilder.setPositiveButton(getString(R.string.add_user), (dialog, which) -> {
                     ServerProxy proxy = ServerManager.getServerRequest();
                     Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), selectedUser);
-                    ServerManager.serverRequest(call, MapsActivity.this::addGroupMemberResult, MapsActivity.this::error);
+                    ServerManager.serverRequest(call, result -> addGroupMemberResult(result, selectedUser), MapsActivity.this::error);
                 });
 
                 alertDialogBuilder.setNegativeButton(getString(R.string.remove_user), (dialog, which) -> {
                     ServerProxy proxy = ServerManager.getServerRequest();
                     Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), selectedUser.getId());
-                    ServerManager.serverRequest(call, MapsActivity.this::removeGroupMemberResult, MapsActivity.this::error);
+                    ServerManager.serverRequest(call, result -> removeGroupMemberResult(result, selectedUser), MapsActivity.this::error);
                 });
 
                 alertDialogBuilder.setNeutralButton(getString(R.string.cancel), null);
                 alertDialogBuilder.show();
 
-                return false;
+                return true;
             }
         }
         return false;
     }
 
-    private void addGroupMemberResult(List<User> users) {
-        Toast.makeText(this, "User added to group", Toast.LENGTH_SHORT).show();
+    private void addGroupMemberResult(List<User> users, User user) {
+        Toast.makeText(this, String.format("Added %s to group", user.getName()),
+                Toast.LENGTH_SHORT).show();
     }
 
-    private void removeGroupMemberResult(Void aVoid) {
-        Toast.makeText(this, "User removed to group", Toast.LENGTH_SHORT).show();
+    private void removeGroupMemberResult(Void result, User user) {
+        Toast.makeText(this, String.format("Removed %s from group", user.getName()),
+                Toast.LENGTH_SHORT).show();
     }
 }
