@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.activities;
+package com.teal.a276.walkinggroup.activities.auth;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +7,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.BaseActivity;
+import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CompleteUserRequest;

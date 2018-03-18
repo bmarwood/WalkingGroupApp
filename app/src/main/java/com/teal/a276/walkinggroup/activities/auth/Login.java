@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.activities;
+package com.teal.a276.walkinggroup.activities.auth;
 
 import android.content.Context;
 import android.content.Intent;
@@ -57,7 +57,7 @@ public class Login extends AuthenticationActivity {
     }
 
     private void checkForLogin() {
-        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, Context.MODE_PRIVATE);
         String userName = prefs.getString(sharePrefUser, null);
         String password = prefs.getString(sharePrefPassword, null);
 

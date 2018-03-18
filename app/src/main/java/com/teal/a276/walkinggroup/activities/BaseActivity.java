@@ -14,7 +14,7 @@ import com.teal.a276.walkinggroup.R;
  * Has Shared Error Handling
  */
 
-abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

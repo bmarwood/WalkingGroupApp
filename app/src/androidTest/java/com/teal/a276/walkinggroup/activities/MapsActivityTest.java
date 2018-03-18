@@ -3,6 +3,7 @@ package com.teal.a276.walkinggroup.activities;
 import android.support.test.rule.ActivityTestRule;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 
 import org.junit.After;
 import org.junit.Before;

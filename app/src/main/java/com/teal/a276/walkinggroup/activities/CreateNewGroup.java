@@ -12,13 +12,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.map.SelectLocationOnMap;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CreateGroupRequest;
 
 import java.util.Observer;
 
-import static com.teal.a276.walkinggroup.activities.SelectLocationOnMap.EXTRA_LATITUDE;
-import static com.teal.a276.walkinggroup.activities.SelectLocationOnMap.EXTRA_LONGITUDE;
+import static com.teal.a276.walkinggroup.activities.map.SelectLocationOnMap.EXTRA_LATITUDE;
+import static com.teal.a276.walkinggroup.activities.map.SelectLocationOnMap.EXTRA_LONGITUDE;
 
 /**
  * Activity to create a new group: Users are able to set group name, set leader's ID, and
