@@ -183,7 +183,6 @@ public class MapsActivity extends AbstractMapActivity {
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-
         Group group = markerGroupHashMap.get(marker);
         if (group == null) {
             return false;
@@ -216,7 +215,7 @@ public class MapsActivity extends AbstractMapActivity {
 
         alertDialogBuilder.setView(dialogView);
         initializeAlertDialog(alertDialogBuilder, group, selectedUser);
-        return true;
+        return false;
     }
 
     private List<String> getUserNames() {
