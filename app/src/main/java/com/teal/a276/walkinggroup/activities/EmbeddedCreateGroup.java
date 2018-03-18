@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,9 +46,6 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     private LocationRequest locationRequest;
     private Location lastLocation;
     private LatLng currentLocation;
-
-    private LocationManager locationManager;
-    private LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,16 +123,13 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        //map.setMinZoomPreference(9);
-        //LatLng ny = new LatLng(40.7143528, -74.0059731);
-        //map.moveCamera(CameraUpdateFactory.newLatLng(ny));
 
-        //map.addMarker(new MarkerOptions().
-        //        position(ny).
-        //        draggable(true));
-        //Log.d("initial location", "Lat" + currentLocation.latitude + "Lng" + currentLocation.longitude);
-
-
+        map.setOnMapClickListener(latLng -> {
+            //clear any previous marker
+            map.clear();
+            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            map.addMarker(new MarkerOptions().position(latLng));
+        });
 
     }
     @Override
@@ -185,12 +178,10 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
 
     }
 
-
     @NonNull
     private LatLng locationToLatLng(){
         return new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -200,12 +191,10 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     @Override
