@@ -19,7 +19,9 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="98dp"
+        android:layout_marginRight="97dp" />
 
     <Button
         android:id="@+id/meetingMapBtn"
@@ -33,7 +35,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createGroupEmailEdit"
         app:layout_constraintVertical_bias="0.0"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:layout_marginRight="72dp" />
 
     <TextView
         android:id="@+id/createGroupNameTv"
@@ -46,7 +49,9 @@
         app:layout_constraintEnd_toStartOf="@+id/createGroupNameEdit"
         app:layout_constraintHorizontal_bias="0.513"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createNewGroupTv" />
+        app:layout_constraintTop_toBottomOf="@+id/createNewGroupTv"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="28dp" />
 
     <TextView
         android:id="@+id/createLeadersEmailTv"
@@ -59,10 +64,11 @@
         app:layout_constraintEnd_toStartOf="@+id/createGroupEmailEdit"
         app:layout_constraintHorizontal_bias="0.593"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createGroupNameTv" />
+        app:layout_constraintTop_toBottomOf="@+id/createGroupNameTv"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="28dp" />
 
     <TextView
-        android:id="@+id/createMeetingLocationTv"
         android:layout_width="120dp"
         android:layout_height="25dp"
         android:layout_marginBottom="8dp"
@@ -74,7 +80,9 @@
         app:layout_constraintEnd_toStartOf="@+id/meetingMapBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createLeadersEmailTv"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="37dp" />
 
     <EditText
         android:id="@+id/createGroupNameEdit"
@@ -86,7 +94,8 @@
         android:inputType="textPersonName"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createNewGroupTv"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:layout_marginRight="16dp" />
 
     <EditText
         android:id="@+id/createGroupEmailEdit"
@@ -98,7 +107,8 @@
         android:inputType="textEmailAddress"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createGroupNameEdit"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:layout_marginRight="12dp" />
 
     <Button
         android:id="@+id/createNewGroupBtn"

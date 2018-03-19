@@ -18,7 +18,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class MapsActivityTest {
 
     @Rule
-    public ActivityTestRule<MapsActivity> activityTestRule = new ActivityTestRule<MapsActivity>(MapsActivity.class);
+    public ActivityTestRule<MapsActivity> activityTestRule = new ActivityTestRule<>(MapsActivity.class);
 
     private MapsActivity mapsActivity = null;
 

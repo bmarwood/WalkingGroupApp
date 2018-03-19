@@ -1,10 +1,7 @@
 package com.teal.a276.walkinggroup.model.serverproxy;
 
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Log;
-
-import com.teal.a276.walkinggroup.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +32,7 @@ public class ServerManager {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(logging)
-                .addInterceptor(new AddHeaderInterceptor(API_KEY, apiToken))
+                .addInterceptor(new AddHeaderInterceptor(apiToken))
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -107,23 +104,20 @@ public class ServerManager {
     }
 
     private static class AddHeaderInterceptor implements Interceptor {
-        private String apiKey;
-        private String token;
+        private final String token;
 
-        private AddHeaderInterceptor(String apiKey, String token) {
-            this.apiKey = apiKey;
+        private AddHeaderInterceptor(String token) {
             this.token = token;
         }
 
         @Override
-        public Response intercept(Interceptor.Chain chain) throws IOException {
+        public Response intercept(@NonNull Interceptor.Chain chain) throws IOException {
             okhttp3.Request originalRequest = chain.request();
 
             okhttp3.Request.Builder builder = originalRequest.newBuilder();
             // Add API header
-            if (apiKey != null) {
-                builder.header("apiKey", apiKey);
-            }
+            builder.header("apiKey", API_KEY);
+
             // Add Token
             if (token != null) {
                 builder.header("Authorization", token);

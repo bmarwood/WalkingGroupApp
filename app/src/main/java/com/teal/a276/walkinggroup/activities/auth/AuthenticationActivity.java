@@ -22,7 +22,7 @@ public abstract class AuthenticationActivity extends BaseActivity {
     public static final String sharePrefUser = "userName";
     static final String sharePrefPassword = "password";
 
-    User user = new User();
+    final User user = new User();
 
     void toggleSpinner(int visibility) {
         final ProgressBar spinner = findViewById(R.id.authenticationProgress);
@@ -78,5 +78,4 @@ public abstract class AuthenticationActivity extends BaseActivity {
         toggleSpinner(View.INVISIBLE);
         super.error(error);
     }
-
 }

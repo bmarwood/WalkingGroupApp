@@ -1,11 +1,7 @@
 package com.teal.a276.walkinggroup;
 
 
-import com.teal.a276.walkinggroup.dataobjects.User;
-
 import org.junit.Test;
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * JUnit Testing for the User Data Object

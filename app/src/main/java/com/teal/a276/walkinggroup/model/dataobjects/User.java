@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
  * Simple User class to store the data the server expects and returns.
  * (Incomplete: Needs support for monitoring and groups).
  */
+@SuppressWarnings("WeakerAccess")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     private Long id;

@@ -27,11 +27,8 @@ import static com.teal.a276.walkinggroup.activities.map.SelectLocationOnMap.EXTR
  */
 
 public class CreateNewGroup extends BaseActivity {
-
-    public static final int REQUEST_CODE_MAP = 1010;
-    double lat=0;
-    double lng=0;
-    LatLng latlng;
+    private final int REQUEST_CODE_MAP = 1010;
+    private LatLng latlng;
     private static Observer newGroupObserver;
 
 
@@ -39,7 +36,6 @@ public class CreateNewGroup extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_group);
-
 
         setCreateNewGroupButton();
         setupMapButton();
@@ -59,8 +55,8 @@ public class CreateNewGroup extends BaseActivity {
             case REQUEST_CODE_MAP:
                 if(resultCode == Activity.RESULT_OK){
 
-                    lat = data.getDoubleExtra(EXTRA_LATITUDE, 0);
-                    lng = data.getDoubleExtra(EXTRA_LONGITUDE, 0);
+                    Double lat = data.getDoubleExtra(EXTRA_LATITUDE, 0);
+                    Double lng = data.getDoubleExtra(EXTRA_LONGITUDE, 0);
                     latlng = new LatLng(lat, lng);
                     Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
                 }
@@ -86,10 +82,10 @@ public class CreateNewGroup extends BaseActivity {
                 leadersEmailVal.setError(getString(R.string.invalid_email));
                 return;
             }
-            if((lat==0) && (lng==0)) {
+            if((latlng.latitude == 0) && (latlng.longitude == 0)) {
                 Toast.makeText(
                         CreateNewGroup.this,
-                        "Location NOT set",
+                        getString(R.string.location_error),
                         Toast.LENGTH_SHORT).show();
                 return;
             }

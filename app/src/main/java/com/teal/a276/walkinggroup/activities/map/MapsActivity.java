@@ -19,8 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -48,13 +46,14 @@ import static com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity.
  * Displays Google maps interface for user to interact with
  */
 
-public class MapsActivity extends AbstractMapActivity {
-    private HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
+public class MapsActivity extends AbstractMapActivity{
+    private final HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
     private List<Group> activeGroups = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<List<Group>> call = proxy.getGroups();

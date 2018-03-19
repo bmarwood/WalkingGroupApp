@@ -34,13 +34,13 @@ import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Abstract class to store the shared logic between all map activities
  */
 
+@SuppressWarnings("deprecation")
 public abstract class AbstractMapActivity extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -48,15 +48,15 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
         LocationListener {
 
     private static final int MAX_RESULTS = 1;
-    protected final int ZOOM_LEVEL = 10;
-    protected final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    protected final int REQUEST_CHECK_SETTINGS = 2;
+    private final int ZOOM_LEVEL = 10;
+    private final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    final int REQUEST_CHECK_SETTINGS = 2;
 
-    protected GoogleMap map;
-    protected GoogleApiClient googleApiClient;
-    protected Location lastLocation;
-    protected LocationRequest locationRequest;
-    protected boolean updateLocation;
+    GoogleMap map;
+    GoogleApiClient googleApiClient;
+    Location lastLocation;
+    private LocationRequest locationRequest;
+    boolean updateLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     // Handles any changes to be made based on the current state of the user’s location settings
-    protected void createLocationRequest() {
+    private void createLocationRequest() {
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -109,7 +109,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
         });
     }
 
-    protected void startLocationUpdates() {
+    void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -169,7 +169,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
 
     }
 
-    protected boolean checkAndRequestPermissions() {
+    private boolean checkAndRequestPermissions() {
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]
@@ -181,7 +181,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     @SuppressLint("MissingPermission")
-    protected void setUpMap() {
+    void setUpMap() {
         if (!checkAndRequestPermissions()) {
             return;
         }
@@ -191,7 +191,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     @SuppressLint("MissingPermission")
-    protected void placeCurrentLocationMarker(boolean draggable, Integer iconId) {
+    void placeCurrentLocationMarker(boolean draggable, Integer iconId) {
         if(!checkAndRequestPermissions()) {
             return;
         }
@@ -208,7 +208,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
         }
     }
 
-    protected void placeMarkerOnMap(LatLng markerLocation, boolean draggable, Integer iconId) {
+    private void placeMarkerOnMap(LatLng markerLocation, boolean draggable, Integer iconId) {
         String title = getAddress(markerLocation);
         MarkerOptions marker = new MarkerOptions().position(markerLocation)
                                             .draggable(draggable).title(title);
@@ -246,12 +246,12 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     // Source: https://stackoverflow.com/questions/7356373/android-how-to-validate-locations-latitude-and-longtitude-values
-    public boolean isValidLatLng(double lat, double lng) {
+    private boolean isValidLatLng(double lat, double lng) {
         return lat < -90 || lat > 90 || lng < -180 || lng > 180;
     }
 
     @NonNull
-    protected LatLng locationToLatLng() {
+    private LatLng locationToLatLng() {
         return new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
     }
 }
