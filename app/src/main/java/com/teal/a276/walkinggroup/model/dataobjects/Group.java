@@ -16,7 +16,6 @@ public class Group {
 
     private Long id;
     private User leader;
-    private String groupName;
     private String groupDescription;
     private List<Double> routeLatArray = new ArrayList<>();
     private List<Double> routeLngArray = new ArrayList<>();
@@ -81,20 +80,9 @@ public class Group {
         this.href = href;
     }
 
-    @JsonIgnore
-    public String getGroupName() {
-        return groupName;
-    }
-
-    @JsonIgnore
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
     @Override
     public String toString(){
-        return "groupName=" + groupName +
-                "groupDescription=" + groupDescription +
+        return "groupDescription=" + groupDescription +
                ", leader='" + leader + '\'' +
 
                ", routeLatArray='" + routeLatArray + '\'' +

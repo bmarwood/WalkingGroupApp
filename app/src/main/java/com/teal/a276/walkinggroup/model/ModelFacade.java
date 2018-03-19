@@ -1,6 +1,5 @@
 package com.teal.a276.walkinggroup.model;
 
-import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 /**
