@@ -13,9 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CompleteUserRequest;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -73,8 +75,8 @@ public class CreateAccount extends AppCompatActivity {
         storeLogin();
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<Void> caller = proxy.login(user);
-        ServerManager.serverRequest(caller, CreateAccount.this::successfulLogin,
-                CreateAccount.this::errorCreateAccount);
+        ServerManager.serverRequest(caller, result -> successfulLogin(result, user),
+                this::errorCreateAccount);
     }
 
     private void storeLogin() {
@@ -91,11 +93,17 @@ public class CreateAccount extends AppCompatActivity {
         editor.apply();
     }
 
-    private void successfulLogin(Void ans) {
-        Intent intent = MapsActivity.makeIntent(CreateAccount.this);
-        toggleSpinner(View.INVISIBLE);
-        startActivity(intent);
-        finish();
+    private void successfulLogin(Void ans, User user) {
+        CompleteUserRequest request = new CompleteUserRequest(user, this::errorCreateAccount);
+        request.makeServerRequest();
+        request.addObserver((observable, o) -> {
+            ModelFacade.getInstance().setCurrentUser((User) o);
+
+
+            Intent intent = MapsActivity.makeIntent(CreateAccount.this);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void errorCreateAccount(String error) {
