@@ -99,11 +99,6 @@ public class CreateNewGroup extends BaseActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        return true;
-    }
-
     public static Intent makeIntent(Context context){
         return new Intent(context, CreateNewGroup.class);
     }

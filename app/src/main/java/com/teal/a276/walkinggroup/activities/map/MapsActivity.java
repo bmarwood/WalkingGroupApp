@@ -46,7 +46,7 @@ import static com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity.
  * Displays Google maps interface for user to interact with
  */
 
-public class MapsActivity extends AbstractMapActivity{
+public class MapsActivity extends AbstractMapActivity {
     private final HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
     private List<Group> activeGroups = new ArrayList<>();
 
