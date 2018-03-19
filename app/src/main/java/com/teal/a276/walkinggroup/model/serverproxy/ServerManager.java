@@ -3,6 +3,9 @@ package com.teal.a276.walkinggroup.model.serverproxy;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.model.ModelFacade;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -81,8 +84,8 @@ public class ServerManager {
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
                 Log.e("Server Connection Error", Log.getStackTraceString(t));
-                //TODO: proper error message here besides throwable
-                errorCallback.error(t.getLocalizedMessage());
+                String connectionError = ModelFacade.getInstance().getAppResources().getString(R.string.connection_error);
+                errorCallback.error(String.format(connectionError, t.getLocalizedMessage()));
             }
         });
     }

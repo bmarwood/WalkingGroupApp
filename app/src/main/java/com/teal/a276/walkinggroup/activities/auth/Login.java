@@ -64,10 +64,6 @@ public class Login extends AuthenticationActivity {
         if (userName != null && !userName.isEmpty()) {
             switcher.showNext();
             autoLogin = true;
-//            EditText emailInput = findViewById(R.id.email);
-//            EditText passwordInput = findViewById(R.id.password);
-//            emailInput.setText(userName, TextView.BufferType.EDITABLE);
-//            passwordInput.setText(password, TextView.BufferType.EDITABLE);
 
             user.setEmail(userName);
             user.setPassword(password);

@@ -45,6 +45,7 @@
 
     <!-- Error handling string -->
     <string name="error">Error</string>
+    <string name="connection_error">Unable to reach server. %s</string>
     <string name="invalid_email">Email Address is Invalid</string>
     <string name="empty_password">Password is Empty</string>
     <string name="empty_group_name">Group Name is Empty</string>

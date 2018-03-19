@@ -2,6 +2,7 @@ package com.teal.a276.walkinggroup.activities.auth;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -23,6 +24,12 @@ public abstract class AuthenticationActivity extends BaseActivity {
     static final String sharePrefPassword = "password";
 
     final User user = new User();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ModelFacade.getInstance().setAppResources(getResources());
+    }
 
     void toggleSpinner(int visibility) {
         final ProgressBar spinner = findViewById(R.id.authenticationProgress);
