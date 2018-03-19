@@ -173,14 +173,22 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 startActivity(CreateNewGroup.makeIntent(this));
                 break;
             case R.id.logoutItem:
-                logoutPrefs();
-                startActivity(Login.makeIntent(this));
+                logout();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
         return true;
+    }
+
+    private void logout() {
+        logoutPrefs();
+        ServerManager.logout();
+        ModelFacade.getInstance().setCurrentUser(null);
+
+        startActivity(Login.makeIntent(this));
+        finish();
     }
 
     private void logoutPrefs() {
