@@ -64,7 +64,7 @@ public class CompleteUserRequest extends AbstractServerRequest {
     }
 
     private void groupResult(Group group, int index) {
-        user.updateMemberOfGroupsGroup(group);
+        user.updateExistingGroup(group);
         if(user.getMemberOfGroups().size() - 1 == index) {
             setDataChanged(user);
         }

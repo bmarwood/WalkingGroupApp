@@ -1,14 +1,12 @@
 package com.teal.a276.walkinggroup.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -44,9 +42,9 @@ public class Monitor extends BaseActivity {
         void makeRequest(String email);
     }
 
-    User user;
-    ArrayAdapter<User> monitorsAdapter;
-    ArrayAdapter<User> monitoredByAdapter;
+    private User user;
+    private ArrayAdapter<User> monitorsAdapter;
+    private ArrayAdapter<User> monitoredByAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +106,7 @@ public class Monitor extends BaseActivity {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private void monitorCallback(String email) {
         MonitorRequest strategy = new MonitorRequest(user, email, Monitor.this::error);
         strategy.makeServerRequest();
@@ -118,6 +117,7 @@ public class Monitor extends BaseActivity {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private void monitoredByCallback(String email) {
         MonitoredByRequest strategy = new MonitoredByRequest(user, email, Monitor.this::error);
         strategy.makeServerRequest();
@@ -146,7 +146,7 @@ public class Monitor extends BaseActivity {
     private class ListItemAdapter extends ArrayAdapter<User> {
         private final List<User> listItems;
         private final Context context;
-        private boolean monitorList;
+        private final boolean monitorList;
 
         public ListItemAdapter(Context context, List<User> listItems, boolean monitorList) {
             super(context, R.layout.list_item, listItems);

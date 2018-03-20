@@ -39,15 +39,12 @@ public class Group {
         this.leader = user;
     }
 
-
     public String getGroupDescription() {
         return this.groupDescription;
     }
     public void setGroupDescription(String descriptions){
         this.groupDescription = descriptions;
     }
-
-
 
     public List<User> getMemberUsers(){
         return memberUsers;
@@ -56,14 +53,12 @@ public class Group {
         this.memberUsers = memberUsers;
     }
 
-
     public List<Double> getRouteLatArray(){
         return routeLatArray;
     }
     public void setRouteLatArray(List<Double> routeLatArray){
         this.routeLatArray = routeLatArray;
     }
-
 
     public List<Double> getRouteLngArray(){
        return routeLngArray;
@@ -89,6 +84,5 @@ public class Group {
                ", routeLngArray='" + routeLngArray + '\'' +
                ", memberUsers='" + memberUsers + '\'' +
                '}';
-
     }
 }
