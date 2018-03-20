@@ -1,7 +1,10 @@
 package com.teal.a276.walkinggroup.model.serverproxy;
 
+import android.support.annotation.Nullable;
+
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
+import com.teal.a276.walkinggroup.model.dataobjects.MessageQueryKey;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 import java.util.List;
@@ -172,5 +175,5 @@ public interface ServerProxy {
     Call<Void> deleteUserFromGroup(@Path("groupId") Long groupId, @Path("userId") Long userId);
 
     @GET("/messages")
-    Call<List<Message>> getMessages(@QueryMap Map<String, String> options);
+    Call<List<Message>> getMessages(@Nullable @QueryMap Map<MessageQueryKey, String> options);
 }

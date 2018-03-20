@@ -5,8 +5,9 @@ import java.util.List;
 /**
  * Created by scott on 20/03/18.
  */
-
 public class Message {
+
+
     private Long id;
     private Long timeStamp;
     private String text;

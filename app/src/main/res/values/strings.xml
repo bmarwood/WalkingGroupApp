@@ -61,4 +61,9 @@
     <string name="add_user">Add User</string>
     <string name="remove_user">Remove User</string>
 
+    <!-- Messages activity string -->
+    <string name="unread_messages">Unread Messages</string>
+    <string name="read_messages">Read Messages</string>
+    <string name="read_messages">Read Messages</string>
+
 </resources>
