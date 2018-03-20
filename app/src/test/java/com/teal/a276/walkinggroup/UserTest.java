@@ -155,7 +155,7 @@ public class UserTest extends BaseTest {
         user.getMemberOfGroups().add(generateGroup("TestGroup 1"));
 
         Group testGroup = generateGroup("UpdatedGroup");
-        user.updateMemberOfGroupsGroup(testGroup);
+        user.updateExistingGroup(testGroup);
         assertTrue(user.getMemberOfGroups().contains(testGroup));
     }
 
@@ -187,6 +187,13 @@ public class UserTest extends BaseTest {
     public void getAndSetPasswordEmpty() throws Exception{
         user.setPassword("");
         assertEquals("", user.getPassword());
+    }
+
+
+    @Test (expected = IllegalArgumentException.class)
+    public void updateGroupTestEmptyGroups() throws Exception {
+        Group testGroup = generateGroup("UpdatedGroup");
+        user.updateExistingGroup(testGroup);
     }
 
     //null Tests

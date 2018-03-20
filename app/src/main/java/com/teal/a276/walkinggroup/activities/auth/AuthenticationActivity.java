@@ -11,6 +11,7 @@ import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
 import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
+import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CompleteUserRequest;
 
@@ -41,6 +42,7 @@ public abstract class AuthenticationActivity extends BaseActivity {
         request.makeServerRequest();
         request.addObserver((observable, o) -> {
             ModelFacade.getInstance().setCurrentUser((User) o);
+            ModelFacade.getInstance().setGroupManager(new GroupManager());
             storeLogin();
 
             Intent intent = MapsActivity.makeIntent(this);

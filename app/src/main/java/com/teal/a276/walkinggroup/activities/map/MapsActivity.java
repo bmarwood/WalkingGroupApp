@@ -24,11 +24,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.activities.CreateNewGroup;
+import com.teal.a276.walkinggroup.activities.CreateGroup;
 import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.activities.auth.Login;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
+import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -36,6 +37,8 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import retrofit2.Call;
 
@@ -46,14 +49,17 @@ import static com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity.
  * Displays Google maps interface for user to interact with
  */
 
-public class MapsActivity extends AbstractMapActivity {
+public class MapsActivity extends AbstractMapActivity implements Observer {
     private final HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
-    private List<Group> activeGroups = new ArrayList<>();
+    GroupManager groupManager;
+//    private List<Group> activeGroups = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        groupManager = ModelFacade.getInstance().getGroupManager();
 
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<List<Group>> call = proxy.getGroups();
@@ -61,6 +67,7 @@ public class MapsActivity extends AbstractMapActivity {
     }
 
     private void populateGroupsOnMap(){
+        List<Group> activeGroups = groupManager.getGroups();
         for(Group group : activeGroups) {
             addMarker(group);
         }
@@ -95,7 +102,7 @@ public class MapsActivity extends AbstractMapActivity {
     }
 
     private void groupsResult(List<Group> groups) {
-        activeGroups = groups;
+        groupManager.setGroups(groups);
         if(googleApiClient.isConnected() && map != null) {
             populateGroupsOnMap();
         }
@@ -115,15 +122,7 @@ public class MapsActivity extends AbstractMapActivity {
                 startActivity(Monitor.makeIntent(this));
                 break;
             case R.id.addNewGroup:
-                //TODO: FIX THIS
-                CreateNewGroup.setGroupResultCallback((o, arg) -> {
-                    Group group = (Group) arg;
-                    activeGroups.add(group);
-                    if(map != null && googleApiClient.isConnected()) {
-                        addMarker(group);
-                    }
-                });
-                startActivity(CreateNewGroup.makeIntent(this));
+                startActivity(CreateGroup.makeIntent(this));
                 break;
             case R.id.logoutItem:
                 logout();
@@ -164,6 +163,18 @@ public class MapsActivity extends AbstractMapActivity {
             updateLocation = true;
             startLocationUpdates();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        groupManager.addObserver(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        groupManager.deleteObserver(this);
     }
 
     @Override
@@ -217,9 +228,7 @@ public class MapsActivity extends AbstractMapActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
         alertDialogBuilder.setView(dialogView);
@@ -276,5 +285,10 @@ public class MapsActivity extends AbstractMapActivity {
     private void removeGroupMemberResult(Void result, User user) {
         Toast.makeText(this, String.format("Removed %s from group", user.getName()),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        addMarker((Group) o);
     }
 }
