@@ -2,7 +2,6 @@ package com.teal.a276.walkinggroup.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -15,14 +14,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,7 +28,6 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationListener;
@@ -163,14 +158,16 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback,
                 break;
             case R.id.addNewGroup:
                 //TODO: FIX THIS
-                CreateNewGroup.setGroupResultCallback((o, arg) -> {
+                //CreateNewGroup.setGroupResultCallback((o, arg) -> {
+                EmbeddedCreateGroup.setGroupResultCallback((o, arg) -> {
                     Group group = (Group) arg;
                     activeGroups.add(group);
                     if(map != null && googleApiClient.isConnected()) {
                         addMarker(group);
                     }
                 });
-                startActivity(CreateNewGroup.makeIntent(this));
+                //startActivity(CreateNewGroup.makeIntent(this));
+                startActivity(EmbeddedCreateGroup.makeIntent(this));
                 break;
             case R.id.logoutItem:
                 logoutPrefs();

@@ -53,6 +53,10 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     private LocationRequest locationRequest;
     private Location lastLocation;
     private LatLng currentLocation;
+    private static Observer newGroupObserver;
+    private Marker meetingMarker;
+    private Marker destinationMarker;
+    private boolean selectedMeetingLocation = false;
     double lat = 0;
     double lng = 0;
 
@@ -63,6 +67,7 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
 
 
         setupCreateButton();
+        setupSelectDestinationButton();
 
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -108,12 +113,23 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
                         Toast.LENGTH_SHORT).show();
                 return;
             }
+            //Log.d("Button", "Button works.");
 
             //Server
             //after implementing server code, comment out code in setGroupResult method below
-
-
+            //LatLng latlng = new LatLng(lat, lng);
+            //CreateGroupRequest request = new CreateGroupRequest(leadersEmailStr, nameValStr,
+            //        latlng, EmbeddedCreateGroup.this::error);
+            //request.makeServerRequest();
+            //request.addObserver(newGroupObserver);
             //finish();
+        });
+    }
+    private void setupSelectDestinationButton(){
+        Button btn = findViewById(R.id.selectDestButton);
+        btn.setOnClickListener(v -> {
+            selectedMeetingLocation = true;
+            Toast.makeText(this, "Please select destination", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -125,16 +141,24 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
 
         Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
 
-        map.setOnMapClickListener(latLng -> {
-            //clear any previous marker
-            map.clear();
-            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            map.addMarker(new MarkerOptions().position(latLng));
+        if(!selectedMeetingLocation) {
+            map.setOnMapClickListener(latLng -> {
+                //clear any previous marker
+                meetingMarker.remove();
+                //map.clear();
+                map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                meetingMarker = map.addMarker(new MarkerOptions().position(latLng));
 
-            lat = latLng.latitude;
-            lng = latLng.longitude;
-            Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
-        });
+                lat = latLng.latitude;
+                lng = latLng.longitude;
+                Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
+            });
+        }
+
+
+
+        //implement destination marker
+        //map.setOnMapClickListener(lat);
 
     }
     private void createLocationRequest() {
@@ -211,11 +235,16 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12));
             }
         }
-        map.addMarker(new MarkerOptions().
+        meetingMarker = map.addMarker(new MarkerOptions().
                 position(currentLocation).
+                title("Meeting").
                 draggable(true));
         Log.d("initial location", "Lat" + currentLocation.latitude + "Lng" + currentLocation.longitude);
 
+        //For case when user wants to choose current location as starting location.
+        lat = currentLocation.latitude;
+        lng = currentLocation.longitude;
+        Log.d("initial location", "Lat" + lat + "Lng" + lng);
 
     }
 
@@ -255,7 +284,7 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
         return true;
     }
     public static void setGroupResultCallback(Observer obs){
-        //newGroupObserver = obs;
+        newGroupObserver = obs;
     }
     //delete later
     public static Intent makeIntent(Context context){
