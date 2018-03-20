@@ -23,7 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.Login">
+        <activity android:name=".activities.auth.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,13 +37,13 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".activities.MapsActivity"
+            android:name=".activities.map.MapsActivity"
             android:label="@string/title_activity_maps">
         </activity>
-        <activity android:name=".activities.CreateAccount" />
-        <activity android:name=".activities.CreateNewGroup" />
+        <activity android:name=".activities.auth.CreateAccount" />
+        <activity android:name=".activities.CreateGroup" />
         <activity
-            android:name=".activities.SelectLocationOnMap"
+            android:name=".activities.map.SelectLocationOnMap"
             android:label="@string/title_activity_select_location_on_map"/>
     </application>
 

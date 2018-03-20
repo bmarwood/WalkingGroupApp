@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 
 /**
  * Simple User class to store the data the server expects and returns.
- * (Incomplete: Needs support for monitoring and groups).
  */
+@SuppressWarnings("WeakerAccess")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     private Long id;
@@ -100,14 +100,23 @@ public class User {
         this.leadsGroups = leadsGroups;
     }
 
-    public void updateMemberOfGroupsGroup(@NonNull Group newGroup) {
+    public void updateExistingGroup(@NonNull Group newGroup) {
+        boolean updatedGroup = false;
+
         Group[] groupsArray = getMemberOfGroups().toArray(new Group[this.memberOfGroups.size()]);
         for(int i = 0; i < groupsArray.length; i++) {
             Group group = groupsArray[i];
             if(group.getId().equals(newGroup.getId())) {
                 groupsArray[i] = newGroup;
+                updatedGroup = true;
+                break;
             }
         }
+
+        if (!updatedGroup) {
+            throw new IllegalArgumentException(String.format("Group %s not found in memberOfGroups %s", newGroup, memberOfGroups));
+        }
+
         this.memberOfGroups = Arrays.asList(groupsArray);
     }
 

@@ -3,6 +3,7 @@ package com.teal.a276.walkinggroup.activities;
 import android.support.test.rule.ActivityTestRule;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,7 +18,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class MapsActivityTest {
 
     @Rule
-    public ActivityTestRule<MapsActivity> activityTestRule = new ActivityTestRule<MapsActivity>(MapsActivity.class);
+    public ActivityTestRule<MapsActivity> activityTestRule = new ActivityTestRule<>(MapsActivity.class);
 
     private MapsActivity mapsActivity = null;
 
