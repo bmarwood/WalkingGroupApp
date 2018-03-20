@@ -57,13 +57,11 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     private static Observer newGroupObserver;
     private Marker meetingMarker;
     private Marker destinationMarker;
-   // private boolean selectedMeetingLocation = false;
     double meetingLat = 0;
     double meetingLng = 0;
     double destLat = 0;
     double destLng = 0;
     boolean isClicked = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,18 +137,13 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
             if(isClicked){
                 Toast.makeText(EmbeddedCreateGroup.this, "clicked", Toast.LENGTH_SHORT).show();
                 //String setDest = "Set Dest";
-                btn.setText("Set Start");
+                btn.setText(R.string.embedded_set_meeting);
             }else{
                 Toast.makeText(EmbeddedCreateGroup.this, "unClicked", Toast.LENGTH_SHORT).show();
-                btn.setText("Set Dest");
+                btn.setText(R.string.embedded_set_dest);
                 setMeetingCoordinates();
                 return;
             }
-            //selectedMeetingLocation = true;
-//            if(selectedMeetingLocation) {
-//                selectedMeetingLocation ^= true;
-//            }
-
             //Toast.makeText(this, "Please select destination", Toast.LENGTH_SHORT).show();
 
             map.setOnMapClickListener(latLng -> {
@@ -172,26 +165,11 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     }
 
     //Locations Methods
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
         setMeetingCoordinates();
-        //Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
-
-//        map.setOnMapClickListener(latLng -> {
-//            //clear any previous marker
-//            meetingMarker.remove();
-//            //map.clear();
-//            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-//            meetingMarker = map.addMarker(new MarkerOptions().
-//                    position(latLng).
-//                    title("Meeting"));
-//            meetingLat = latLng.latitude;
-//            meetingLng = latLng.longitude;
-//            Log.d("Lat Long", "Lat: " + meetingLat + "Long: " + meetingLng);
-//        });
 
     }
     private void setMeetingCoordinates(){
@@ -288,7 +266,6 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
         meetingMarker = map.addMarker(new MarkerOptions().
                 position(currentLocation).
                 title("Meeting"));
-                //draggable(true));
         Log.d("initial location", "Lat" + currentLocation.latitude + "Lng" + currentLocation.longitude);
 
         //For case when user wants to choose current location as starting location.
@@ -343,7 +320,7 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     public static void setGroupResultCallback(Observer obs){
         newGroupObserver = obs;
     }
-    //delete later
+
     public static Intent makeIntent(Context context){
         return new Intent(context, EmbeddedCreateGroup.class);
     }

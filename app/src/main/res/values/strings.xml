@@ -82,4 +82,8 @@
     <string name="add_user">Add User</string>
     <string name="remove_user">Remove User</string>
 
+    <!-- Strings related to EmbeddedCreateGroup-->
+    <string name="embedded_set_meeting">Set Meeting</string>
+    <string name="embedded_set_dest">Set Dest</string>
+
 </resources>
