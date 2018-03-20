@@ -31,6 +31,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -56,9 +57,13 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     private static Observer newGroupObserver;
     private Marker meetingMarker;
     private Marker destinationMarker;
-    private boolean selectedMeetingLocation = false;
-    double lat = 0;
-    double lng = 0;
+   // private boolean selectedMeetingLocation = false;
+    double meetingLat = 0;
+    double meetingLng = 0;
+    double destLat = 0;
+    double destLng = 0;
+    boolean isClicked = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +95,7 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     }
 
     private void setupCreateButton() {
+
         Button btn = findViewById(R.id.embeddedCreateButton);
         btn.setOnClickListener(v ->{
             EditText nameVal = findViewById(R.id.embeddedNameEdit);
@@ -106,14 +112,15 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
                 leadersEmailVal.setError(getString(R.string.invalid_email));
                 return;
             }
-            if((lat==0) && (lng==0)){
+            if((meetingLat==0) && (meetingLng==0)){
                 Toast.makeText(
                         EmbeddedCreateGroup.this,
                         "Location not set",
                         Toast.LENGTH_SHORT).show();
                 return;
             }
-            //Log.d("Button", "Button works.");
+
+            Log.d("Coords", "meetingLat/Lng: " + meetingLat + ", " + meetingLng + "destLat/Lng:" + destLat + destLng);
 
             //Server
             //after implementing server code, comment out code in setGroupResult method below
@@ -128,8 +135,39 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     private void setupSelectDestinationButton(){
         Button btn = findViewById(R.id.selectDestButton);
         btn.setOnClickListener(v -> {
-            selectedMeetingLocation = true;
-            Toast.makeText(this, "Please select destination", Toast.LENGTH_SHORT).show();
+            isClicked = !isClicked;
+            if(isClicked){
+                Toast.makeText(EmbeddedCreateGroup.this, "clicked", Toast.LENGTH_SHORT).show();
+                //String setDest = "Set Dest";
+                btn.setText("Set Start");
+            }else{
+                Toast.makeText(EmbeddedCreateGroup.this, "unClicked", Toast.LENGTH_SHORT).show();
+                btn.setText("Set Dest");
+                setMeetingCoordinates();
+                return;
+            }
+            //selectedMeetingLocation = true;
+//            if(selectedMeetingLocation) {
+//                selectedMeetingLocation ^= true;
+//            }
+
+            //Toast.makeText(this, "Please select destination", Toast.LENGTH_SHORT).show();
+
+            map.setOnMapClickListener(latLng -> {
+                destinationMarker.remove();
+                destinationMarker = map.addMarker(new MarkerOptions().
+                        position(latLng).
+                        title("Destination").
+                        icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                destinationMarker.setVisible(true);
+
+                destLat = latLng.latitude;
+                destLng = latLng.longitude;
+
+                Log.d("Lat (Dest)", "DestLat: " + destLat + "DestLng: " + destLng);
+
+
+            });
         });
     }
 
@@ -139,28 +177,40 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
+        setMeetingCoordinates();
+        //Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
 
-        if(!selectedMeetingLocation) {
-            map.setOnMapClickListener(latLng -> {
-                //clear any previous marker
-                meetingMarker.remove();
-                //map.clear();
-                map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                meetingMarker = map.addMarker(new MarkerOptions().position(latLng));
-
-                lat = latLng.latitude;
-                lng = latLng.longitude;
-                Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
-            });
-        }
-
-
-
-        //implement destination marker
-        //map.setOnMapClickListener(lat);
+//        map.setOnMapClickListener(latLng -> {
+//            //clear any previous marker
+//            meetingMarker.remove();
+//            //map.clear();
+//            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+//            meetingMarker = map.addMarker(new MarkerOptions().
+//                    position(latLng).
+//                    title("Meeting"));
+//            meetingLat = latLng.latitude;
+//            meetingLng = latLng.longitude;
+//            Log.d("Lat Long", "Lat: " + meetingLat + "Long: " + meetingLng);
+//        });
 
     }
+    private void setMeetingCoordinates(){
+        map.setOnMapClickListener(latLng -> {
+            //clear any previous marker
+            meetingMarker.remove();
+            //map.clear();
+            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            meetingMarker = map.addMarker(new MarkerOptions().
+                    position(latLng).
+                    title("Meeting"));
+
+            meetingLat = latLng.latitude;
+            meetingLng = latLng.longitude;
+            Log.d("Lat (meeting)", "Lat: " + meetingLat + "Long: " + meetingLng);
+        });
+
+    }
+
     private void createLocationRequest() {
         locationRequest = new LocationRequest();;
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -237,14 +287,21 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
         }
         meetingMarker = map.addMarker(new MarkerOptions().
                 position(currentLocation).
-                title("Meeting").
-                draggable(true));
+                title("Meeting"));
+                //draggable(true));
         Log.d("initial location", "Lat" + currentLocation.latitude + "Lng" + currentLocation.longitude);
 
         //For case when user wants to choose current location as starting location.
-        lat = currentLocation.latitude;
-        lng = currentLocation.longitude;
-        Log.d("initial location", "Lat" + lat + "Lng" + lng);
+        meetingLat = currentLocation.latitude;
+        meetingLng = currentLocation.longitude;
+        Log.d("initial location", "Lat" + meetingLat + "Lng" + meetingLng);
+
+        //destination
+        destinationMarker = map.addMarker(new MarkerOptions().
+                position(currentLocation).
+                title("Destination"));
+        destinationMarker.setVisible(false);
+
 
     }
 
