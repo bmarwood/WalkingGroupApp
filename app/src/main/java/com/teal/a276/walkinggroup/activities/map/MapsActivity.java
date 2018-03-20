@@ -126,14 +126,24 @@ public class MapsActivity extends AbstractMapActivity {
                 startActivity(CreateNewGroup.makeIntent(this));
                 break;
             case R.id.logoutItem:
-                logoutPrefs();
-                startActivity(Login.makeIntent(this));
+                logout();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
         return true;
+    }
+
+
+    private void logout() {
+        logoutPrefs();
+        ServerManager.logout();
+        ModelFacade.getInstance().setCurrentUser(null);
+        ModelFacade.getInstance().setAppResources(null);
+
+        startActivity(Login.makeIntent(this));
+        finish();
     }
 
     private void logoutPrefs() {

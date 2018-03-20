@@ -62,7 +62,6 @@ public class ServerManager {
             public void onResponse(@NonNull Call<T> call, @NonNull retrofit2.Response<T> response) {
 
                 // Process the response
-                //TODO: account creation DOESN'T return auth token
                 if (response.errorBody() == null) {
                     // Check for authentication token:
                     String tokenInHeader = response.headers().get("Authorization");
@@ -101,6 +100,7 @@ public class ServerManager {
             message = jObjError.getString("message");
         } catch (IOException | JSONException e) {
             Log.e("Error decoding message", Log.getStackTraceString(e));
+            Log.e("Error response:", response.toString());
         }
 
         return message;
@@ -129,6 +129,10 @@ public class ServerManager {
 
             return chain.proceed(modifiedRequest);
         }
+    }
+
+    public static void logout() {
+        apiToken = null;
     }
 }
 

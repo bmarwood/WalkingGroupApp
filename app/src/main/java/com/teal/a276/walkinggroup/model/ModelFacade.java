@@ -2,7 +2,6 @@ package com.teal.a276.walkinggroup.model;
 
 import android.content.res.Resources;
 
-import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 /**
@@ -13,9 +12,7 @@ public class ModelFacade {
 
     private static ModelFacade instance;
     private User currentUser = null;
-    private GroupManager manager = null;
     private Resources appResources;
-
 
     private ModelFacade() {}
 
@@ -49,5 +46,4 @@ public class ModelFacade {
 
         return appResources;
     }
-
 }
