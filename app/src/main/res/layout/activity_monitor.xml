@@ -7,7 +7,6 @@
     tools:context="com.teal.a276.walkinggroup.activities.Monitor">
 
     <TextView
-        android:id="@+id/monitoredByTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
@@ -19,7 +18,9 @@
         app:layout_constraintBottom_toTopOf="@+id/monitoredByListView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="142dp"
+        android:layout_marginLeft="144dp" />
 
     <TextView
         android:id="@+id/monitoringTv"
@@ -32,7 +33,9 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/monitoringListView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginRight="142dp"
+        android:layout_marginLeft="143dp" />
 
     <ListView
         android:id="@+id/monitoredByListView"
@@ -63,7 +66,7 @@
         android:layout_marginBottom="7dp"
         android:layout_marginEnd="154dp"
         android:layout_marginStart="154dp"
-        android:text="add"
+        android:text="@string/add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -75,7 +78,7 @@
         android:layout_marginBottom="7dp"
         android:layout_marginEnd="154dp"
         android:layout_marginStart="154dp"
-        android:text="Add"
+        android:text="@string/add"
         app:layout_constraintBottom_toTopOf="@+id/monitoringTv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

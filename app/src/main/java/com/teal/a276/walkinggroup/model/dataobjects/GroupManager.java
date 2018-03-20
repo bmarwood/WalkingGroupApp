@@ -1,43 +1,35 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CreateGroupRequest;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
- * Manages joining groups, and groups the user could join
+ * Class to interact with the server proxy and allow for notification of group creation data
  */
-public class GroupManager {
 
-   // private final AbstractServerManager serverManager;
-   // public GroupManager(AbstractServerManager serverManager) {
-   //     this.serverManager = serverManager;
-   // }
+public class GroupManager extends Observable {
+    private List<Group> groups = new ArrayList<>();
 
-    private List<Group> activeGroups = new ArrayList<>();
-
-    public void setActiveGroups(List<Group> groups) {
-        activeGroups = groups;
-    }
-    public void addActiveGroup(Group group){
-        activeGroups.add(group);
+    public void addNewGroup(String leaderEmail, String groupDescription, LatLng location, ServerError errorCallback) {
+        CreateGroupRequest request = new CreateGroupRequest(leaderEmail, groupDescription, location, errorCallback);
+        request.makeServerRequest();
+        request.addObserver((observable, o) -> {
+            groups.add((Group)o);
+            setChanged();
+            notifyObservers(o);
+        });
     }
 
-    public List<Group> getActiveGroups() {
-        return activeGroups;
+    public List<Group> getGroups() {
+        return groups;
     }
 
-    public Group getActiveGroup(int index){
-        validateIndexWithException(index);
-        return activeGroups.get(index);
-    }
-
-    private void validateIndexWithException(int index){
-        if(index < 0 || index >= activeGroups.size()){
-            throw new IllegalArgumentException();
-        }
-    }
-
-    public void removeActiveGroup(Group group){
-        activeGroups.remove(group);
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 }

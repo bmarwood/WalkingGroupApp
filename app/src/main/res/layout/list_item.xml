@@ -30,7 +30,10 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/userName"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_remove_item" />
+        app:srcCompat="@drawable/ic_remove_item"
+        android:contentDescription="@string/remove_user"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/userName"

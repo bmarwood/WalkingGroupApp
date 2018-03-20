@@ -3,6 +3,9 @@ package com.teal.a276.walkinggroup.model.serverproxy;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.model.ModelFacade;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +35,7 @@ public class ServerManager {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(logging)
-                .addInterceptor(new AddHeaderInterceptor(API_KEY, apiToken))
+                .addInterceptor(new AddHeaderInterceptor(apiToken))
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -59,7 +62,6 @@ public class ServerManager {
             public void onResponse(@NonNull Call<T> call, @NonNull retrofit2.Response<T> response) {
 
                 // Process the response
-                //TODO: account creation DOESN'T return auth token
                 if (response.errorBody() == null) {
                     // Check for authentication token:
                     String tokenInHeader = response.headers().get("Authorization");
@@ -81,7 +83,8 @@ public class ServerManager {
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
                 Log.e("Server Connection Error", Log.getStackTraceString(t));
-                errorCallback.error("");
+                String connectionError = ModelFacade.getInstance().getAppResources().getString(R.string.connection_error);
+                errorCallback.error(String.format(connectionError, t.getLocalizedMessage()));
             }
         });
     }
@@ -97,29 +100,27 @@ public class ServerManager {
             message = jObjError.getString("message");
         } catch (IOException | JSONException e) {
             Log.e("Error decoding message", Log.getStackTraceString(e));
+            Log.e("Error response:", response.toString());
         }
 
         return message;
     }
 
     private static class AddHeaderInterceptor implements Interceptor {
-        private String apiKey;
-        private String token;
+        private final String token;
 
-        private AddHeaderInterceptor(String apiKey, String token) {
-            this.apiKey = apiKey;
+        private AddHeaderInterceptor(String token) {
             this.token = token;
         }
 
         @Override
-        public Response intercept(Interceptor.Chain chain) throws IOException {
+        public Response intercept(@NonNull Interceptor.Chain chain) throws IOException {
             okhttp3.Request originalRequest = chain.request();
 
             okhttp3.Request.Builder builder = originalRequest.newBuilder();
             // Add API header
-            if (apiKey != null) {
-                builder.header("apiKey", apiKey);
-            }
+            builder.header("apiKey", API_KEY);
+
             // Add Token
             if (token != null) {
                 builder.header("Authorization", token);
@@ -128,6 +129,10 @@ public class ServerManager {
 
             return chain.proceed(modifiedRequest);
         }
+    }
+
+    public static void logout() {
+        apiToken = null;
     }
 }
 

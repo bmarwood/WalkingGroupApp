@@ -16,7 +16,6 @@ public class Group {
 
     private Long id;
     private User leader;
-    private String groupName;
     private String groupDescription;
     private List<Double> routeLatArray = new ArrayList<>();
     private List<Double> routeLngArray = new ArrayList<>();
@@ -40,15 +39,12 @@ public class Group {
         this.leader = user;
     }
 
-
     public String getGroupDescription() {
         return this.groupDescription;
     }
     public void setGroupDescription(String descriptions){
         this.groupDescription = descriptions;
     }
-
-
 
     public List<User> getMemberUsers(){
         return memberUsers;
@@ -57,14 +53,12 @@ public class Group {
         this.memberUsers = memberUsers;
     }
 
-
     public List<Double> getRouteLatArray(){
         return routeLatArray;
     }
     public void setRouteLatArray(List<Double> routeLatArray){
         this.routeLatArray = routeLatArray;
     }
-
 
     public List<Double> getRouteLngArray(){
        return routeLngArray;
@@ -81,26 +75,14 @@ public class Group {
         this.href = href;
     }
 
-    @JsonIgnore
-    public String getGroupName() {
-        return groupName;
-    }
-
-    @JsonIgnore
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
     @Override
     public String toString(){
-        return "groupName=" + groupName +
-                "groupDescription=" + groupDescription +
+        return "groupDescription=" + groupDescription +
                ", leader='" + leader + '\'' +
 
                ", routeLatArray='" + routeLatArray + '\'' +
                ", routeLngArray='" + routeLngArray + '\'' +
                ", memberUsers='" + memberUsers + '\'' +
                '}';
-
     }
 }

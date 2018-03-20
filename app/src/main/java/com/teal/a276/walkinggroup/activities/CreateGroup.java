@@ -5,40 +5,33 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.map.SelectLocationOnMap;
+import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
-import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CreateGroupRequest;
 
-import java.util.Observer;
-
-import static com.teal.a276.walkinggroup.activities.SelectLocationOnMap.EXTRA_LATITUDE;
-import static com.teal.a276.walkinggroup.activities.SelectLocationOnMap.EXTRA_LONGITUDE;
+import static com.teal.a276.walkinggroup.activities.map.SelectLocationOnMap.EXTRA_LATITUDE;
+import static com.teal.a276.walkinggroup.activities.map.SelectLocationOnMap.EXTRA_LONGITUDE;
 
 /**
  * Activity to create a new group: Users are able to set group name, set leader's ID, and
  * select the meeting location on the map by dragging the marker to the desired destination.
  */
 
-public class CreateNewGroup extends BaseActivity {
-
-    public static final int REQUEST_CODE_MAP = 1010;
-    double lat=0;
-    double lng=0;
-    LatLng latlng;
-    private static Observer newGroupObserver;
+public class CreateGroup extends BaseActivity {
+    private final int REQUEST_CODE_MAP = 1010;
+    private LatLng latlng;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_group);
-
 
         setCreateNewGroupButton();
         setupMapButton();
@@ -47,7 +40,7 @@ public class CreateNewGroup extends BaseActivity {
     private void setupMapButton() {
         Button btn = findViewById(R.id.meetingMapBtn);
         btn.setOnClickListener(v -> {
-            Intent intent = SelectLocationOnMap.makeIntent(CreateNewGroup.this);
+            Intent intent = SelectLocationOnMap.makeIntent(CreateGroup.this);
             startActivityForResult(intent, REQUEST_CODE_MAP);
         });
     }
@@ -58,8 +51,8 @@ public class CreateNewGroup extends BaseActivity {
             case REQUEST_CODE_MAP:
                 if(resultCode == Activity.RESULT_OK){
 
-                    lat = data.getDoubleExtra(EXTRA_LATITUDE, 0);
-                    lng = data.getDoubleExtra(EXTRA_LONGITUDE, 0);
+                    Double lat = data.getDoubleExtra(EXTRA_LATITUDE, 0);
+                    Double lng = data.getDoubleExtra(EXTRA_LONGITUDE, 0);
                     latlng = new LatLng(lat, lng);
                     Log.d("Lat Long", "Lat: " + lat + "Long: " + lng);
                 }
@@ -85,33 +78,21 @@ public class CreateNewGroup extends BaseActivity {
                 leadersEmailVal.setError(getString(R.string.invalid_email));
                 return;
             }
-            if((lat==0) && (lng==0)) {
+            if((latlng.latitude == 0) && (latlng.longitude == 0)) {
                 Toast.makeText(
-                        CreateNewGroup.this,
-                        "Location NOT set",
+                        CreateGroup.this,
+                        getString(R.string.location_error),
                         Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            CreateGroupRequest request = new CreateGroupRequest(leadersEmailStr, nameValStr, latlng, CreateNewGroup.this::error);
-            request.makeServerRequest();
-            request.addObserver(newGroupObserver);
-
+            ModelFacade.getInstance().getGroupManager().addNewGroup(leadersEmailStr, nameValStr, latlng, CreateGroup.this::error);
             finish();
         });
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        return true;
-    }
-
     public static Intent makeIntent(Context context){
-        return new Intent(context, CreateNewGroup.class);
-    }
-
-    public static void setGroupResultCallback(Observer obs) {
-        newGroupObserver = obs;
+        return new Intent(context, CreateGroup.class);
     }
 }

@@ -1,5 +1,7 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
@@ -9,8 +11,8 @@ import java.util.regex.Pattern;
 
 /**
  * Simple User class to store the data the server expects and returns.
- * (Incomplete: Needs support for monitoring and groups).
  */
+@SuppressWarnings("WeakerAccess")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     private Long id;
@@ -98,31 +100,24 @@ public class User {
         this.leadsGroups = leadsGroups;
     }
 
-    public void addGroupToLead(Group group) {
-        this.leadsGroups.add(group);
-    }
+    public void updateExistingGroup(@NonNull Group newGroup) {
+        boolean updatedGroup = false;
 
-    public void removeGroupToLead(Group group) {
-        this.leadsGroups.remove(group);
-    }
-
-    public void joinGroup(Group group) {
-        this.memberOfGroups.add(group);
-    }
-
-    public void updateGroup(Group newGroup) {
         Group[] groupsArray = getMemberOfGroups().toArray(new Group[this.memberOfGroups.size()]);
         for(int i = 0; i < groupsArray.length; i++) {
             Group group = groupsArray[i];
             if(group.getId().equals(newGroup.getId())) {
                 groupsArray[i] = newGroup;
+                updatedGroup = true;
+                break;
             }
         }
-        this.memberOfGroups = Arrays.asList(groupsArray);
-    }
 
-    public void leaveGroup(Group group) {
-        this.memberOfGroups.remove(group);
+        if (!updatedGroup) {
+            throw new IllegalArgumentException(String.format("Group %s not found in memberOfGroups %s", newGroup, memberOfGroups));
+        }
+
+        this.memberOfGroups = Arrays.asList(groupsArray);
     }
 
     public String getHref() {
@@ -140,43 +135,20 @@ public class User {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", monitoredByUsers=" + monitoredByUsers +
-                ", monitorsUsers=" + monitorsUsers +
-                //", walkingGroups=" + walkingGroups +
+                ", monitoredByUsers=" + monitoredByUsers + '\'' +
+                ", monitorsUsers=" + monitorsUsers + '\'' +
+                ", leadsGroups=" + leadsGroups + '\'' +
+                "memberOfGroups=" + memberOfGroups + '\'' +
+                "href=" + href + '\'' +
                 '}';
-    }
-
-    //below are added by Jamie, managing users
-    private void validateIndexWithExceptionMonitoredBy(int index){
-        if(index < 0 || index >= monitoredByUsers.size()){
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private void validateIndexWithExceptionMonitors(int index){
-        if(index < 0 || index >= monitorsUsers.size()){
-            throw new IllegalArgumentException();
-        }
-    }
-
-    //RETURNS SINGLE USER, NOTE THAT THIS FUNC IS VERY SIMILAR TO THE ORIGINAL
-    //FUNCTION THAT RETURNS A LIST
-    public User getMonitoredByUser(int index){
-        validateIndexWithExceptionMonitoredBy(index);
-        return monitoredByUsers.get(index);
-    }
-
-    public User getMonitorsUser(int index){
-        validateIndexWithExceptionMonitors(index);
-        return monitorsUsers.get(index);
     }
 
     public static boolean validateEmail(String email) {
         Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-        return p.matcher(email).matches();
+        return email != null && p.matcher(email).matches();
     }
 
-    public void copyUser(User user) {
+    public void copyUser(@NonNull User user) {
         setId(user.getId());
         setName(user.getName());
         setEmail(user.getEmail());

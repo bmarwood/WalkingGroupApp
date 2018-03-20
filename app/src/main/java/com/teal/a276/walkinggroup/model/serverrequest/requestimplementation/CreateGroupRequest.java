@@ -18,9 +18,9 @@ import retrofit2.Call;
 
 public class CreateGroupRequest extends AbstractServerRequest {
 
-    private LatLng latlng;
-    private String leaderEmail;
-    private String groupDes;
+    private final LatLng latlng;
+    private final String leaderEmail;
+    private final String groupDes;
 
 
     public CreateGroupRequest(String leaderEmail, String groupDes, LatLng latLng, @NonNull ServerError errorCallback) {
