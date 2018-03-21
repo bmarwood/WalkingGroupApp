@@ -16,7 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -231,6 +233,8 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
+        setupDialogInfo(group, alertDialogBuilder, dialogView);
+
         alertDialogBuilder.setView(dialogView);
         initializeAlertDialog(alertDialogBuilder, group, selectedUser);
         return false;
@@ -258,6 +262,34 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(listener);
+    }
+
+    private void setupDialogInfo(Group group, AlertDialog.Builder alertDialogBuilder, View dialogView) {
+        String title = getString(R.string.add_remove_user, group.getGroupDescription());
+        alertDialogBuilder.setTitle(title);
+
+        // TODO: group leaders name and email are null find out why
+        User user = group.getLeader();
+        user.getId();
+        user.getEmail();
+        user.getName();
+
+        TextView leaderName = dialogView.findViewById(R.id.leadersNameTxt);
+        String leadersName = getString(R.string.leaders_name, group.getLeader().getName());
+        leaderName.setText(leadersName);
+
+        TextView leaderEmail = dialogView.findViewById(R.id.leadersEmailTxt);
+        String leadersEmail = getString(R.string.leaders_email, group.getLeader().getEmail());
+        leaderEmail.setText(leadersEmail);
+
+        ImageButton infoButton = dialogView.findViewById(R.id.infoBtn);
+        infoButton.setBackgroundColor(getResources().getColor(R.color.white));
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MapsActivity.this, "Launch Group Info activity", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initializeAlertDialog(AlertDialog.Builder builder, Group selectedGroup, User selectedUser) {
