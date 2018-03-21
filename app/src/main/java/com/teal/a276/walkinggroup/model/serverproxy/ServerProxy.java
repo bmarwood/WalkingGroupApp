@@ -175,5 +175,9 @@ public interface ServerProxy {
     Call<Void> deleteUserFromGroup(@Path("groupId") Long groupId, @Path("userId") Long userId);
 
     @GET("/messages")
-    Call<List<Message>> getMessages(@Nullable @QueryMap Map<MessageQueryKey, String> options);
+    Call<List<Message>> getMessages(@Nullable @QueryMap Map<String, Object> options);
+
+    @POST("/messages/toparentsof/{id}")
+    Call<Message> sendMessageToMonitors(@Path("id") Long userId, @Body Message message);
+
 }

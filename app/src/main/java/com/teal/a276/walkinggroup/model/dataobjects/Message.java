@@ -1,10 +1,13 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 /**
  * Created by scott on 20/03/18.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Message {
 
 
