@@ -17,15 +17,6 @@ public class ModelFacade {
     private User currentUser = null;
     private GroupManager groupManager = null;
     private Resources appResources = null;
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
     private List<User> users = null;
 
     private ModelFacade() {}
@@ -71,5 +62,13 @@ public class ModelFacade {
         }
 
         return appResources;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

@@ -293,7 +293,15 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         // Setup information activity
         ImageButton infoButton = dialogView.findViewById(R.id.infoBtn);
         infoButton.setBackgroundColor(getResources().getColor(R.color.white));
-        infoButton.setOnClickListener(v -> startActivity(GroupMembersActivity.makeIntent(MapsActivity.this)));
+
+        // Pass which group is to be displayed to the activity
+        infoButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public  void onClick(View v) {
+                Intent intent = GroupMembersActivity.makeIntent(MapsActivity.this, group.getGroupDescription());
+                startActivity(intent);
+            }
+        });
     }
 
     private void getUsers(List<User> userList) {

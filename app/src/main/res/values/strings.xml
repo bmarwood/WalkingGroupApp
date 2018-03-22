@@ -64,6 +64,8 @@
     <string name="leaders_name">Leader\'s Name: %1$s</string>
     <string name="leaders_email">Leader\'s Email: %1$s</string>
     <string name="select_monitor_monitoree">Select Monitor / Monitoree</string>
+    <string name="group_1_s">Group %1$s</string>
+    <string name="members">Members</string>
 
 
 </resources>
