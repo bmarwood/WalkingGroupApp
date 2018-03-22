@@ -121,8 +121,9 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
             Log.d("Coords", "meetingLat/Lng: " + meetingLat + ", " + meetingLng + "destLat/Lng:" + destLat + destLng);
 
             //Server
-            //after implementing server code, comment out code in setGroupResult method below
-            //LatLng latlng = new LatLng(lat, lng);
+            LatLng meetingLatlng = new LatLng(meetingLat, meetingLng);
+            LatLng destLatlng = new LatLng(destLat, destLng);
+
             //CreateGroupRequest request = new CreateGroupRequest(leadersEmailStr, nameValStr,
             //        latlng, EmbeddedCreateGroup.this::error);
             //request.makeServerRequest();
@@ -135,16 +136,15 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
         btn.setOnClickListener(v -> {
             isClicked = !isClicked;
             if(isClicked){
-                Toast.makeText(EmbeddedCreateGroup.this, "clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EmbeddedCreateGroup.this, "Please Select Destination Location", Toast.LENGTH_SHORT).show();
                 //String setDest = "Set Dest";
                 btn.setText(R.string.embedded_set_meeting);
             }else{
-                Toast.makeText(EmbeddedCreateGroup.this, "unClicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EmbeddedCreateGroup.this, "Please Select Meeting Location", Toast.LENGTH_SHORT).show();
                 btn.setText(R.string.embedded_set_dest);
                 setMeetingCoordinates();
                 return;
             }
-            //Toast.makeText(this, "Please select destination", Toast.LENGTH_SHORT).show();
 
             map.setOnMapClickListener(latLng -> {
                 destinationMarker.remove();
@@ -153,6 +153,7 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
                         title("Destination").
                         icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
                 destinationMarker.setVisible(true);
+                destinationMarker.showInfoWindow();
 
                 destLat = latLng.latitude;
                 destLng = latLng.longitude;
@@ -181,6 +182,7 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
             meetingMarker = map.addMarker(new MarkerOptions().
                     position(latLng).
                     title("Meeting"));
+            meetingMarker.showInfoWindow();
 
             meetingLat = latLng.latitude;
             meetingLng = latLng.longitude;
