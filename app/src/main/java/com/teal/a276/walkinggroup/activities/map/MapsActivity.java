@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.CreateGroup;
+import com.teal.a276.walkinggroup.activities.GroupMembersActivity;
 import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.activities.auth.Login;
 import com.teal.a276.walkinggroup.model.ModelFacade;
@@ -54,7 +55,6 @@ import static com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity.
 public class MapsActivity extends AbstractMapActivity implements Observer {
     private final HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
     GroupManager groupManager;
-//    private List<Group> activeGroups = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +63,14 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
         groupManager = ModelFacade.getInstance().getGroupManager();
 
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<Group>> call = proxy.getGroups();
-        ServerManager.serverRequest(call, this::groupsResult, this::error);
+        ServerProxy getGroupsProxy = ServerManager.getServerRequest();
+        Call<List<Group>> getGroupsCall = getGroupsProxy.getGroups();
+        ServerManager.serverRequest(getGroupsCall, this::groupsResult, this::error);
+
+        // TODO: Should this be called somewhere else?
+        ServerProxy getUsersProxy = ServerManager.getServerRequest();
+        Call<List<User>> getUsersCall = getUsersProxy.getUsers();
+        ServerManager.serverRequest(getUsersCall, this::getUsers, this::error);
     }
 
     private void populateGroupsOnMap(){
@@ -268,28 +273,31 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         String title = getString(R.string.add_remove_user, group.getGroupDescription());
         alertDialogBuilder.setTitle(title);
 
-        // TODO: group leaders name and email are null find out why
-        User user = group.getLeader();
-        user.getId();
-        user.getEmail();
-        user.getName();
+        // Get leaders info
+        List<User> users = ModelFacade.getInstance().getUsers();
+        User leader = new User();
+        for(int i = 0; i < users.size(); i++){
+            if(group.getLeader().getId().equals(users.get(i).getId())){
+                leader = users.get(i);
+            }
+        }
 
+        // Set leader name / email
         TextView leaderName = dialogView.findViewById(R.id.leadersNameTxt);
-        String leadersName = getString(R.string.leaders_name, group.getLeader().getName());
+        String leadersName = getString(R.string.leaders_name, leader.getName());
         leaderName.setText(leadersName);
-
         TextView leaderEmail = dialogView.findViewById(R.id.leadersEmailTxt);
-        String leadersEmail = getString(R.string.leaders_email, group.getLeader().getEmail());
+        String leadersEmail = getString(R.string.leaders_email, leader.getEmail());
         leaderEmail.setText(leadersEmail);
 
+        // Setup information activity
         ImageButton infoButton = dialogView.findViewById(R.id.infoBtn);
         infoButton.setBackgroundColor(getResources().getColor(R.color.white));
-        infoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MapsActivity.this, "Launch Group Info activity", Toast.LENGTH_SHORT).show();
-            }
-        });
+        infoButton.setOnClickListener(v -> startActivity(GroupMembersActivity.makeIntent(MapsActivity.this)));
+    }
+
+    private void getUsers(List<User> userList) {
+        ModelFacade.getInstance().setUsers(userList);
     }
 
     private void initializeAlertDialog(AlertDialog.Builder builder, Group selectedGroup, User selectedUser) {
