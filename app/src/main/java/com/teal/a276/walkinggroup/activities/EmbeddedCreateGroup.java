@@ -40,6 +40,10 @@ import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 import java.util.Observer;
 
+/**
+ * Class to create new groups, allowing users to select meeting/dest on mapView
+ */
+
 public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -126,6 +130,9 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
 
             //CreateGroupRequest request = new CreateGroupRequest(leadersEmailStr, nameValStr,
             //        latlng, EmbeddedCreateGroup.this::error);
+
+            //CreateGroupRequest request = new CreateGroupRequest(leadersEmailStr, nameValStr,
+            //        meetingLatlng, destLatlng, EmbeddedCreateGroup.this::error);
             //request.makeServerRequest();
             //request.addObserver(newGroupObserver);
             //finish();

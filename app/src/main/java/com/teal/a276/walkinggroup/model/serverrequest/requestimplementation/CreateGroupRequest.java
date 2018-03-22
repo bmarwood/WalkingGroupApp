@@ -22,12 +22,21 @@ public class CreateGroupRequest extends AbstractServerRequest {
     private final String leaderEmail;
     private final String groupDes;
 
+    //added
+    //private final LatLng meetingLatLng;
+    //private final LatLng destLatLng;
 
+    //added
+    //public CreateGroupRequest(String leaderEmail, String groupDes, LatLng meetingLatLng, LatLng destLatLng, @NonNull ServerError errorCallback) {
     public CreateGroupRequest(String leaderEmail, String groupDes, LatLng latLng, @NonNull ServerError errorCallback) {
         super(null, errorCallback);
         this.leaderEmail = leaderEmail;
         this.groupDes = groupDes;
         this.latlng = latLng;
+
+        //added
+        //this.meetingLatLng = meetingLatLng;
+        //this.destLatLng = destLatLng;
     }
 
     @Override
@@ -50,6 +59,12 @@ public class CreateGroupRequest extends AbstractServerRequest {
 
         latArray.add(latlng.latitude);
         lngArray.add(latlng.longitude);
+
+        //added
+        //latArray.add(meetingLatLng.latitude);
+        //latArray.add(destLatLng.latitude);
+        //lngArray.add(meetingLatLng.longitude);
+        //lngArray.add(destLatLng.longitude);
 
         group.setRouteLatArray(latArray);
         group.setRouteLngArray(lngArray);
