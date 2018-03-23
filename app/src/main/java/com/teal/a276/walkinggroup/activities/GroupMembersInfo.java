@@ -127,6 +127,7 @@ public class GroupMembersInfo extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 Toast.makeText(GroupMembersInfo.this, "Clicked " + position, Toast.LENGTH_SHORT).show();
 
+                // TODO: Launch activity when profile issue is complete
                 // Pass group member with info to profile activity
 //                Intent intent = Profile.makeIntent(GroupMembersInfo.this, groupMembersWithInfo.get(position) );
 //                startActivity(intent);
