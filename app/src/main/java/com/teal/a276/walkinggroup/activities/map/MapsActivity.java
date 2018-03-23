@@ -83,9 +83,15 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             return;
         }
 
-        for (int j = 0; j < routeLatArray.size(); j++){
-                LatLng markerLocation = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
-                placeGroupMarker(markerLocation, group);
+        //for (int j = 0; j < routeLatArray.size(); j++){
+        //        LatLng markerLocation = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
+        //        placeGroupMarker(markerLocation, group);
+        //}
+
+        //after dest has been implemented, there will be 2 elements in the array
+        if(!routeLatArray.isEmpty()) {
+            LatLng markerLocation = new LatLng(routeLatArray.get(0), routeLngArray.get(0));
+            placeGroupMarker(markerLocation, group);
         }
     }
 

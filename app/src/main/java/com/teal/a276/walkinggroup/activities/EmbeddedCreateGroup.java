@@ -36,9 +36,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
-
-import java.util.Observer;
 
 /**
  * Class to create new groups, allowing users to select meeting/dest on mapView
@@ -58,7 +57,6 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     private LocationRequest locationRequest;
     private Location lastLocation;
     private LatLng currentLocation;
-    private static Observer newGroupObserver;
     private Marker meetingMarker;
     private Marker destinationMarker;
     double meetingLat = 0;
@@ -135,7 +133,9 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
             //        meetingLatlng, destLatlng, EmbeddedCreateGroup.this::error);
             //request.makeServerRequest();
             //request.addObserver(newGroupObserver);
-            //finish();
+            ModelFacade.getInstance().getGroupManager().addNewGroup(leadersEmailStr, nameValStr, meetingLatlng, destLatlng, EmbeddedCreateGroup.this::error);
+
+            finish();
         });
     }
     private void setupSelectDestinationButton(){
@@ -326,9 +326,7 @@ public class EmbeddedCreateGroup extends BaseActivity implements OnMapReadyCallb
     public boolean onCreateOptionsMenu(Menu menu){
         return true;
     }
-    public static void setGroupResultCallback(Observer obs){
-        newGroupObserver = obs;
-    }
+
 
     public static Intent makeIntent(Context context){
         return new Intent(context, EmbeddedCreateGroup.class);
