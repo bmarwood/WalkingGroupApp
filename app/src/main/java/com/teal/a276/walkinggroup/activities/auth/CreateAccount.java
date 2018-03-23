@@ -68,10 +68,11 @@ public class CreateAccount extends AuthenticationActivity {
 
     private void successfulResult(User user, String password) {
         user.setPassword(password);
+        this.user = user;
 
         storeLogin();
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<Void> caller = proxy.login(user);
+        Call<Void> caller = proxy.login(this.user);
         ServerManager.serverRequest(caller, this::successfulLogin,
                 this::authError);
     }
