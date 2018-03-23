@@ -27,7 +27,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.CreateGroup;
-import com.teal.a276.walkinggroup.activities.GroupMembersActivity;
+import com.teal.a276.walkinggroup.activities.GroupMembersInfo;
 import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.activities.auth.Login;
 import com.teal.a276.walkinggroup.model.ModelFacade;
@@ -67,7 +67,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         Call<List<Group>> getGroupsCall = getGroupsProxy.getGroups();
         ServerManager.serverRequest(getGroupsCall, this::groupsResult, this::error);
 
-        // TODO: Should this be called somewhere else?
         ServerProxy getUsersProxy = ServerManager.getServerRequest();
         Call<List<User>> getUsersCall = getUsersProxy.getUsers();
         ServerManager.serverRequest(getUsersCall, this::getUsers, this::error);
@@ -282,7 +281,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             }
         }
 
-        // Set leader name / email
         TextView leaderName = dialogView.findViewById(R.id.leadersNameTxt);
         String leadersName = getString(R.string.leaders_name, leader.getName());
         leaderName.setText(leadersName);
@@ -293,14 +291,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         // Setup information activity
         ImageButton infoButton = dialogView.findViewById(R.id.infoBtn);
         infoButton.setBackgroundColor(getResources().getColor(R.color.white));
-
-        // Pass which group is to be displayed to the activity
-        infoButton.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public  void onClick(View v) {
-                Intent intent = GroupMembersActivity.makeIntent(MapsActivity.this, group.getGroupDescription());
-                startActivity(intent);
-            }
+        infoButton.setOnClickListener(v -> {
+            Intent intent = GroupMembersInfo.makeIntent(MapsActivity.this, group.getGroupDescription(), group.getId());
+            startActivity(intent);
         });
     }
 
