@@ -60,5 +60,6 @@
     <!-- Strings related to map -->
     <string name="add_user">Add User</string>
     <string name="remove_user">Remove User</string>
+    <string name="dashboard">Dashboard</string>
 
 </resources>
