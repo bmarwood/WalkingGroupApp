@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
-import com.teal.a276.walkinggroup.model.dataobjects.MessageQueryKey;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 import java.util.List;

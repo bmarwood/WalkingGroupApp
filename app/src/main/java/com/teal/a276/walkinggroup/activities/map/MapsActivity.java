@@ -53,7 +53,6 @@ import static com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity.
 public class MapsActivity extends AbstractMapActivity implements Observer {
     private final HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
     GroupManager groupManager;
-//    private List<Group> activeGroups = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

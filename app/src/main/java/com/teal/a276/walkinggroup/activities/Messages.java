@@ -1,6 +1,8 @@
 package com.teal.a276.walkinggroup.activities;
 
+import android.app.AlarmManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -9,8 +11,8 @@ import android.widget.ListView;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
-import com.teal.a276.walkinggroup.model.dataobjects.MessageQueryKey;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.serverproxy.MessageQueryKey;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
@@ -31,7 +33,7 @@ public class Messages extends BaseActivity {
 
         user = ModelFacade.getInstance().getCurrentUser();
         HashMap<String, Object> requestParameters = new HashMap<>();
-        requestParameters.put(MessageQueryKey.FOR_USER.toString(), user.getId());
+        requestParameters.put(MessageQueryKey.FOR_USER, user.getId());
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<List<Message>> call = proxy.getMessages(requestParameters);
         ServerManager.serverRequest(call, this::userMessages, this::error);
