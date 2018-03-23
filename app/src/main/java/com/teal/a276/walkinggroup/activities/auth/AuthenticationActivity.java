@@ -24,7 +24,7 @@ public abstract class AuthenticationActivity extends BaseActivity {
     public static final String sharePrefUser = "userName";
     static final String sharePrefPassword = "password";
 
-    final User user = new User();
+    User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public abstract class AuthenticationActivity extends BaseActivity {
     }
 
     void successfulLogin(Void ans) {
-        CompleteUserRequest request = new CompleteUserRequest(user, this::error);
+        CompleteUserRequest request = new CompleteUserRequest(user, this::authError);
         request.makeServerRequest();
         request.addObserver((observable, o) -> {
             ModelFacade.getInstance().setCurrentUser((User) o);
