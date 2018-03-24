@@ -44,7 +44,7 @@
         <activity
             android:name=".activities.map.SelectLocationOnMap"
             android:label="@string/title_activity_select_location_on_map" />
-        <activity android:name=".activities.DashBoard"></activity>
+        <activity android:name=".activities.map.DashBoard"></activity>
     </application>
 
 </manifest>
