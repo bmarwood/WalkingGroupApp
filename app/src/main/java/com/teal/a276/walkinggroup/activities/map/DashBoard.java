@@ -33,7 +33,7 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         user = ModelFacade.getInstance().getCurrentUser();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.fragment);
         mapFragment.getMapAsync(this);
 
         if (googleApiClient == null) {
@@ -107,8 +107,8 @@ public class DashBoard extends AbstractMapActivity implements Observer {
 
         //User still does not have location fields
 
-        //LatLng markerLocation = new LatLng(user.getLatLng);
-        //placeMonitoreesOnMap(markerLocation, user);
+        LatLng markerLocation = user.getLastGPSLocation();
+        placeMonitoreesOnMap(markerLocation, user);
     }
 }
 

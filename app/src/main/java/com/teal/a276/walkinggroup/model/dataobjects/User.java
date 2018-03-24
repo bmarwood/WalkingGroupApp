@@ -3,6 +3,7 @@ package com.teal.a276.walkinggroup.model.dataobjects;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +20,8 @@ public class User {
     private String name;
     private String email;
     private String password;
+    //added
+    private LatLng lastGPSLocation;
     private List<Group> memberOfGroups = new ArrayList<>();
     private List<Group> leadsGroups = new ArrayList<>();
 
@@ -158,5 +161,10 @@ public class User {
         setMonitoredByUsers(user.getMonitoredByUsers());
         setMonitorsUsers(user.getMonitorsUsers());
         setHref(user.getHref());
+    }
+
+    //added
+    public LatLng getLastGPSLocation(){
+        return lastGPSLocation;
     }
 }
