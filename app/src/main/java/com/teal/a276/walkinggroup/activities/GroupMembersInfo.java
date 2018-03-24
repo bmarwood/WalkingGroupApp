@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
@@ -30,18 +29,16 @@ import java.util.List;
 import retrofit2.Call;
 
 public class GroupMembersInfo extends BaseActivity {
-    private static final String EXTRA_GROUPNAME = "com.teal.a276.walkinggroup.activities.GroupMembersInfo - the groupName";
-    private static final String EXTRA_GROUPID = "com.teal.a276.walkinggroup.activities.GroupMembersInfo - the groupID";
-    private String groupName;
-    private Long groupID;
-    private Group groupSelected;
+    private static final String EXTRA_GROUP_NAME = "com.teal.a276.walkinggroup.activities.GroupMembersInfo - groupName";
+    private static final String EXTRA_GROUP_ID = "com.teal.a276.walkinggroup.activities.GroupMembersInfo - groupID";
+    private Group groupSelected = new Group();
     User leader = new User();
     List<User> groupMembersWithInfo = new ArrayList<>();
 
-    public static Intent makeIntent(Context context, String groupName, Long groupID) {
+    public static Intent makeIntent(Context context, Group group) {
         Intent intent = new Intent(context, GroupMembersInfo.class);
-        intent.putExtra(EXTRA_GROUPNAME, groupName);
-        intent.putExtra(EXTRA_GROUPID, groupID);
+        intent.putExtra(EXTRA_GROUP_NAME, group.getGroupDescription());
+        intent.putExtra(EXTRA_GROUP_ID, group.getId());
         return intent;
     }
 
@@ -53,21 +50,23 @@ public class GroupMembersInfo extends BaseActivity {
         extractDataFromIntent();
         setGroup();
         setText();
-        initializeListViews();
+        callServerForUserList();
         registerClickCallback();
     }
 
     private void extractDataFromIntent() {
         Intent intent = getIntent();
-        groupName = intent.getStringExtra(EXTRA_GROUPNAME);
-        groupID = intent.getLongExtra(EXTRA_GROUPID, 0);
+        String groupName = intent.getStringExtra(EXTRA_GROUP_NAME);
+        Long groupID = intent.getLongExtra(EXTRA_GROUP_ID, 0);
+        groupSelected.setGroupDescription(groupName);
+        groupSelected.setId(groupID);
     }
 
     private void setGroup() {
         GroupManager groupManager = ModelFacade.getInstance().getGroupManager();
         List<Group> currentGroups = groupManager.getGroups();
         for (int i = 0; i < currentGroups.size(); i++) {
-            if (currentGroups.get(i).getGroupDescription().equals(groupName)) {
+            if (currentGroups.get(i).getGroupDescription().equals(groupSelected.getGroupDescription())) {
                 groupSelected = currentGroups.get(i);
             }
         }
@@ -75,7 +74,7 @@ public class GroupMembersInfo extends BaseActivity {
 
     private void setText() {
         TextView groupNameTv = findViewById(R.id.groupNameTxt);
-        String groupsName = getString(R.string.group_1_s, groupName);
+        String groupsName = getString(R.string.group_number, groupSelected.getGroupDescription());
         groupNameTv.setText(groupsName);
 
         // Get leaders info
@@ -95,9 +94,9 @@ public class GroupMembersInfo extends BaseActivity {
         leaderEmail.setText(leadersEmail);
     }
 
-    private void initializeListViews() {
+    private void callServerForUserList() {
            ServerProxy proxy = ServerManager.getServerRequest();
-           Call<List<User>> call = proxy.getGroupMembers(groupID);
+           Call<List<User>> call = proxy.getGroupMembers(groupSelected.getId());
            ServerManager.serverRequest(call, this::getUsers, this::error);
     }
 
@@ -125,7 +124,7 @@ public class GroupMembersInfo extends BaseActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                Toast.makeText(GroupMembersInfo.this, "Clicked " + position, Toast.LENGTH_SHORT).show();
+                Log.d("GroupMembersInfo", "Clicked " + position);
 
                 // TODO: Launch activity when profile issue is complete
                 // Pass group member with info to profile activity

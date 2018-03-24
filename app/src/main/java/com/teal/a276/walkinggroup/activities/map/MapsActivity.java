@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -290,9 +291,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
         // Setup information activity
         ImageButton infoButton = dialogView.findViewById(R.id.infoBtn);
-        infoButton.setBackgroundColor(getResources().getColor(R.color.white));
+        infoButton.setBackgroundColor(Color.WHITE);
         infoButton.setOnClickListener(v -> {
-            Intent intent = GroupMembersInfo.makeIntent(MapsActivity.this, group.getGroupDescription(), group.getId());
+            Intent intent = GroupMembersInfo.makeIntent(MapsActivity.this, group);
             startActivity(intent);
         });
     }
