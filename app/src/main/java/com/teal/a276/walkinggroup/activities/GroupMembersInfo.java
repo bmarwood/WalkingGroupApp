@@ -107,7 +107,7 @@ public class GroupMembersInfo extends BaseActivity {
         for (int i = 0; i < userList.size(); i++) {
             User user = userList.get(i);
             for (int j = 0; j < currentUsers.size(); j++) {
-                if (currentUsers.get(j).getId().equals(user.getId())) {
+                if (currentUsers.get(j).equals(user)) {
                     groupMembersWithInfo.add(currentUsers.get(j));
                 }
             }
