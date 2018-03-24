@@ -179,4 +179,7 @@ public interface ServerProxy {
     @POST("/messages/toparentsof/{id}")
     Call<Message> sendMessageToMonitors(@Path("id") Long userId, @Body Message message);
 
+    @POST("/messages/{messageId}/readby/{userId}")
+    Call<User> setMessageRead(@Path("messageId") Long messageId, @Path("userId") Long userId, @Body Boolean readStatus);
+
 }

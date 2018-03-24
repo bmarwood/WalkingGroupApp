@@ -9,17 +9,16 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 
 /**
  * Created by scott on 23/03/18.
  */
 
-public class MessageTouchHelper extends ItemTouchHelper.SimpleCallback {
+abstract class MessageTouchHelper extends ItemTouchHelper.SimpleCallback {
     private Drawable icon;
 
-    public MessageTouchHelper(int dragDirs, int swipeDirs, Drawable icon) {
+    MessageTouchHelper(int dragDirs, int swipeDirs, Drawable icon) {
         super(dragDirs, swipeDirs);
         this.icon = icon;
     }
@@ -66,11 +65,5 @@ public class MessageTouchHelper extends ItemTouchHelper.SimpleCallback {
         clear.setColor(Color.TRANSPARENT);
         canvas.drawRect(view.getLeft() + xOffset, (float)view.getTop(),
                 (float)view.getLeft(), (float)view.getBottom(), clear);
-    }
-
-    @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        Log.d("Swiped item: ", viewHolder.getAdapterPosition() + "");
-
     }
 }
