@@ -1,5 +1,9 @@
-package com.teal.a276.walkinggroup.activities;
+package com.teal.a276.walkinggroup.activities.message;
 
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.BaseActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
@@ -30,6 +35,8 @@ import retrofit2.Call;
 public class Messages extends BaseActivity {
     RecyclerView unreadMessages;
     User user;
+    Drawable readIcon = getResources().getDrawable(R.drawable.ic_read);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +57,41 @@ public class Messages extends BaseActivity {
                                     float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
                 View itemView = viewHolder.itemView;
-                // Draw the red delete background
-                ColorDrawable background = new ColorDrawable(Color.BLUE);
+
+                if (dX == 0.0 && !isCurrentlyActive) {
+                   clearReadIcon(canvas, itemView, dX);
+                   super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                   return;
+                }
+
+                ColorDrawable background = new ColorDrawable(Color.GREEN);
                 background.setBounds(itemView.getLeft() + (int)dX, itemView.getTop(),
                         itemView.getLeft(), itemView.getBottom());
+
                 background.draw(canvas);
+                drawReadIcon(canvas, itemView);
 
                 super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+
+            private void drawReadIcon(Canvas canvas, View view) {
+                int itemHeight = view.getBottom() - view.getTop();
+                int margin = (itemHeight - readIcon.getIntrinsicHeight()) / 2;
+                int iconTop = view.getTop() + margin;
+                int iconBottom = iconTop + readIcon.getIntrinsicHeight();
+                int iconLeft = view.getLeft() + margin + readIcon.getIntrinsicWidth();
+                int iconRight = view.getLeft() - margin;
+
+                readIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                readIcon.draw(canvas);
+            }
+
+            private void clearReadIcon(Canvas canvas, View view, float xOffset) {
+                Paint clear = new Paint();
+                clear.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
+                clear.setColor(Color.TRANSPARENT);
+                canvas.drawRect(view.getLeft() + xOffset, (float)view.getTop(),
+                        (float)view.getLeft(), (float)view.getBottom(), clear);
             }
 
             @Override
@@ -76,13 +111,7 @@ public class Messages extends BaseActivity {
         Call<List<Message>> call = proxy.getMessages(requestParameters);
         ServerManager.serverRequest(call, this::userMessages, this::error);
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        user = ModelFacade.getInstance().getCurrentUser();
-    }
-
+    
     private void userMessages(List<Message> messages) {
         Log.d("Got messages", messages.toString());
         List<String> messagesStrings = new ArrayList<>();
@@ -90,13 +119,12 @@ public class Messages extends BaseActivity {
             messagesStrings.add(m.getText());
         }
 
-        RecyclerView.Adapter adapter = new TestAdapter(messagesStrings);
+        RecyclerView.Adapter adapter = new MessagesAdapter(messagesStrings);
         RecyclerView unreadMessages = findViewById(R.id.unreadMessages);
         unreadMessages.setAdapter(adapter);
     }
 
     public void sendMessage(View v) {
-
         Message message = new Message();
         message.setText("This is a test message");
 
@@ -109,26 +137,26 @@ public class Messages extends BaseActivity {
         Log.d("Message sent", m.getText());
     }
 
-    private class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
+    private class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
         private List<String> messages;
 
          class ViewHolder extends RecyclerView.ViewHolder {
-             TextView mTextView;
-             ViewHolder(TextView v) {
-                super(v);
-                mTextView = v;
+             TextView textView;
+             ViewHolder(TextView view) {
+                super(view);
+                 textView = view;
             }
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public TestAdapter(List<String> messages) {
+        public MessagesAdapter(List<String> messages) {
             this.messages = messages;
         }
 
         // Create new views (invoked by the layout manager)
         @Override
-        public TestAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                       int viewType) {
+        public MessagesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                             int viewType) {
             // create a new view
             TextView v = (TextView) LayoutInflater.from(parent.getContext())
                     .inflate(android.R.layout.simple_list_item_1, parent, false);
@@ -137,7 +165,7 @@ public class Messages extends BaseActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.mTextView.setText(messages.get(position));
+            holder.textView.setText(messages.get(position));
         }
 
         @Override
