@@ -60,5 +60,12 @@
     <!-- Strings related to map -->
     <string name="add_user">Add User</string>
     <string name="remove_user">Remove User</string>
+    <string name="add_remove_user">Add/Remove User from group:\n%1$s</string>
+    <string name="leaders_name">Leader\'s Name: %1$s</string>
+    <string name="leaders_email">Leader\'s Email: %1$s</string>
+    <string name="select_monitor_monitoree">Select Monitor / Monitoree</string>
+    <string name="group_number">Group %1$s</string>
+    <string name="members">Members</string>
+
 
 </resources>
