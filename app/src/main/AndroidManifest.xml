@@ -38,13 +38,16 @@
 
         <activity
             android:name=".activities.map.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps"/>
         <activity android:name=".activities.auth.CreateAccount" />
         <activity android:name=".activities.CreateGroup" />
         <activity
             android:name=".activities.map.SelectLocationOnMap"
             android:label="@string/title_activity_select_location_on_map" />
-        <activity android:name=".activities.message.Messages"></activity>
+        <activity android:name=".activities.message.Messages"/>
+        <activity
+            android:name=".activities.GroupMembersInfo">
+        </activity>
     </application>
 
 </manifest>

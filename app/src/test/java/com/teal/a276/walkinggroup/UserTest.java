@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -236,5 +237,23 @@ public class UserTest extends BaseTest {
         assertEquals("email@email.com",user.getEmail());
         assertEquals(null,user.getHref());
         assertEquals(null,user.getId());
+    }
+
+    @Test
+    public void testNotEqual() {
+        User user = new User("Bob Lee", "email@email.com", "Password1234");
+        user.setId(1L);
+        User userTwo = new User("Lee Bob", "email1@email.com", "Password12345");
+        userTwo.setId(2L);
+        assertFalse(user.equals(userTwo));
+    }
+
+    @Test
+    public void testEqual() {
+        User user = new User("Bob Lee", "email@email.com", "Password1234");
+        User userTwo = new User("Bob Lee", "email@email.com", "Password1234");
+        user.setId(1L);
+        userTwo.setId(1L);
+        assertTrue(user.equals(userTwo));
     }
 }
