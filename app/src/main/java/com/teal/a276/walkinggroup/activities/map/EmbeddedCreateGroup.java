@@ -68,9 +68,7 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
     }
     private void setMeetingCoordinates(){
         map.setOnMapClickListener(latLng -> {
-            //clear any previous marker
             meetingMarker.remove();
-            //map.clear();
             map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             meetingMarker = map.addMarker(new MarkerOptions().
                     position(latLng).
@@ -140,7 +138,6 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
 
             Log.d("Coords", "meetingLat/Lng: " + meetingLat + ", " + meetingLng + "destLat/Lng:" + destLat + destLng);
 
-            //Server
             LatLng meetingLatlng = new LatLng(meetingLat, meetingLng);
             LatLng destLatlng = new LatLng(destLat, destLng);
 
@@ -177,7 +174,6 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         meetingLng = currentLocation.longitude;
         Log.d("initial location", "Lat" + meetingLat + "Lng" + meetingLng);
 
-        //destination
         destinationMarker = map.addMarker(new MarkerOptions().
                 position(currentLocation).
                 title("Destination"));
