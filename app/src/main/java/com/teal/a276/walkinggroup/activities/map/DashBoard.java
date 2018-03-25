@@ -16,10 +16,16 @@ import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Dashboard Activity for parents to check location of their monitorees (Children)
+ * and the location of the leader
+ *
+ */
 
 public class DashBoard extends AbstractMapActivity implements Observer {
 
@@ -54,6 +60,7 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         if(updateLocation) {
             startLocationUpdates();
         }
+        populateMonitorsOnMap();
     }
 
     @Override
@@ -65,20 +72,6 @@ public class DashBoard extends AbstractMapActivity implements Observer {
     public void update(Observable o, Object arg) {
 
     }
-    /*
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-    }
-    */
-
-    /*
-    @Override
-    protected void onStart(){
-        super.onStart();
-        googleApiClient.connect();
-    }
-    */
 
 
     public static Intent makeIntent(Context context){
@@ -86,12 +79,27 @@ public class DashBoard extends AbstractMapActivity implements Observer {
     }
 
 
+    //Methods for Placing people the user monitors on map
+    private void populateMonitorsOnMap(){
+
+        //List<User> monitorsUsers = this.user.getMonitorsUsers();
+
+        List<User> monitorsUsers = new ArrayList<>();
+        User user1 = new User();
+
+        LatLng vancouver = new LatLng(49.282729, -123.120738);
+        user1.setLastGPSLocation(vancouver);
+        user1.setName("User1");
+
+        User sfu = new User();
+        LatLng sfuBurnaby = new LatLng(49.278502, -122.916372);
+        sfu.setLastGPSLocation(sfuBurnaby);
+        sfu.setName("SFU");
+
+        monitorsUsers.add(user1);
+        monitorsUsers.add(sfu);
 
 
-    //Methods for Placing monitorees on map
-
-    private void populateUsersOnMap(){
-        List<User> monitorsUsers = this.user.getMonitorsUsers();
         for(User user : monitorsUsers){
             addMarker(user);
         }
@@ -102,113 +110,17 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         markerOptions.title(title);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
         Marker marker = map.addMarker(markerOptions);
+        marker.showInfoWindow();
     }
     private void addMarker(User user){
-
-        //User still does not have location fields
-
         LatLng markerLocation = user.getLastGPSLocation();
         placeMonitoreesOnMap(markerLocation, user);
     }
+
+
+    //Methods for Placing Leader
+
+
+
+
 }
-
-
-
-
-
-
-
-//Below is the mapView method, works
-
-/*
-public class DashBoard extends AbstractMapActivity implements Observer {
-    //public class DashBoard extends AbstractMapActivity implements Observer {
-
-    LatLng currentLocation;
-    private int LOCATION_PERMISSION_REQUEST_CODE=1;
-    private MapView mapView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dash_board);
-
-        Bundle mapViewBundle = null;
-        if (savedInstanceState != null) {
-            mapViewBundle = savedInstanceState.getBundle("MapViewBundleKey");
-        }
-
-        mapView = findViewById(R.id.dashMapView);
-        mapView.onCreate(mapViewBundle);
-        mapView.getMapAsync(this);
-
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-        createLocationRequest();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        setUpMap();
-        //placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
-        if(updateLocation) {
-            startLocationUpdates();
-        }
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        return false;
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-
-    }
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-    }
-    @Override
-    protected void onStart(){
-        super.onStart();
-        googleApiClient.connect();
-        mapView.onStart();
-    }
-
-    protected void setUpMap(){
-        if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]
-                    {android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-            return;
-        }
-        map.setMyLocationEnabled(true);
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        LocationAvailability locationAvailability =
-                LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient);
-        if (null != locationAvailability && locationAvailability.isLocationAvailable()) {
-            lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            if (lastLocation != null) {
-                currentLocation = new LatLng(lastLocation.getLatitude(), lastLocation
-                        .getLongitude());
-                currentLocation = locationToLatLng();
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12));
-            }
-        }
-    }
-    public static Intent makeIntent(Context context){
-        return new Intent(context, DashBoard.class);
-    }
-}
-*/

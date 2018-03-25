@@ -163,8 +163,11 @@ public class User {
         setHref(user.getHref());
     }
 
-    //added
+    //added for Dashboard
     public LatLng getLastGPSLocation(){
         return lastGPSLocation;
+    }
+    public void setLastGPSLocation(LatLng location){
+        this.lastGPSLocation = location;
     }
 }

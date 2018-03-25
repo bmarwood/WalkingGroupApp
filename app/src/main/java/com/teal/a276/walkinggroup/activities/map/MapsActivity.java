@@ -193,7 +193,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     public void onConnected(@Nullable Bundle bundle) {
         setUpMap();
         refreshGroupMarkers();
-        placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
+        placeCurrentLocationMarker( false, R.mipmap.ic_user_location);
         if (updateLocation) {
             startLocationUpdates();
         }
