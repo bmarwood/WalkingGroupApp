@@ -10,9 +10,8 @@ import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import java.util.List;
 
 /**
- * Created by scott on 24/03/18.
+ * Adapter for a RecyclerView.
  */
-
 class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
     private List<Message> messages;
 

@@ -28,6 +28,9 @@ import java.util.Observer;
 
 import retrofit2.Call;
 
+/**
+ * Activity that handles displaying all read and unread messages the user has recieved
+ */
 public class Messages extends BaseActivity implements Observer {
     //1 minute in ms
     private final long UPDATE_RATE = 60000;

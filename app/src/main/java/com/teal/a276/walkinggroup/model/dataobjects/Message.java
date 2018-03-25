@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 /**
- * Created by scott on 20/03/18.
+ * Simple Message class to store the data the server expects and returns.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Message {

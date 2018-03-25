@@ -16,9 +16,8 @@ import java.util.TimerTask;
 import retrofit2.Call;
 
 /**
- * Created by scott on 24/03/18.
+ * Class to handle polling the server for message updates. When created it starts polling the server.
  */
-
 public class MessageUpdater extends Observable {
     private Timer timer = new Timer();
     private HashSet<Message> messageCache = new HashSet<>();

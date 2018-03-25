@@ -12,9 +12,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 /**
- * Created by scott on 23/03/18.
+ * Listener that allows for messages in a recycle view to be swiped to mark them as read.
  */
-
 abstract class MessageTouchHelper extends ItemTouchHelper.SimpleCallback {
     private Drawable icon;
 
