@@ -40,14 +40,17 @@
             android:name=".activities.map.MapsActivity"
             android:label="@string/title_activity_maps">
         </activity>
-        <activity android:name=".activities.auth.CreateAccount" />
-        <activity android:name=".activities.CreateGroup" />
+        <activity
+            android:name=".activities.auth.CreateAccount" />
+        <activity
+            android:name=".activities.CreateGroup" />
         <activity
             android:name=".activities.map.SelectLocationOnMap"
-            android:label="@string/title_activity_select_location_on_map"/>
-            android:name=".activities.SelectLocationOnMap"
             android:label="@string/title_activity_select_location_on_map" />
-        <activity android:name=".activities.map.EmbeddedCreateGroup" />
+        <activity
+            android:name=".activities.GroupMembersInfo">
+        </activity>
+            <activity android:name=".activities.map.EmbeddedCreateGroup" />
     </application>
 
 </manifest>

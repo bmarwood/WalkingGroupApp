@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
+import java.util.List;
+
 /**
  * Singleton for accessing groups/users
  */
@@ -15,6 +17,7 @@ public class ModelFacade {
     private User currentUser = null;
     private GroupManager groupManager = null;
     private Resources appResources = null;
+    private List<User> users = null;
 
     private ModelFacade() {}
 
@@ -59,5 +62,13 @@ public class ModelFacade {
         }
 
         return appResources;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }
