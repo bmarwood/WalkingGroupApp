@@ -11,6 +11,12 @@
         android:title="@string/add_new_group"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/myGroups"
+        android:title="@string/my_groups"
+        app:showAsAction="never" />
+
+
     <item android:id="@+id/logoutItem"
         android:title="@string/logout"
         app:showAsAction="never" />
