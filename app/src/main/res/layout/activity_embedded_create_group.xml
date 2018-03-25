@@ -6,14 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.teal.a276.walkinggroup.activities.map.EmbeddedCreateGroup">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="411dp"
-        android:layout_height="434dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
 
     <TextView
         android:id="@+id/embeddedName"
@@ -33,12 +25,15 @@
         android:id="@+id/embeddedEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="21dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginEnd="30dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginStart="39dp"
         android:text="Leader's Email"
-        app:layout_constraintBottom_toTopOf="@+id/mapView"
+        app:layout_constraintBottom_toTopOf="@+id/embeddedFragment"
         app:layout_constraintEnd_toStartOf="@+id/embeddedEmailEdit"
+        app:layout_constraintHorizontal_bias="0.433"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -58,12 +53,12 @@
     <EditText
         android:id="@+id/embeddedEmailEdit"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="37dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="36dp"
         android:ems="10"
         android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/mapView"
+        app:layout_constraintBottom_toTopOf="@+id/embeddedFragment"
         app:layout_constraintEnd_toEndOf="parent" />
 
 
@@ -86,4 +81,17 @@
         android:text="Select Dest"
         app:layout_constraintBottom_toTopOf="@+id/embeddedCreateButton"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <fragment
+        android:id="@+id/embeddedFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="413dp"
+        android:layout_height="432dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 </android.support.constraint.ConstraintLayout>
