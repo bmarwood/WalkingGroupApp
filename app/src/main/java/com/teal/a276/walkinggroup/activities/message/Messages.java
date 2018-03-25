@@ -14,6 +14,7 @@ import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
+import com.teal.a276.walkinggroup.model.dataobjects.MessageUpdater;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -22,23 +23,28 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import retrofit2.Call;
 
-public class Messages extends BaseActivity {
-    RecyclerView unreadMessagesView;
-    ArrayAdapter<String> readMessagesAdapter;
-    ListView readMessagesView;
-    Drawable readIcon;
-    List<Message> unreadMessages = new ArrayList<>();
+public class Messages extends BaseActivity implements Observer {
+    //Update every minute in ms
+    private final long UPDATE_RATE = 10000;//60000;
+    private RecyclerView unreadMessagesView;
+    private ArrayAdapter<String> readMessagesAdapter;
+    private ListView readMessagesView;
+    private List<Message> unreadMessages = new ArrayList<>();
+    private MessageUpdater messageUpdater = new MessageUpdater();
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
-        User user = ModelFacade.getInstance().getCurrentUser();
-        readIcon = getResources().getDrawable(R.drawable.ic_read);
+        user = ModelFacade.getInstance().getCurrentUser();
+        Drawable readIcon = getResources().getDrawable(R.drawable.ic_read);
         unreadMessagesView = findViewById(R.id.unreadMessages);
         readMessagesView = findViewById(R.id.readMessages);
 
@@ -64,7 +70,6 @@ public class Messages extends BaseActivity {
         ServerManager.serverRequest(call, this::readMessagesResult, this::error);
     }
 
-
     private Call<List<Message>> requestMessages(Long userId, String status) {
         HashMap<String, Object> requestParameters = new HashMap<>();
         requestParameters.put(MessageRequestConstant.FOR_USER, userId);
@@ -76,6 +81,7 @@ public class Messages extends BaseActivity {
 
     private void unreadMessagesResult(List<Message> messages) {
         this.unreadMessages = messages;
+        messageUpdater.addCacheItems(messages);
         RecyclerView.Adapter adapter = new MessagesAdapter(messages);
         unreadMessagesView.setAdapter(adapter);
     }
@@ -125,5 +131,26 @@ public class Messages extends BaseActivity {
 
     private void messageSent(Message m) {
         Log.d("Message sent", m.getText());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        messageUpdater.unsubscribeFromUpdates();
+        messageUpdater.deleteObserver(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        messageUpdater.subscribeForUpdates(user, this::error, UPDATE_RATE);
+        messageUpdater.addObserver(this);
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        List<Message> messages = (List<Message>)o;
+        MessagesAdapter adapter = (MessagesAdapter) unreadMessagesView.getAdapter();
+        adapter.addAll(messages);
     }
 }
