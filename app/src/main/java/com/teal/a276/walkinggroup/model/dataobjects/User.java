@@ -163,6 +163,24 @@ public class User {
         setHref(user.getHref());
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!User.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (!this.name.equals(other.name)) {
+            return false;
+        }
+        if (!this.id.equals(other.id)) {
+            return false;
+        }
+        return true;
+    }
+
     //added for Dashboard
     public LatLng getLastGPSLocation(){
         return lastGPSLocation;

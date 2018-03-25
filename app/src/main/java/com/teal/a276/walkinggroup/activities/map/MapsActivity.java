@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -25,6 +28,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.CreateGroup;
+import com.teal.a276.walkinggroup.activities.GroupMembersInfo;
 import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.activities.auth.Login;
 import com.teal.a276.walkinggroup.model.ModelFacade;
@@ -52,7 +56,6 @@ import static com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity.
 public class MapsActivity extends AbstractMapActivity implements Observer {
     private final HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
     GroupManager groupManager;
-//    private List<Group> activeGroups = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +64,13 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
         groupManager = ModelFacade.getInstance().getGroupManager();
 
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<Group>> call = proxy.getGroups();
-        ServerManager.serverRequest(call, this::groupsResult, this::error);
+        ServerProxy getGroupsProxy = ServerManager.getServerRequest();
+        Call<List<Group>> getGroupsCall = getGroupsProxy.getGroups();
+        ServerManager.serverRequest(getGroupsCall, this::groupsResult, this::error);
+
+        ServerProxy getUsersProxy = ServerManager.getServerRequest();
+        Call<List<User>> getUsersCall = getUsersProxy.getUsers();
+        ServerManager.serverRequest(getUsersCall, this::getUsers, this::error);
     }
 
     private void populateGroupsOnMap(){
@@ -234,6 +241,8 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
+        setupDialogInfo(group, alertDialogBuilder, dialogView);
+
         alertDialogBuilder.setView(dialogView);
         initializeAlertDialog(alertDialogBuilder, group, selectedUser);
         return false;
@@ -261,6 +270,39 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(listener);
+    }
+
+    private void setupDialogInfo(Group group, AlertDialog.Builder alertDialogBuilder, View dialogView) {
+        String title = getString(R.string.add_remove_user, group.getGroupDescription());
+        alertDialogBuilder.setTitle(title);
+
+        // Get leaders info
+        List<User> users = ModelFacade.getInstance().getUsers();
+        User leader = new User();
+        for(int i = 0; i < users.size(); i++){
+            if(group.getLeader().getId().equals(users.get(i).getId())){
+                leader = users.get(i);
+            }
+        }
+
+        TextView leaderName = dialogView.findViewById(R.id.leadersNameTxt);
+        String leadersName = getString(R.string.leaders_name, leader.getName());
+        leaderName.setText(leadersName);
+        TextView leaderEmail = dialogView.findViewById(R.id.leadersEmailTxt);
+        String leadersEmail = getString(R.string.leaders_email, leader.getEmail());
+        leaderEmail.setText(leadersEmail);
+
+        // Setup information activity
+        ImageButton infoButton = dialogView.findViewById(R.id.infoBtn);
+        infoButton.setBackgroundColor(Color.WHITE);
+        infoButton.setOnClickListener(v -> {
+            Intent intent = GroupMembersInfo.makeIntent(MapsActivity.this, group);
+            startActivity(intent);
+        });
+    }
+
+    private void getUsers(List<User> userList) {
+        ModelFacade.getInstance().setUsers(userList);
     }
 
     private void initializeAlertDialog(AlertDialog.Builder builder, Group selectedGroup, User selectedUser) {
