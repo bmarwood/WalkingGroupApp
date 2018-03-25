@@ -1,7 +1,5 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
-import android.os.Handler;
-
 import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -25,7 +23,11 @@ public class MessageUpdater extends Observable {
     private Timer timer = new Timer();
     private HashSet<Message> messageCache = new HashSet<>();
 
-    public void subscribeForUpdates(final User user, final ServerError errorCallback, long updateRate) {
+    public MessageUpdater(final User user, final ServerError errorCallback, long updateRate) {
+        subscribeForUpdates(user, errorCallback, updateRate);
+    }
+
+    private void subscribeForUpdates(final User user, final ServerError errorCallback, long updateRate) {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {

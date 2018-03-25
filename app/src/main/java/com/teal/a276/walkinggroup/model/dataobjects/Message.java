@@ -14,8 +14,8 @@ public class Message {
     private Long id;
     private Long timeStamp;
     private String text;
-    private List<User> fromUsers;
-    private List<Group> toGroup;
+    private User fromUser;
+    private Group toGroup;
     private boolean emergency;
     private String href;
 
@@ -43,19 +43,19 @@ public class Message {
         this.text = text;
     }
 
-    public List<User> getFromUsers() {
-        return fromUsers;
+    public User getFromUser() {
+        return fromUser;
     }
 
-    public void setFromUsers(List<User> fromUsers) {
-        this.fromUsers = fromUsers;
+    public void setFromUsers(User fromUsers) {
+        this.fromUser = fromUsers;
     }
 
-    public List<Group> getToGroup() {
+    public Group getToGroup() {
         return toGroup;
     }
 
-    public void setToGroup(List<Group> toGroup) {
+    public void setToGroup(Group toGroup) {
         this.toGroup = toGroup;
     }
 

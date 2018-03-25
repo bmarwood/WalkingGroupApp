@@ -29,13 +29,13 @@ import java.util.Observer;
 import retrofit2.Call;
 
 public class Messages extends BaseActivity implements Observer {
-    //Update every minute in ms
-    private final long UPDATE_RATE = 10000;//60000;
+    //1 minute in ms
+    private final long UPDATE_RATE = 60000;
     private RecyclerView unreadMessagesView;
     private ArrayAdapter<String> readMessagesAdapter;
     private ListView readMessagesView;
     private List<Message> unreadMessages = new ArrayList<>();
-    private MessageUpdater messageUpdater = new MessageUpdater();
+    private MessageUpdater messageUpdater;
     private User user;
 
     @Override
@@ -120,19 +120,6 @@ public class Messages extends BaseActivity implements Observer {
         super.error(error);
     }
 
-    public void sendMessage(View v) {
-        Message message = new Message();
-        message.setText("This is a test message");
-
-        ServerProxy proxy = ServerManager.getServerRequest();
-        Call<Message> call = proxy.sendMessageToMonitors(52L, message);
-        ServerManager.serverRequest(call, this::messageSent, this::error);
-    }
-
-    private void messageSent(Message m) {
-        Log.d("Message sent", m.getText());
-    }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -143,7 +130,7 @@ public class Messages extends BaseActivity implements Observer {
     @Override
     public void onResume() {
         super.onResume();
-        messageUpdater.subscribeForUpdates(user, this::error, UPDATE_RATE);
+        messageUpdater = new MessageUpdater(user, this::error, UPDATE_RATE);
         messageUpdater.addObserver(this);
     }
 
