@@ -61,4 +61,28 @@
     <string name="add_user">Add User</string>
     <string name="remove_user">Remove User</string>
 
+
+    <string name="user_profile">User Profile</string>
+    <string name="name">Name</string>
+    <string name="birth">Birth</string>
+    <string name="home_number">Home Number</string>
+    <string name="address">address</string>
+    <string name="current_grade">Current Grade</string>
+    <string name="teachers_name">Teachers Name:</string>
+    <string name="emergency_contact_information">Emergency Contact Information</string>
+    <string name="birth_date">Birth Date:</string>
+    <string name="pick_your_birth_date">Pick Your Birth Date</string>
+    <string name="nametxt">Name:</string>
+    <string name="userImage">UserImage</string>
+    <string name="date">Date</string>
+    <string name="addressColon">Address:</string>
+    <string name="home_phone_number">Home Phone Number:</string>
+    <string name="cell_phone_number">Cell Phone Number:</string>
+    <string name="email">Email:</string>
+    <string name="current_grade_colon">Current Grade:</string>
+    <string name="teachers_name">Teachers Name:</string>
+    <string name="optional">(Optional)</string>
+    <string name="contact_info">Contact Info:</string>
+    <string name="save">Save</string>
+
 </resources>

@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
+    <item android:id="@+id/userProfile"
+        android:title="@string/user_profile"
+        app:showAsAction="never" />
+
     <item android:id="@+id/monitorItem"
         android:title="@string/monitor"
         app:showAsAction="never" />
