@@ -72,4 +72,9 @@ public class MessageUpdater extends Observable {
     public void unsubscribeFromUpdates() {
         timer.cancel();
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        timer.cancel();
+    }
 }
