@@ -146,7 +146,7 @@ public class GroupMembersInfo extends BaseActivity {
         private final Context context;
 
         private ListItemAdapter(Context context, List<User> listItems) {
-            super(context, R.layout.list_item, listItems);
+            super(context, R.layout.group_info_list_item, listItems);
             this.listItems = listItems;
             this.context = context;
         }
@@ -157,7 +157,7 @@ public class GroupMembersInfo extends BaseActivity {
             View itemView = convertView;
             if (itemView == null) {
                 LayoutInflater inflater = LayoutInflater.from(context);
-                itemView = inflater.inflate(R.layout.list_item, parent, false);
+                itemView = inflater.inflate(R.layout.group_info_list_item, parent, false);
             }
 
             User selectedUser = listItems.get(position);
@@ -170,14 +170,11 @@ public class GroupMembersInfo extends BaseActivity {
                 }
             }
 
-            TextView emailTextView = itemView.findViewById(R.id.userEmail);
+            TextView emailTextView = itemView.findViewById(R.id.groupUserEmail);
             emailTextView.setText(userWithInfo.getEmail());
 
-            TextView nameTextView = itemView.findViewById(R.id.userName);
+            TextView nameTextView = itemView.findViewById(R.id.groupUserName);
             nameTextView.setText(userWithInfo.getName());
-
-            ImageView removeView = itemView.findViewById(R.id.removeUser);
-            removeView.setVisibility(View.INVISIBLE);
 
             return itemView;
         }
