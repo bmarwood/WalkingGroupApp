@@ -94,15 +94,12 @@ public class MyGroups extends BaseActivity {
         groupsImIn.setAdapter(groupsImInAdapter);
     }
 
-
     private void setListView(List<String> leadsGroupNames, List<String> memberOfGroupNames) {
         ListView leaderList = findViewById(R.id.leaderOfGroups);
         leaderList.setOnItemClickListener((parent, viewClicked, position, id) -> {
             Log.d("MyGroups", "Clicked  leads position " + position);
             setAlertDialog(leadsGroupNames, position);
         });
-
-
 
         ListView membList = findViewById(R.id.memberOfGroups);
         membList.setOnItemClickListener((parent, viewClicked, position, id) -> {
@@ -119,8 +116,6 @@ public class MyGroups extends BaseActivity {
         String title = getString(R.string.msg_group, leadsGroupNames.get(position));
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setView(dialogView);
-
-
 
         alertDialogBuilder.setPositiveButton(getString(R.string.post), (dialog, which) -> {
             // Extract data from UI:
@@ -141,7 +136,6 @@ public class MyGroups extends BaseActivity {
         Intent intent = GroupMembersInfo.makeIntent(MyGroups.this, group);
         startActivity(intent);
     }
-
 
     @Override
     public void onBackPressed() {
