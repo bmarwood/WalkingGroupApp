@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
@@ -33,6 +34,8 @@ public class UserProfile extends AuthenticationActivity {
         setupBirthdayBtn();
         fillKnownInfo();
         setUpSaveButton();
+        Toast.makeText(getApplicationContext(), user.getEmail(),
+                Toast.LENGTH_SHORT).show();
 
     }
 
