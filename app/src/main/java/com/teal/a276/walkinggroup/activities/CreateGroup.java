@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.map.SelectLocationOnMap;
-import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 import static com.teal.a276.walkinggroup.activities.map.SelectLocationOnMap.EXTRA_LATITUDE;
@@ -86,7 +85,7 @@ public class CreateGroup extends BaseActivity {
                 return;
             }
 
-            ModelFacade.getInstance().getGroupManager().addNewGroup(leadersEmailStr, nameValStr, latlng, CreateGroup.this::error);
+            //ModelFacade.getInstance().getGroupManager().addNewGroup(leadersEmailStr, nameValStr, latlng, CreateGroup.this::error);
             finish();
         });
 

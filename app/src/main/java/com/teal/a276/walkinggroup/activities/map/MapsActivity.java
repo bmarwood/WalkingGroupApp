@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,11 +26,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.activities.CreateGroup;
-import com.teal.a276.walkinggroup.activities.message.Messages;
 import com.teal.a276.walkinggroup.activities.GroupMembersInfo;
 import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.activities.auth.Login;
+import com.teal.a276.walkinggroup.activities.message.Messages;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
@@ -92,9 +90,10 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             return;
         }
 
-        for (int j = 0; j < routeLatArray.size(); j++){
-                LatLng markerLocation = new LatLng(routeLatArray.get(j), routeLngArray.get(j));
-                placeGroupMarker(markerLocation, group);
+        //after dest has been implemented, there will be 2 elements in the array
+        if(!routeLatArray.isEmpty()) {
+            LatLng markerLocation = new LatLng(routeLatArray.get(0), routeLngArray.get(0));
+            placeGroupMarker(markerLocation, group);
         }
     }
 
@@ -130,7 +129,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 startActivity(Monitor.makeIntent(this));
                 break;
             case R.id.addNewGroup:
-                startActivity(CreateGroup.makeIntent(this));
+                startActivity(EmbeddedCreateGroup.makeIntent(this));
                 break;
             case R.id.messages:
                 startActivity(new Intent(this, Messages.class));
