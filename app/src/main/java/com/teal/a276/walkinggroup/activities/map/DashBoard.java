@@ -61,6 +61,7 @@ public class DashBoard extends AbstractMapActivity implements Observer {
             startLocationUpdates();
         }
         populateMonitorsOnMap();
+        populateLeadersOnMap();
     }
 
     @Override
@@ -84,6 +85,7 @@ public class DashBoard extends AbstractMapActivity implements Observer {
 
         //List<User> monitorsUsers = this.user.getMonitorsUsers();
 
+        //Mock users for now
         List<User> monitorsUsers = new ArrayList<>();
         User user1 = new User();
 
@@ -99,26 +101,60 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         monitorsUsers.add(user1);
         monitorsUsers.add(sfu);
 
-
         for(User user : monitorsUsers){
-            addMarker(user);
+            addMonitorsMarker(user);
         }
     }
-    private void placeMonitoreesOnMap(LatLng markerLocation, User user){
+    private void addMonitorsMarker(User user){
+        LatLng markerLocation = user.getLastGPSLocation();
+        placeMonitorsOnMap(markerLocation, user);
+    }
+    private void placeMonitorsOnMap(LatLng markerLocation, User user){
         MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
         String title = user.getName();
         markerOptions.title(title);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
         Marker marker = map.addMarker(markerOptions);
-        marker.showInfoWindow();
-    }
-    private void addMarker(User user){
-        LatLng markerLocation = user.getLastGPSLocation();
-        placeMonitoreesOnMap(markerLocation, user);
     }
 
+
+    private void populateLeadersOnMap(){
+        List<User> leaders = new ArrayList<>();
+
+        User richmondLeader = new User();
+        LatLng richmond = new LatLng(49.166723, -123.135210);
+        richmondLeader.setLastGPSLocation(richmond);
+        richmondLeader.setName("Richmond Leader");
+
+        User ubcLeader = new User();
+        LatLng ubc = new LatLng(49.260605, -123.245994);
+        ubcLeader.setLastGPSLocation(ubc);
+        ubcLeader.setName("UBC Leader");
+
+        leaders.add(richmondLeader);
+        leaders.add(ubcLeader);
+
+        for(User user : leaders){
+            addLeadersMarker(user);
+        }
+    }
 
     //Methods for Placing Leader
+
+    private void addLeadersMarker(User user){
+        LatLng markerLocation = user.getLastGPSLocation();
+        placeLeadersOnMap(markerLocation, user);
+    }
+
+    private void placeLeadersOnMap(LatLng markerLocation, User user){
+        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
+        String title = user.getName();
+        markerOptions.title(title);
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+        Marker marker = map.addMarker(markerOptions);
+
+    }
+
 
 
 
