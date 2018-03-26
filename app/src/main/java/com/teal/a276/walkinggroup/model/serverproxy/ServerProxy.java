@@ -50,7 +50,7 @@ public interface ServerProxy {
      * @Param user User to update Server with
      * @return The user with the specified id
      */
-    @POST("/user/{id}")
+    @POST("/users/{id}")
     Call<User> updateUser(@Path("id") Long userId, @Body User user);
 
     @GET("/users/{id}")

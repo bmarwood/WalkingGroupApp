@@ -14,12 +14,15 @@ import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
+import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CompleteUserRequest;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 
@@ -34,18 +37,14 @@ public class UserProfile extends AuthenticationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         ModelFacade model = ModelFacade.getInstance();
-
         user = model.getCurrentUser();
 
-        setupBirthdayBtn();
         fillKnownInfo();
+        setupBirthdayBtn();
         setUpSaveButton();
-        Toast.makeText(getApplicationContext(), user.getId().toString(), Toast.LENGTH_SHORT).show();
-
     }
 
     private void fillKnownInfo() {
-        //still need to fix birthbutton
         EditText nameInput = findViewById(R.id.editName);
         EditText addressInput = findViewById(R.id.editAddress);
         EditText homePhoneInput = findViewById(R.id.editHome);
@@ -56,38 +55,44 @@ public class UserProfile extends AuthenticationActivity {
         EditText contactInfoInput = findViewById(R.id.editContactInfo);
 
 
-        if(!(user.getName() == null)){
+        if (!(user.getName() == null)) {
 
             nameInput.setText(user.getName(), TextView.BufferType.EDITABLE);
         }
-        if(!(user.getAddress() == null)) {
+        if (!(user.getAddress() == null)) {
             addressInput.setText(user.getAddress(), TextView.BufferType.EDITABLE);
         }
-        if(!(user.getHomePhone() == null)) {
+        if (!(user.getHomePhone() == null)) {
             homePhoneInput.setText(user.getHomePhone(), TextView.BufferType.EDITABLE);
         }
-        if(!(user.getCellPhone() == null)) {
+        if (!(user.getCellPhone() == null)) {
             cellPhoneInput.setText(user.getCellPhone(), TextView.BufferType.EDITABLE);
         }
-        if(!(user.getEmail() == null)) {
+        if (!(user.getEmail() == null)) {
             emailInput.setText(user.getEmail(), TextView.BufferType.EDITABLE);
             emailInput.setKeyListener(null);
         }
-        if(!(user.getGrade() == null)) {
-            gradeInput.setText(user.getGrade(),TextView.BufferType.EDITABLE);
+        if (!(user.getGrade() == null)) {
+            gradeInput.setText(user.getGrade(), TextView.BufferType.EDITABLE);
         }
-        if(!(user.getTeacherName() == null)) {
+        if (!(user.getTeacherName() == null)) {
             teachersNameInput.setText(user.getTeacherName(), TextView.BufferType.EDITABLE);
         }
-        if(!(user.getEmergencyContactInfo() == null)) {
+        if (!(user.getEmergencyContactInfo() == null)) {
             contactInfoInput.setText(user.getEmergencyContactInfo(), TextView.BufferType.EDITABLE);
         }
+        if (!(user.getBirthYear() == 0)) {
+            dateTime.set(user.getBirthYear(), user.getBirthMonth(), Calendar.DATE);
 
+        }else {
 
+            dateTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
+                    Calendar.getInstance().get(Calendar.DATE));
+        }
 
     }
 
-    private void setUpSaveButton(){
+    private void setUpSaveButton() {
         Button btn = findViewById(R.id.save_Btn);
         btn.setOnClickListener((View v) -> {
             EditText nameInput = findViewById(R.id.editName);
@@ -98,15 +103,12 @@ public class UserProfile extends AuthenticationActivity {
             EditText gradeInput = findViewById(R.id.editGrade);
             EditText teachersNameInput = findViewById(R.id.editTeacherName);
             EditText contactInfoInput = findViewById(R.id.editContactInfo);
-            Button btn_date = findViewById(R.id.btn_datePicker);
 
-            if (!hasValidProfileInfo(nameInput, addressInput, homePhoneInput, cellPhoneInput, emailInput, gradeInput)){
+
+            if (!hasValidProfileInfo(nameInput, addressInput, homePhoneInput, cellPhoneInput, emailInput, gradeInput)) {
                 return;
             }
             toggleSpinner(View.VISIBLE);
-
-
-            String[] dateSaver = ((btn_date.getText()).toString()).split(" ");
 
             String name = nameInput.getText().toString();
             String address = addressInput.getText().toString();
@@ -118,8 +120,8 @@ public class UserProfile extends AuthenticationActivity {
             String contactInfo = contactInfoInput.getText().toString();
 
 
-            user.setBirthMonth(dateSaver[0]);
-            user.setBirthYear(dateSaver[2]);
+            user.setBirthMonth(dateTime.get(Calendar.MONTH));
+            user.setBirthYear(dateTime.get(Calendar.YEAR));
             user.setName(name);
             user.setAddress(address);
             user.setHomePhone(homePhone);
@@ -145,8 +147,8 @@ public class UserProfile extends AuthenticationActivity {
 
     }
 
-    private void updateDate(){
-        new DatePickerDialog(this, datePicker, dateTime.get(Calendar.YEAR),dateTime.get(Calendar.MONTH),dateTime.get(Calendar.DAY_OF_MONTH)).show();
+    private void updateDate() {
+        new DatePickerDialog(this, datePicker, dateTime.get(Calendar.YEAR), dateTime.get(Calendar.MONTH), dateTime.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
@@ -162,7 +164,6 @@ public class UserProfile extends AuthenticationActivity {
     public static Intent makeIntent(Context context) {
         return new Intent(context, UserProfile.class);
     }
-
 
 
 }

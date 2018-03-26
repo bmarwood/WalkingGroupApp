@@ -145,7 +145,6 @@
                     android:id="@+id/editEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="false"
                     android:ems="10"
                     android:inputType="textEmailAddress" />
             </TableRow>
@@ -158,14 +157,16 @@
                     android:id="@+id/gradetxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/current_grade_colon" />
+                    android:text="@string/current_grade_colon"
+                    />
+
 
                 <EditText
                     android:id="@+id/editGrade"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:inputType="number" />
+                    android:hint="@string/optional" />
             </TableRow>
 
             <TableRow

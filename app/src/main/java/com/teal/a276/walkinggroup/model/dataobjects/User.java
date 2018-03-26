@@ -2,6 +2,7 @@ package com.teal.a276.walkinggroup.model.dataobjects;
 
 import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
@@ -19,8 +20,8 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private String birthYear;
-    private String birthMonth;
+    private Integer birthYear;
+    private Integer birthMonth;
     private String address;
     private String cellPhone;
     private String homePhone;
@@ -75,19 +76,19 @@ public class User {
         this.password = password;
     }
 
-    public String getBirthYear() {
+    public Integer getBirthYear() {
         return birthYear;
     }
 
-    public void setBirthYear(String birthYear) {
+    public void setBirthYear(int birthYear) {
         this.birthYear = birthYear;
     }
 
-    public String getBirthMonth() {
+    public Integer getBirthMonth() {
         return birthMonth;
     }
 
-    public void setBirthMonth(String birthMonth) {
+    public void setBirthMonth(int birthMonth) {
         this.birthMonth = birthMonth;
     }
 
@@ -139,6 +140,7 @@ public class User {
         this.emergencyContactInfo = emergencyContactInfo;
     }
 
+    @JsonIgnore
     public List<User> getMonitoredByUsers() {
         return monitoredByUsers;
     }
@@ -147,6 +149,7 @@ public class User {
         this.monitoredByUsers = monitoredByUsers;
     }
 
+    @JsonIgnore
     public List<User> getMonitorsUsers() {
         return monitorsUsers;
     }
@@ -155,6 +158,7 @@ public class User {
         this.monitorsUsers = monitorsUsers;
     }
 
+    @JsonIgnore
     public List<Group> getMemberOfGroups() {
         return memberOfGroups;
     }
@@ -163,6 +167,7 @@ public class User {
         this.memberOfGroups = memberOfGroups;
     }
 
+    @JsonIgnore
     public List<Group> getLeadsGroups() {
         return leadsGroups;
     }
@@ -248,12 +253,6 @@ public class User {
             return false;
         }
         final User other = (User) obj;
-        if (!this.name.equals(other.name)) {
-            return false;
-        }
-        if (!this.id.equals(other.id)) {
-            return false;
-        }
-        return true;
+        return this.name.equals(other.name) && this.id.equals(other.id);
     }
 }
