@@ -49,6 +49,8 @@
         <activity android:name=".activities.GroupMembersInfo"></activity>
         <activity android:name=".activities.MyGroups"></activity>
         <activity android:name=".activities.message.Messages"/>
+
+            <activity android:name=".activities.map.EmbeddedCreateGroup" />
     </application>
 
 </manifest>

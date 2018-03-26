@@ -15,8 +15,8 @@ import java.util.Observable;
 public class GroupManager extends Observable {
     private List<Group> groups = new ArrayList<>();
 
-    public void addNewGroup(String leaderEmail, String groupDescription, LatLng location, ServerError errorCallback) {
-        CreateGroupRequest request = new CreateGroupRequest(leaderEmail, groupDescription, location, errorCallback);
+    public void addNewGroup(String leaderEmail, String groupDescription, LatLng meeting, LatLng dest, ServerError errorCallback) {
+        CreateGroupRequest request = new CreateGroupRequest(leaderEmail, groupDescription, meeting, dest, errorCallback);
         request.makeServerRequest();
         request.addObserver((observable, o) -> {
             groups.add((Group)o);

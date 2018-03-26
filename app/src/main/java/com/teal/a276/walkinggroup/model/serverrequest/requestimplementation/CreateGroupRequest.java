@@ -18,16 +18,17 @@ import retrofit2.Call;
 
 public class CreateGroupRequest extends AbstractServerRequest {
 
-    private final LatLng latlng;
     private final String leaderEmail;
     private final String groupDes;
+    private final LatLng meetingLatLng;
+    private final LatLng destLatLng;
 
-
-    public CreateGroupRequest(String leaderEmail, String groupDes, LatLng latLng, @NonNull ServerError errorCallback) {
+    public CreateGroupRequest(String leaderEmail, String groupDes, LatLng meetingLatLng, LatLng destLatLng, @NonNull ServerError errorCallback) {
         super(null, errorCallback);
         this.leaderEmail = leaderEmail;
         this.groupDes = groupDes;
-        this.latlng = latLng;
+        this.meetingLatLng = meetingLatLng;
+        this.destLatLng = destLatLng;
     }
 
     @Override
@@ -40,16 +41,15 @@ public class CreateGroupRequest extends AbstractServerRequest {
         Group group = new Group();
         group.setLeader(user);
 
-        //TODO: Remove this line of code after new server has been pushed.
-        group.setId(-1L);
-
         group.setGroupDescription(groupDes);
 
         List<Double> latArray = new ArrayList<>();
         List<Double> lngArray = new ArrayList<>();
 
-        latArray.add(latlng.latitude);
-        lngArray.add(latlng.longitude);
+        latArray.add(meetingLatLng.latitude);
+        latArray.add(destLatLng.latitude);
+        lngArray.add(meetingLatLng.longitude);
+        lngArray.add(destLatLng.longitude);
 
         group.setRouteLatArray(latArray);
         group.setRouteLngArray(lngArray);

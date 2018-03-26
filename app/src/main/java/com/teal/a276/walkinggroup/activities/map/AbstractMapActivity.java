@@ -79,7 +79,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     // Handles any changes to be made based on the current state of the user’s location settings
-    private void createLocationRequest() {
+    protected void createLocationRequest() {
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -251,7 +251,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     @NonNull
-    private LatLng locationToLatLng() {
+    protected LatLng locationToLatLng() {
         return new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
     }
 }
