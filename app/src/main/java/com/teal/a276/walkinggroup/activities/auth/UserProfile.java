@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -31,6 +32,9 @@ public class UserProfile extends AuthenticationActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+        ModelFacade model = ModelFacade.getInstance();
+
+        user = model.getCurrentUser();
         setupBirthdayBtn();
         fillKnownInfo();
         setUpSaveButton();
@@ -40,6 +44,7 @@ public class UserProfile extends AuthenticationActivity {
     }
 
     private void fillKnownInfo() {
+        //still need to fix birthbutton
         EditText nameInput = findViewById(R.id.editName);
         EditText addressInput = findViewById(R.id.editAddress);
         EditText homePhoneInput = findViewById(R.id.editHome);

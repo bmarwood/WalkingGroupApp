@@ -44,11 +44,13 @@ public abstract class AuthenticationActivity extends BaseActivity {
             ModelFacade.getInstance().setCurrentUser((User) o);
             ModelFacade.getInstance().setGroupManager(new GroupManager());
             storeLogin();
-
             Intent intent = MapsActivity.makeIntent(this);
             startActivity(intent);
+
             finish();
         });
+
+
     }
 
     void successfulSave(){
