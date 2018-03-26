@@ -76,4 +76,9 @@
     <string name="embedded_set_dest">Set Dest</string>
     <string name="embedded_leader_s_email">Leader\'s Email</string>
 
+    <!-- Messages activity string -->
+    <string name="messages">Messages</string>
+    <string name="unread_messages">Unread Messages</string>
+    <string name="read_messages">Read Messages</string>
+
 </resources>
