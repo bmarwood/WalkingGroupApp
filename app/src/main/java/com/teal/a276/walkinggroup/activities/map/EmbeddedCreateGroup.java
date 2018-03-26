@@ -62,11 +62,9 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         createLocationRequest();
     }
 
-
     public static Intent makeIntent(Context context){
         return new Intent(context, EmbeddedCreateGroup.class);
     }
-
 
     private void setMeetingCoordinates(){
         map.setOnMapClickListener(latLng -> {
@@ -113,7 +111,6 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         });
     }
 
-
     private void setupCreateButton() {
         Button btn = findViewById(R.id.embeddedCreateButton);
         btn.setOnClickListener(v ->{
@@ -149,13 +146,11 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         });
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap){
         map = googleMap;
         setMeetingCoordinates();
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -166,7 +161,6 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         }
         addInitialMarkers();
     }
-
 
     private void addInitialMarkers() {
         currentLocation = locationToLatLng();
@@ -186,12 +180,10 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         destinationMarker.setVisible(false);
     }
 
-
     @Override
     public boolean onMarkerClick(Marker marker) {
         return false;
     }
-
 
     @Override
     public void update(Observable o, Object arg) {
