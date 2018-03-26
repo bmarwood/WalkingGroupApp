@@ -68,4 +68,9 @@
     <string name="members">Members</string>
 
 
+    <!-- Messages activity string -->
+    <string name="messages">Messages</string>
+    <string name="unread_messages">Unread Messages</string>
+    <string name="read_messages">Read Messages</string>
+
 </resources>
