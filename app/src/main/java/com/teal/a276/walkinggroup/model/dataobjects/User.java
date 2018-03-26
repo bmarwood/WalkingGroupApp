@@ -19,6 +19,14 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private String birthYear;
+    private String birthMonth;
+    private String address;
+    private String cellPhone;
+    private String homePhone;
+    private String grade;
+    private String teacherName;
+    private String emergencyContactInfo;
     private List<Group> memberOfGroups = new ArrayList<>();
     private List<Group> leadsGroups = new ArrayList<>();
 
@@ -67,6 +75,69 @@ public class User {
         this.password = password;
     }
 
+    public String getBirthYear() {
+        return birthYear;
+    }
+
+    public void setBirthYear(String birthYear) {
+        this.birthYear = birthYear;
+    }
+
+    public String getBirthMonth() {
+        return birthMonth;
+    }
+
+    public void setBirthMonth(String birthMonth) {
+        this.birthMonth = birthMonth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCellPhone() {
+        return cellPhone;
+    }
+
+    public void setCellPhone(String cellPhone) {
+        this.cellPhone = cellPhone;
+    }
+
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public String getEmergencyContactInfo() {
+        return emergencyContactInfo;
+    }
+
+    public void setEmergencyContactInfo(String emergencyContactInfo) {
+        this.emergencyContactInfo = emergencyContactInfo;
+    }
 
     public List<User> getMonitoredByUsers() {
         return monitoredByUsers;
@@ -153,6 +224,14 @@ public class User {
         setName(user.getName());
         setEmail(user.getEmail());
         setPassword(user.getPassword());
+        setBirthYear(user.birthYear);
+        setBirthMonth(user.birthMonth);
+        setAddress(user.address);
+        setCellPhone(user.cellPhone);
+        setHomePhone(user.homePhone);
+        setGrade(user.grade);
+        setTeacherName(user.teacherName);
+        setEmergencyContactInfo(user.emergencyContactInfo);
         setMemberOfGroups(user.getMemberOfGroups());
         setLeadsGroups(user.getLeadsGroups());
         setMonitoredByUsers(user.getMonitoredByUsers());

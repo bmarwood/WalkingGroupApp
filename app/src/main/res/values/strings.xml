@@ -78,9 +78,8 @@
     <string name="addressColon">Address:</string>
     <string name="home_phone_number">Home Phone Number:</string>
     <string name="cell_phone_number">Cell Phone Number:</string>
-    <string name="email">Email:</string>
+    <string name="email_colon">Email:</string>
     <string name="current_grade_colon">Current Grade:</string>
-    <string name="teachers_name">Teachers Name:</string>
     <string name="optional">(Optional)</string>
     <string name="contact_info">Contact Info:</string>
     <string name="save">Save</string>

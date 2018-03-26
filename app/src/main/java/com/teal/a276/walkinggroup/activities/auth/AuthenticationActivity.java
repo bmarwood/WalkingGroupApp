@@ -51,6 +51,18 @@ public abstract class AuthenticationActivity extends BaseActivity {
         });
     }
 
+    void successfulSave(){
+        CompleteUserRequest request = new CompleteUserRequest(user, this::error);
+        request.makeServerRequest();
+        request.addObserver((observable, o) -> {
+            ModelFacade.getInstance().setCurrentUser((User) o);
+            ModelFacade.getInstance().setGroupManager(new GroupManager());
+
+            finish();
+        });
+
+    }
+
     void storeLogin() {
         EditText emailInput = findViewById(R.id.email);
         EditText passwordInput = findViewById(R.id.password);
@@ -81,6 +93,45 @@ public abstract class AuthenticationActivity extends BaseActivity {
         }
 
         return validInputs;
+    }
+
+    boolean hasValidProfileInfo(EditText name, EditText address, EditText homePhone, EditText cellPhone,
+                                EditText email, EditText grade){
+        boolean validInputs = true;
+
+        if(isEmpty(name)){
+            name.setError("name is empty");
+            validInputs = false;
+        }
+        if (isEmpty(address)){
+            address.setError("address is empty");
+            validInputs = false;
+        }
+        if (isEmpty(homePhone)){
+            homePhone.setError("homePhone is empty");
+            validInputs = false;
+        }
+        if (isEmpty(cellPhone)) {
+            cellPhone.setError("cellPhone is empty");
+            validInputs = false;
+        }
+        if (isEmpty(email)) {
+            email.setError("email is empty");
+            validInputs = false;
+        }
+        if(isEmpty(grade)) {
+            grade.setError("grade is empty");
+            validInputs = false;
+        }
+        return validInputs;
+
+    }
+    private boolean isEmpty(EditText name) {
+        if(name.getText().toString().isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     void authError(String error) {
