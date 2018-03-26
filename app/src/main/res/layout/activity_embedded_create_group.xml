@@ -15,7 +15,7 @@
         android:layout_marginEnd="43dp"
         android:layout_marginStart="39dp"
         android:layout_marginTop="53dp"
-        android:text="Group Name"
+        android:text="@string/group_name"
         app:layout_constraintBottom_toTopOf="@+id/embeddedEmail"
         app:layout_constraintEnd_toStartOf="@+id/embeddedNameEdit"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,12 +29,13 @@
         android:layout_marginEnd="30dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="39dp"
-        android:text="Leader's Email"
+        android:text="@string/embedded_leader_s_email"
         app:layout_constraintBottom_toTopOf="@+id/embeddedFragment"
         app:layout_constraintEnd_toStartOf="@+id/embeddedEmailEdit"
         app:layout_constraintHorizontal_bias="0.433"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="RtlHardcoded" />
 
     <EditText
         android:id="@+id/embeddedNameEdit"
@@ -68,8 +69,8 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Create"
+        android:layout_marginEnd="16dp"
+        android:text="@string/create"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -77,8 +78,8 @@
         android:id="@+id/selectDestButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:text="Select Dest"
+        android:layout_marginEnd="16dp"
+        android:text="@string/embedded_set_dest"
         app:layout_constraintBottom_toTopOf="@+id/embeddedCreateButton"
         app:layout_constraintRight_toRightOf="parent" />
 

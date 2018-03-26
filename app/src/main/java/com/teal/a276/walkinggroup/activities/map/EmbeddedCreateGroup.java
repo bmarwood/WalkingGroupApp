@@ -60,12 +60,14 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
                     .build();
         }
         createLocationRequest();
-
     }
+
 
     public static Intent makeIntent(Context context){
         return new Intent(context, EmbeddedCreateGroup.class);
     }
+
+
     private void setMeetingCoordinates(){
         map.setOnMapClickListener(latLng -> {
             meetingMarker.remove();
@@ -107,10 +109,11 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
                 destLng = latLng.longitude;
 
                 Log.d("Lat (Dest)", "DestLat: " + destLat + "DestLng: " + destLng);
-
             });
         });
     }
+
+
     private void setupCreateButton() {
         Button btn = findViewById(R.id.embeddedCreateButton);
         btn.setOnClickListener(v ->{
@@ -135,7 +138,6 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
                         Toast.LENGTH_SHORT).show();
                 return;
             }
-
             Log.d("Coords", "meetingLat/Lng: " + meetingLat + ", " + meetingLng + "destLat/Lng:" + destLat + destLng);
 
             LatLng meetingLatlng = new LatLng(meetingLat, meetingLng);
@@ -147,11 +149,13 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         });
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap){
         map = googleMap;
         setMeetingCoordinates();
     }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -162,6 +166,8 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         }
         addInitialMarkers();
     }
+
+
     private void addInitialMarkers() {
         currentLocation = locationToLatLng();
         meetingMarker = map.addMarker(new MarkerOptions().
@@ -180,10 +186,12 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         destinationMarker.setVisible(false);
     }
 
+
     @Override
     public boolean onMarkerClick(Marker marker) {
         return false;
     }
+
 
     @Override
     public void update(Observable o, Object arg) {

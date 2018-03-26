@@ -74,5 +74,6 @@
     <!-- Strings related to EmbeddedCreateGroup-->
     <string name="embedded_set_meeting">Set Meeting</string>
     <string name="embedded_set_dest">Set Dest</string>
+    <string name="embedded_leader_s_email">Leader\'s Email</string>
 
 </resources>
