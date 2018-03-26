@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Adapter for a RecyclerView.
+ * General idea for the adapter from here: https://medium.com/@kitek/recyclerview-swipe-to-delete-easier-than-you-thought-cff67ff5e5f6
  */
 class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
     private List<Message> messages;

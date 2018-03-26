@@ -9,8 +9,6 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Message {
-
-
     private Long id;
     private Long timeStamp;
     private String text;

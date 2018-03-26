@@ -13,13 +13,12 @@ import android.view.View;
 
 /**
  * Listener that allows for messages in a recycle view to be swiped to mark them as read.
+ * General idea for the ItemTouchHelper from here: https://medium.com/@kitek/recyclerview-swipe-to-delete-easier-than-you-thought-cff67ff5e5f6
  */
 abstract class MessageTouchHelper extends ItemTouchHelper.SimpleCallback {
-    private Drawable icon;
 
-    MessageTouchHelper(int dragDirs, int swipeDirs, Drawable icon) {
+    MessageTouchHelper(int dragDirs, int swipeDirs) {
         super(dragDirs, swipeDirs);
-        this.icon = icon;
     }
 
     @Override

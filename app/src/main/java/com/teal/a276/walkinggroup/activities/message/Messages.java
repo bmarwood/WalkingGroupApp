@@ -1,13 +1,9 @@
 package com.teal.a276.walkinggroup.activities.message;
 
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -30,7 +26,7 @@ import java.util.Observer;
 import retrofit2.Call;
 
 /**
- * Activity that handles displaying all read and unread messages the user has recieved
+ * Activity that handles displaying all read and unread messages the user has received
  */
 public class Messages extends BaseActivity implements Observer {
     //1 minute in ms
@@ -48,12 +44,11 @@ public class Messages extends BaseActivity implements Observer {
         setContentView(R.layout.activity_messages);
 
         user = ModelFacade.getInstance().getCurrentUser();
-        Drawable readIcon = getResources().getDrawable(R.drawable.ic_read);
         unreadMessagesView = findViewById(R.id.unreadMessages);
         readMessagesView = findViewById(R.id.readMessages);
 
         unreadMessagesView.setLayoutManager(new LinearLayoutManager(this));
-        ItemTouchHelper.SimpleCallback messageTouchHelper = new MessageTouchHelper(0, ItemTouchHelper.RIGHT, readIcon) {
+        ItemTouchHelper.SimpleCallback messageTouchHelper = new MessageTouchHelper(0, ItemTouchHelper.RIGHT) {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 Message message = unreadMessages.get(viewHolder.getAdapterPosition());
