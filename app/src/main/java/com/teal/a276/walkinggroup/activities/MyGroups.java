@@ -18,12 +18,16 @@ import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyGroups extends AppCompatActivity {
+import retrofit2.Call;
 
+public class MyGroups extends BaseActivity {
+    private User user = new User();
     private List<Group> leadsGroups;
     private List<Group> memberOfGroups;
     private List<String> leadsGroupNames = new ArrayList<>();
@@ -38,16 +42,32 @@ public class MyGroups extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_groups);
 
-        setInfo();
+        user = ModelFacade.getInstance().getCurrentUser();
+
+        // TODO: Call Server to update user model
+        callServerForUserList();
+//        setInfo();
         setGroupInfo();
-        initializeListViews();
+//        initializeListViews();
     }
 
-    private void setInfo() {
-        User user = ModelFacade.getInstance().getCurrentUser();
-        leadsGroups = user.getLeadsGroups();
-        memberOfGroups = user.getMemberOfGroups();
+    private void callServerForUserList() {
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<User> call = proxy.getUserById(user.getId());
+        ServerManager.serverRequest(call, this::setInfo, this::error);
     }
+
+    private void setInfo(User user) {
+        memberOfGroups = user.getMemberOfGroups();
+        leadsGroups = user.getLeadsGroups();
+//        String s = "";
+    }
+
+//    private void setInfo() {
+//        user = ModelFacade.getInstance().getCurrentUser();
+//        leadsGroups = user.getLeadsGroups();
+//        memberOfGroups = user.getMemberOfGroups();
+//    }
 
     private void setGroupInfo() {
         GroupManager groupManager = ModelFacade.getInstance().getGroupManager();
@@ -78,6 +98,12 @@ public class MyGroups extends AppCompatActivity {
         ArrayAdapter<String> groupsImInAdapter = new MyGroups.ListItemAdapter(this, memberOfGroupNames);
         ListView groupsImIn = findViewById(R.id.groupsImIn);
         groupsImIn.setAdapter(groupsImInAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
     }
 
     private class ListItemAdapter extends ArrayAdapter<String> {
