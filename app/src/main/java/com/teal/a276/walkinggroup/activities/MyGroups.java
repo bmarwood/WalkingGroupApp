@@ -19,6 +19,7 @@ import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
+import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -63,21 +64,67 @@ public class MyGroups extends BaseActivity {
 
         setListViewNames(leadsGroupNames, memberOfGroupNames, groups);
         setArrayAdapters(leadsGroupNames, memberOfGroupNames);
-        setListView(leadsGroupNames, memberOfGroupNames);
+
+        // TODO: Extract into methods
+        ListView leaderList = findViewById(R.id.leaderOfGroups);
+        leaderList.setOnItemClickListener((parent, viewClicked, position, id) -> {
+            Log.d("MyGroups", "Clicked  leads position " + position);
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = this.getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.group_message_alertdialog, null);
+            String title = getString(R.string.msg_group, leadsGroupNames.get(position));
+            alertDialogBuilder.setTitle(title);
+            alertDialogBuilder.setView(dialogView);
+
+            alertDialogBuilder.setPositiveButton(getString(R.string.post), (dialog, which) -> {
+
+                // Extract data from UI:
+                EditText editName = dialogView.findViewById(R.id.messageEditText);
+                String messageString = editName.getText().toString();
+
+                if(!messageString.isEmpty()){
+                    // TODO: Test this works; its posting 2 messages to current user other members get the message and the leader gets nothing
+                    Message message = new Message();
+                    message.setText(messageString);
+                    Group groupSelected = leadsGroups.get(position);
+                    ServerProxy proxy = ServerManager.getServerRequest();
+                    Call<Message> call = proxy.sendMessageToGroup(groupSelected.getId(), message);
+                    ServerManager.serverRequest(call, this::sendMessage, this::error);
+                }
+            });
+
+            alertDialogBuilder.setNegativeButton(getString(R.string.cancel), null);
+
+            alertDialogBuilder.show();
+        });
+
+        ListView membList = findViewById(R.id.memberOfGroups);
+        membList.setOnItemClickListener((parent, viewClicked, position, id) -> {
+            Log.d("MyGroups", "Clicked  member position " + position);
+            // Launch group info
+            makeIntent(memberOfGroupNames, position);
+        });
+    }
+
+    private <T> void sendMessage(T t) {
+
     }
 
     private void setListViewNames(List<String> leadsGroupNames, List<String> memberOfGroupNames, List<Group> groups) {
         for(int i = 0; i < groups.size(); i++){
+            Group leadsGroup = groups.get(i);
             for (int j = 0; j < leadsGroups.size(); j++){
-                if(groups.get(i).getId().equals(leadsGroups.get(j).getId())) {
+                if(leadsGroup.getId().equals(leadsGroups.get(j).getId())) {
                     leadsGroupNames.add(groups.get(i).getGroupDescription());
                 }
             }
         }
 
         for(int i = 0; i < groups.size(); i++){
+            Group memberGroup = groups.get(i);
             for (int j = 0; j < memberOfGroups.size(); j++){
-                if(groups.get(i).getId().equals(memberOfGroups.get(j).getId())) {
+                if(memberGroup.getId().equals(memberOfGroups.get(j).getId())) {
                     memberOfGroupNames.add(groups.get(i).getGroupDescription());
                 }
             }
@@ -92,42 +139,6 @@ public class MyGroups extends BaseActivity {
         ArrayAdapter<String> groupsImInAdapter = new ListItemAdapter(this, memberOfGroupNames);
         ListView groupsImIn = findViewById(R.id.memberOfGroups);
         groupsImIn.setAdapter(groupsImInAdapter);
-    }
-
-    private void setListView(List<String> leadsGroupNames, List<String> memberOfGroupNames) {
-        ListView leaderList = findViewById(R.id.leaderOfGroups);
-        leaderList.setOnItemClickListener((parent, viewClicked, position, id) -> {
-            Log.d("MyGroups", "Clicked  leads position " + position);
-            setAlertDialog(leadsGroupNames, position);
-        });
-
-        ListView membList = findViewById(R.id.memberOfGroups);
-        membList.setOnItemClickListener((parent, viewClicked, position, id) -> {
-            Log.d("MyGroups", "Clicked  member position " + position);
-            // Launch group info
-            makeIntent(memberOfGroupNames, position);
-        });
-    }
-
-    private void setAlertDialog(List<String> leadsGroupNames, int position) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.group_message_alertdialog, null);
-        String title = getString(R.string.msg_group, leadsGroupNames.get(position));
-        alertDialogBuilder.setTitle(title);
-        alertDialogBuilder.setView(dialogView);
-
-        alertDialogBuilder.setPositiveButton(getString(R.string.post), (dialog, which) -> {
-            // Extract data from UI:
-            EditText editName = findViewById(R.id.messageEditText);
-            String message = editName.getText().toString();
-
-            // TODO: Post to server
-        });
-
-        alertDialogBuilder.setNegativeButton(getString(R.string.cancel), null);
-
-        alertDialogBuilder.show();
     }
 
     private void makeIntent(List<String> leadsGroupNames, int position) {
