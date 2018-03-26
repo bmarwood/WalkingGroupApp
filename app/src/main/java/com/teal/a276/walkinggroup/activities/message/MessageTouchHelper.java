@@ -42,20 +42,7 @@ abstract class MessageTouchHelper extends ItemTouchHelper.SimpleCallback {
         background.setBounds(itemView.getLeft() + (int)dX, itemView.getTop(),
                 itemView.getLeft(), itemView.getBottom());
         background.draw(canvas);
-        drawReadIcon(canvas, itemView);
         super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-    }
-
-    private void drawReadIcon(Canvas canvas, View view) {
-        int itemHeight = view.getBottom() - view.getTop();
-        int margin = (itemHeight - icon.getIntrinsicHeight()) / 2;
-        int iconTop = view.getTop() + margin;
-        int iconBottom = iconTop + icon.getIntrinsicHeight();
-        int iconLeft = view.getLeft() + margin + icon.getIntrinsicWidth();
-        int iconRight = view.getLeft() - margin;
-
-        icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
-        icon.draw(canvas);
     }
 
     private void clearReadIcon(Canvas canvas, View view, float xOffset) {
