@@ -114,10 +114,11 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         String title = user.getName();
         markerOptions.title(title);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-        Marker marker = map.addMarker(markerOptions);
+        map.addMarker(markerOptions);
     }
 
 
+    //methods to populate leaders
     private void populateLeadersOnMap(){
         List<User> leaders = new ArrayList<>();
 
@@ -139,7 +140,6 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         }
     }
 
-    //Methods for Placing Leader
 
     private void addLeadersMarker(User user){
         LatLng markerLocation = user.getLastGPSLocation();
@@ -151,7 +151,7 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         String title = user.getName();
         markerOptions.title(title);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
-        Marker marker = map.addMarker(markerOptions);
+        map.addMarker(markerOptions);
 
     }
 
