@@ -66,8 +66,10 @@
     <string name="select_monitor_monitoree">Select Monitor / Monitoree</string>
     <string name="group_number">Group %1$s</string>
     <string name="members">Members</string>
-    <string name="groups_im_in">Groups Im In</string>
-    <string name="groups_i_lead">Groups I Lead</string>
+
+    <!-- Strings related to myGroups -->
+    <string name="member_of_groups">Member of Groups</string>
+    <string name="leader_of_groups">Leader of Groups</string>
     <string name="my_groups">My Groups</string>
 
 

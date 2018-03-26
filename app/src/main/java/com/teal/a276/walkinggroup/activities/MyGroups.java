@@ -3,8 +3,8 @@ package com.teal.a276.walkinggroup.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +30,6 @@ public class MyGroups extends BaseActivity {
     private User user = new User();
     private List<Group> leadsGroups;
     private List<Group> memberOfGroups;
-    private List<String> leadsGroupNames = new ArrayList<>();
-    private List<String> memberOfGroupNames = new ArrayList<>();
 
     public static Intent makeIntent(Context context) {
         return new Intent(context, MyGroups.class);
@@ -43,12 +41,7 @@ public class MyGroups extends BaseActivity {
         setContentView(R.layout.activity_my_groups);
 
         user = ModelFacade.getInstance().getCurrentUser();
-
-        // TODO: Call Server to update user model
         callServerForUserList();
-//        setInfo();
-        setGroupInfo();
-//        initializeListViews();
     }
 
     private void callServerForUserList() {
@@ -60,19 +53,18 @@ public class MyGroups extends BaseActivity {
     private void setInfo(User user) {
         memberOfGroups = user.getMemberOfGroups();
         leadsGroups = user.getLeadsGroups();
-//        String s = "";
-    }
 
-//    private void setInfo() {
-//        user = ModelFacade.getInstance().getCurrentUser();
-//        leadsGroups = user.getLeadsGroups();
-//        memberOfGroups = user.getMemberOfGroups();
-//    }
-
-    private void setGroupInfo() {
+        List<String> leadsGroupNames = new ArrayList<>();
+        List<String> memberOfGroupNames = new ArrayList<>();
         GroupManager groupManager = ModelFacade.getInstance().getGroupManager();
         List<Group> groups = groupManager.getGroups();
 
+        setListViewNames(leadsGroupNames, memberOfGroupNames, groups);
+        setArrayAdapters(leadsGroupNames, memberOfGroupNames);
+        setListView(leadsGroupNames, memberOfGroupNames);
+    }
+
+    private void setListViewNames(List<String> leadsGroupNames, List<String> memberOfGroupNames, List<Group> groups) {
         for(int i = 0; i < groups.size(); i++){
             for (int j = 0; j < leadsGroups.size(); j++){
                 if(groups.get(i).getId().equals(leadsGroups.get(j).getId())) {
@@ -90,15 +82,39 @@ public class MyGroups extends BaseActivity {
         }
     }
 
-    private void initializeListViews() {
-        ArrayAdapter<String> groupsILeadAdapter = new MyGroups.ListItemAdapter(this, leadsGroupNames);
-        ListView groupsILead = findViewById(R.id.groupsILead);
+    private void setArrayAdapters(List<String> leadsGroupNames, List<String> memberOfGroupNames) {
+        ArrayAdapter<String> groupsILeadAdapter = new ListItemAdapter(this, leadsGroupNames);
+        ListView groupsILead = findViewById(R.id.leaderOfGroups);
         groupsILead.setAdapter(groupsILeadAdapter);
 
-        ArrayAdapter<String> groupsImInAdapter = new MyGroups.ListItemAdapter(this, memberOfGroupNames);
-        ListView groupsImIn = findViewById(R.id.groupsImIn);
+        ArrayAdapter<String> groupsImInAdapter = new ListItemAdapter(this, memberOfGroupNames);
+        ListView groupsImIn = findViewById(R.id.memberOfGroups);
         groupsImIn.setAdapter(groupsImInAdapter);
     }
+
+
+    private void setListView(List<String> leadsGroupNames, List<String> memberOfGroupNames) {
+        ListView leaderList = findViewById(R.id.leaderOfGroups);
+        leaderList.setOnItemClickListener((parent, viewClicked, position, id) -> {
+            Log.d("MyGroups", "Clicked  leads position " + position);
+            makeIntent(leadsGroupNames, position);
+        });
+
+
+        ListView membList = findViewById(R.id.memberOfGroups);
+        membList.setOnItemClickListener((parent, viewClicked, position, id) -> {
+            Log.d("MyGroups", "Clicked  member position " + position);
+            makeIntent(memberOfGroupNames, position);
+        });
+    }
+
+    private void makeIntent(List<String> leadsGroupNames, int position) {
+        Group group = new Group();
+        group.setGroupDescription(leadsGroupNames.get(position));
+        Intent intent = GroupMembersInfo.makeIntent(MyGroups.this, group);
+        startActivity(intent);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -133,3 +149,6 @@ public class MyGroups extends BaseActivity {
         }
     }
 }
+
+
+
