@@ -44,17 +44,14 @@
             android:name=".activities.auth.CreateAccount" />
         <activity
             android:name=".activities.CreateGroup" />
-            android:label="@string/title_activity_maps">
-            android:label="@string/title_activity_maps"/>
-        <activity
+            <activity
             android:name=".activities.map.SelectLocationOnMap"
             android:label="@string/title_activity_select_location_on_map" />
+        <activity android:name=".activities.GroupMembersInfo"></activity>
+        <activity android:name=".activities.MyGroups"></activity>
         <activity android:name=".activities.message.Messages"/>
-        <activity
-            android:name=".activities.GroupMembersInfo">
-        </activity>
-            android:label="@string/title_activity_select_location_on_map" />
         <activity android:name=".activities.map.DashBoard"></activity>
+
             <activity android:name=".activities.map.EmbeddedCreateGroup" />
     </application>
 

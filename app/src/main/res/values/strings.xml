@@ -70,6 +70,13 @@
     <string name="group_number">Group %1$s</string>
     <string name="members">Members</string>
 
+    <!-- Strings related to myGroups -->
+    <string name="member_of_groups">Member of Groups</string>
+    <string name="leader_of_groups">Leader of Groups</string>
+    <string name="my_groups">My Groups</string>
+    <string name="post">Post</string>
+    <string name="msg_group">Message Group: %1$s</string>
+
     <string name="dashboard">Dashboard</string>
 
     <!-- Strings related to EmbeddedCreateGroup-->
