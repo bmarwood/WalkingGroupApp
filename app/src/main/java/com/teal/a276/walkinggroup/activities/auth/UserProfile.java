@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -35,11 +36,11 @@ public class UserProfile extends AuthenticationActivity {
         ModelFacade model = ModelFacade.getInstance();
 
         user = model.getCurrentUser();
+
         setupBirthdayBtn();
         fillKnownInfo();
         setUpSaveButton();
-        Toast.makeText(getApplicationContext(), user.getEmail(),
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), user.getId().toString(), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -56,6 +57,7 @@ public class UserProfile extends AuthenticationActivity {
 
 
         if(!(user.getName() == null)){
+
             nameInput.setText(user.getName(), TextView.BufferType.EDITABLE);
         }
         if(!(user.getAddress() == null)) {
@@ -67,9 +69,10 @@ public class UserProfile extends AuthenticationActivity {
         if(!(user.getCellPhone() == null)) {
             cellPhoneInput.setText(user.getCellPhone(), TextView.BufferType.EDITABLE);
         }
-
+        if(!(user.getEmail() == null)) {
             emailInput.setText(user.getEmail(), TextView.BufferType.EDITABLE);
-
+            emailInput.setKeyListener(null);
+        }
         if(!(user.getGrade() == null)) {
             gradeInput.setText(user.getGrade(),TextView.BufferType.EDITABLE);
         }
@@ -95,6 +98,7 @@ public class UserProfile extends AuthenticationActivity {
             EditText gradeInput = findViewById(R.id.editGrade);
             EditText teachersNameInput = findViewById(R.id.editTeacherName);
             EditText contactInfoInput = findViewById(R.id.editContactInfo);
+            Button btn_date = findViewById(R.id.btn_datePicker);
 
             if (!hasValidProfileInfo(nameInput, addressInput, homePhoneInput, cellPhoneInput, emailInput, gradeInput)){
                 return;
@@ -102,7 +106,7 @@ public class UserProfile extends AuthenticationActivity {
             toggleSpinner(View.VISIBLE);
 
 
-
+            String[] dateSaver = ((btn_date.getText()).toString()).split(" ");
 
             String name = nameInput.getText().toString();
             String address = addressInput.getText().toString();
@@ -113,6 +117,9 @@ public class UserProfile extends AuthenticationActivity {
             String teachersName = teachersNameInput.getText().toString();
             String contactInfo = contactInfoInput.getText().toString();
 
+
+            user.setBirthMonth(dateSaver[0]);
+            user.setBirthYear(dateSaver[2]);
             user.setName(name);
             user.setAddress(address);
             user.setHomePhone(homePhone);
@@ -127,9 +134,6 @@ public class UserProfile extends AuthenticationActivity {
             ServerManager.serverRequest(caller, result -> this.successfulSave(),
                     UserProfile.this::authError);
         });
-    }
-
-    private void successfulResult(User result) {
     }
 
 
