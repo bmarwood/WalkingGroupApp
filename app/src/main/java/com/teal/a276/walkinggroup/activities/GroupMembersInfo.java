@@ -120,17 +120,13 @@ public class GroupMembersInfo extends BaseActivity {
 
     private void registerClickCallback() {
         ListView list = findViewById(R.id.groupMembersListView);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setOnItemClickListener((parent, viewClicked, position, id) -> {
+            Log.d("GroupMembersInfo", "Clicked " + position);
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                Log.d("GroupMembersInfo", "Clicked " + position);
-
-                // TODO: Launch activity when profile issue is complete
-                // Pass group member with info to profile activity
+            // TODO: Launch activity when profile issue is complete
+            // Pass group member with info to profile activity
 //                Intent intent = Profile.makeIntent(GroupMembersInfo.this, groupMembersWithInfo.get(position) );
 //                startActivity(intent);
-            }
         });
 
     }
