@@ -307,6 +307,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     }
 
     private void initializeAlertDialog(AlertDialog.Builder builder, Group selectedGroup, User selectedUser) {
+
         builder.setPositiveButton(getString(R.string.add_user), (dialog, which) -> {
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), selectedUser);

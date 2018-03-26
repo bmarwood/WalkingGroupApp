@@ -1,5 +1,6 @@
 package com.teal.a276.walkinggroup.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -97,15 +99,40 @@ public class MyGroups extends BaseActivity {
         ListView leaderList = findViewById(R.id.leaderOfGroups);
         leaderList.setOnItemClickListener((parent, viewClicked, position, id) -> {
             Log.d("MyGroups", "Clicked  leads position " + position);
-            makeIntent(leadsGroupNames, position);
+            setAlertDialog(leadsGroupNames, position);
         });
+
 
 
         ListView membList = findViewById(R.id.memberOfGroups);
         membList.setOnItemClickListener((parent, viewClicked, position, id) -> {
             Log.d("MyGroups", "Clicked  member position " + position);
+            // Launch group info
             makeIntent(memberOfGroupNames, position);
         });
+    }
+
+    private void setAlertDialog(List<String> leadsGroupNames, int position) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.group_message_alertdialog, null);
+        String title = getString(R.string.msg_group, leadsGroupNames.get(position));
+        alertDialogBuilder.setTitle(title);
+        alertDialogBuilder.setView(dialogView);
+
+
+
+        alertDialogBuilder.setPositiveButton(getString(R.string.post), (dialog, which) -> {
+            // Extract data from UI:
+            EditText editName = findViewById(R.id.messageEditText);
+            String message = editName.getText().toString();
+
+            // TODO: Post to server
+        });
+
+        alertDialogBuilder.setNegativeButton(getString(R.string.cancel), null);
+
+        alertDialogBuilder.show();
     }
 
     private void makeIntent(List<String> leadsGroupNames, int position) {
