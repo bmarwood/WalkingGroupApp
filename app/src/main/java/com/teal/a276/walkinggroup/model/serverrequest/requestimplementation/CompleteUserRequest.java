@@ -33,7 +33,7 @@ public class CompleteUserRequest extends AbstractServerRequest {
         this.user = user;
 
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.getMonitors(user.getId());
+        Call<List<User>> call = proxy.getMonitors(user.getId(), null);
         ServerManager.serverRequest(call, this::monitorsResult, errorCallback);
     }
 

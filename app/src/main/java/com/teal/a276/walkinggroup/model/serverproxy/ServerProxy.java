@@ -13,6 +13,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -70,7 +71,7 @@ public interface ServerProxy {
      * @return A list of users that the specified user monitors
      */
     @GET("/users/{id}/monitorsUsers")
-    Call<List<User>> getMonitors(@Path("id") Long monitorId);
+    Call<List<User>> getMonitors(@Path("id") Long monitorId, @Header("JSON-DEPTH") Long depth);
 
     /**
      * @param userId Id for the user

@@ -14,12 +14,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
+import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+
+import retrofit2.Call;
 
 /**
  * Dashboard Activity for parents to check location of their monitorees (Children)
@@ -61,7 +65,6 @@ public class DashBoard extends AbstractMapActivity implements Observer {
             startLocationUpdates();
         }
         populateMonitorsOnMap();
-        populateLeadersOnMap();
     }
 
     @Override
@@ -84,9 +87,14 @@ public class DashBoard extends AbstractMapActivity implements Observer {
     private void populateMonitorsOnMap(){
 
         //List<User> monitorsUsers = this.user.getMonitorsUsers();
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<List<User>> call = proxy.getMonitors(user.getId(), 2L);
+        ServerManager.serverRequest(call, this::monitorsResult, this::error);
 
         //Mock users for now
-        List<User> monitorsUsers = new ArrayList<>();
+        //List<User> monitorsUsers = new ArrayList<>();
+
+/*
         User user1 = new User();
 
         LatLng vancouver = new LatLng(49.282729, -123.120738);
@@ -104,11 +112,29 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         for(User user : monitorsUsers){
             addMonitorsMarker(user);
         }
+        */
     }
-    private void addMonitorsMarker(User user){
+
+    private void monitorsResult(List<User> users) {
+        for(User user: users) {
+
+            LatLng vancouver = new LatLng(52.282729, -123.120738);
+            user.setLastGPSLocation(vancouver);
+            addUsersMarker(user);
+            List<Group> groups = user.getMemberOfGroups();
+            for(Group group : groups){
+                ServerProxy proxy = ServerManager.getServerRequest();
+                Call<User> call = proxy.getUserById(group.getLeader().getId());
+                ServerManager.serverRequest(call, this::addLeadersMarker, this::error);
+            }
+        }
+    }
+
+    private void addUsersMarker(User user){
         LatLng markerLocation = user.getLastGPSLocation();
         placeMonitorsOnMap(markerLocation, user);
     }
+
     private void placeMonitorsOnMap(LatLng markerLocation, User user){
         MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
         String title = user.getName();
@@ -117,31 +143,12 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         map.addMarker(markerOptions);
     }
 
-
-    //methods to populate leaders
-    private void populateLeadersOnMap(){
-        List<User> leaders = new ArrayList<>();
-
-        User richmondLeader = new User();
-        LatLng richmond = new LatLng(49.166723, -123.135210);
-        richmondLeader.setLastGPSLocation(richmond);
-        richmondLeader.setName("Richmond Leader");
-
-        User ubcLeader = new User();
-        LatLng ubc = new LatLng(49.260605, -123.245994);
-        ubcLeader.setLastGPSLocation(ubc);
-        ubcLeader.setName("UBC Leader");
-
-        leaders.add(richmondLeader);
-        leaders.add(ubcLeader);
-
-        for(User user : leaders){
-            addLeadersMarker(user);
-        }
-    }
-
-
     private void addLeadersMarker(User user){
+
+        //TODO: delete later
+        LatLng vancouver = new LatLng(49.282729, -123.120738);
+        user.setLastGPSLocation(vancouver);
+
         LatLng markerLocation = user.getLastGPSLocation();
         placeLeadersOnMap(markerLocation, user);
     }
