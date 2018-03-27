@@ -52,8 +52,12 @@ public interface ServerProxy {
     /**
      *
      * @param userId Id of the user
+     * @Param user User to update Server with
      * @return The user with the specified id
      */
+    @POST("/users/{id}")
+    Call<User> updateUser(@Path("id") Long userId, @Body User user);
+
     @GET("/users/{id}")
     Call<User> getUserById(@Path("id") Long userId);
 
@@ -172,6 +176,7 @@ public interface ServerProxy {
      */
     @DELETE("/groups/{groupId}/memberUsers/{userId}")
     Call<Void> deleteUserFromGroup(@Path("groupId") Long groupId, @Path("userId") Long userId);
+
 
     @GET("/messages")
     Call<List<Message>> getMessages(@Nullable @QueryMap Map<String, Object> options);
