@@ -16,11 +16,9 @@ import android.widget.Toast;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
-import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
-import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CompleteUserRequest;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -159,7 +157,7 @@ public class UserProfile extends AuthenticationActivity {
     }
 
     private void setupBirthdayBtn() {
-        dateBtn = findViewById(R.id.btn_datePicker);
+        dateBtn = findViewById(R.id.dateButton);
         dateBtn.setOnClickListener(v -> updateDate());
         dateBtn.setText(formatDate.format(dateTime.getTime()));
     }

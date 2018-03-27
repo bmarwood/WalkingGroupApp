@@ -64,7 +64,7 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         if(updateLocation) {
             startLocationUpdates();
         }
-        populateMonitorsOnMap();
+        populateUsersOnMap();
     }
 
     @Override
@@ -77,42 +77,14 @@ public class DashBoard extends AbstractMapActivity implements Observer {
 
     }
 
-
     public static Intent makeIntent(Context context){
         return new Intent(context, DashBoard.class);
     }
 
-
-    //Methods for Placing people the user monitors on map
-    private void populateMonitorsOnMap(){
-
-        //List<User> monitorsUsers = this.user.getMonitorsUsers();
+    private void populateUsersOnMap(){
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<List<User>> call = proxy.getMonitors(user.getId(), 2L);
+        Call<List<User>> call = proxy.getMonitors(user.getId(), 1L);
         ServerManager.serverRequest(call, this::monitorsResult, this::error);
-
-        //Mock users for now
-        //List<User> monitorsUsers = new ArrayList<>();
-
-/*
-        User user1 = new User();
-
-        LatLng vancouver = new LatLng(49.282729, -123.120738);
-        user1.setLastGPSLocation(vancouver);
-        user1.setName("User1");
-
-        User sfu = new User();
-        LatLng sfuBurnaby = new LatLng(49.278502, -122.916372);
-        sfu.setLastGPSLocation(sfuBurnaby);
-        sfu.setName("SFU");
-
-        monitorsUsers.add(user1);
-        monitorsUsers.add(sfu);
-
-        for(User user : monitorsUsers){
-            addMonitorsMarker(user);
-        }
-        */
     }
 
     private void monitorsResult(List<User> users) {
@@ -159,11 +131,5 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         markerOptions.title(title);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
         map.addMarker(markerOptions);
-
     }
-
-
-
-
-
 }
