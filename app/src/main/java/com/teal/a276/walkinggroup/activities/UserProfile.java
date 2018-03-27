@@ -29,7 +29,7 @@ import retrofit2.Call;
 public class UserProfile extends AuthenticationActivity {
     private DateFormat formatDate = DateFormat.getDateInstance();
     private Calendar dateTime = Calendar.getInstance();
-    private Button btnDate;
+    private Button dateBtn;
     private User user;
     private DatePickerDialog.OnDateSetListener datePicker;
 
@@ -45,7 +45,7 @@ public class UserProfile extends AuthenticationActivity {
             dateTime.set(Calendar.YEAR, year);
             dateTime.set(Calendar.MONTH, monthOfYear);
             dateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            btnDate.setText(formatDate.format(dateTime.getTime()));
+            dateBtn.setText(formatDate.format(dateTime.getTime()));
         };
 
         setupBirthdayBtn();
@@ -169,12 +169,11 @@ public class UserProfile extends AuthenticationActivity {
         });
     }
 
-
     private void setupBirthdayBtn() {
-        btnDate = findViewById(R.id.btn_datePicker);
-        btnDate.setOnClickListener(v -> updateDate());
+        dateBtn = findViewById(R.id.btn_datePicker);
+        dateBtn.setOnClickListener(v -> updateDate());
 
-        btnDate.setText(formatDate.format(dateTime.getTime()));
+        dateBtn.setText(formatDate.format(dateTime.getTime()));
 
     }
 
@@ -237,6 +236,5 @@ public class UserProfile extends AuthenticationActivity {
     public static Intent makeIntent(Context context) {
         return new Intent(context, UserProfile.class);
     }
-
 
 }
