@@ -53,6 +53,9 @@
     <string name="address_error">Address not available</string>
     <string name="location_error">Location not set</string>
 
+
+    <string name="email_or_password_is_incorrect">Email or Password is Incorrect</string>
+
     <!-- Autosign in -->
     <string name="auto_signin_error">There was an Issue AutoSigning in, please try again</string>
     <string name="logging_in">Logging In…</string>
@@ -67,6 +70,18 @@
     <string name="group_number">Group %1$s</string>
     <string name="members">Members</string>
 
+    <!-- Strings related to myGroups -->
+    <string name="member_of_groups">Member of Groups</string>
+    <string name="leader_of_groups">Leader of Groups</string>
+    <string name="my_groups">My Groups</string>
+    <string name="post">Post</string>
+    <string name="msg_group">Message Group: %1$s</string>
+
+
+    <!-- Strings related to EmbeddedCreateGroup-->
+    <string name="embedded_set_meeting">Set Meeting</string>
+    <string name="embedded_set_dest">Set Dest</string>
+    <string name="embedded_leader_s_email">Leader\'s Email</string>
 
 
     <string name="user_profile">User Profile</string>
