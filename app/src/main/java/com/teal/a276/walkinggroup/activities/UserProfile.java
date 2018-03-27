@@ -109,7 +109,6 @@ public class UserProfile extends AuthenticationActivity {
             EditText teachersNameInput = findViewById(R.id.editTeacherName);
             EditText contactInfoInput = findViewById(R.id.editContactInfo);
 
-
             if (!hasValidProfileInfo(nameInput, addressInput, homePhoneInput, cellPhoneInput, emailInput)) {
                 return;
             }
