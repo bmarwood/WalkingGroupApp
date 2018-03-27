@@ -82,6 +82,10 @@
     <string name="embedded_set_meeting">Set Meeting</string>
     <string name="embedded_set_dest">Set Dest</string>
     <string name="embedded_leader_s_email">Leader\'s Email</string>
+    <string name="leader_destination">Please Select Destination UserLocation</string>
+    <string name="user_destination">Please Select Meeting UserLocation</string>
+    <string name="meeting">Meeting</string>
+
 
 
     <string name="user_profile">User Profile</string>
