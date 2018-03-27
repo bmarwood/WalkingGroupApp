@@ -26,7 +26,7 @@ public class MonitoredByRequest extends AbstractServerRequest {
 
     @Override
     public void makeServerRequest() {
-        getUserForEmail(monitorsEmail, this::userResult);
+        getUserForEmail(monitorsEmail, this::userResult, null);
     }
 
     private void userResult(User user) {

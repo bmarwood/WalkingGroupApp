@@ -33,7 +33,7 @@ public class CreateGroupRequest extends AbstractServerRequest {
 
     @Override
     public void makeServerRequest() {
-        getUserForEmail(leaderEmail, this::userFromEmail);
+        getUserForEmail(leaderEmail, this::userFromEmail, null);
 
     }
 

@@ -26,7 +26,8 @@ public class CompleteUserRequest extends AbstractServerRequest {
 
     @Override
     public void makeServerRequest() {
-        getUserForEmail(currentUser.getEmail(), this::userResult);
+        getUserForEmail(currentUser.getEmail(),
+                this::userResult, 1L);
     }
 
     private void userResult(User user) {
