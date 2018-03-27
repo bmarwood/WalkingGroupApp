@@ -50,11 +50,7 @@ public abstract class AuthenticationActivity extends BaseActivity {
 
             finish();
         });
-
-
     }
-
-
 
     void storeLogin() {
         EditText emailInput = findViewById(R.id.email);
@@ -84,11 +80,8 @@ public abstract class AuthenticationActivity extends BaseActivity {
             emailInput.setError(getString(R.string.invalid_email));
             validInputs = false;
         }
-
         return validInputs;
     }
-
-
 
     void authError(String error) {
         toggleSpinner(View.INVISIBLE);

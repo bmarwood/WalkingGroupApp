@@ -91,12 +91,10 @@ public class UserProfile extends AuthenticationActivity {
         }
         if (!(user.getBirthYear() == 0)) {
             dateTime.set(user.getBirthYear(), user.getBirthMonth(), Calendar.DATE);
-
         }else {
             dateTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
                     Calendar.getInstance().get(Calendar.DATE));
         }
-
     }
 
     private void setUpSaveButton() {
@@ -154,7 +152,6 @@ public class UserProfile extends AuthenticationActivity {
             user.setTeacherName(teachersName);
             user.setEmergencyContactInfo(contactInfo);
 
-
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<User> caller = proxy.updateUser(user.getId(), user);
             ServerManager.serverRequest(caller, UserProfile.this::successfulSave,
@@ -165,9 +162,7 @@ public class UserProfile extends AuthenticationActivity {
     private void setupBirthdayBtn() {
         dateBtn = findViewById(R.id.btn_datePicker);
         dateBtn.setOnClickListener(v -> updateDate());
-
         dateBtn.setText(formatDate.format(dateTime.getTime()));
-
     }
 
     private void updateDate() {
@@ -199,7 +194,6 @@ public class UserProfile extends AuthenticationActivity {
             validInputs = false;
         }
         return validInputs;
-
     }
 
     private boolean isEmpty(EditText name) {
@@ -227,5 +221,4 @@ public class UserProfile extends AuthenticationActivity {
     public static Intent makeIntent(Context context) {
         return new Intent(context, UserProfile.class);
     }
-
 }
