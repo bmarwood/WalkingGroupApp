@@ -223,6 +223,10 @@ public class User {
         Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         return email != null && p.matcher(email).matches();
     }
+    public static boolean validatePhoneNumber(String phone){
+        Pattern p = Pattern.compile("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$", Pattern.CASE_INSENSITIVE);
+        return phone != null && p.matcher(phone).matches();
+    }
 
     public void copyUser(@NonNull User user) {
         setId(user.getId());

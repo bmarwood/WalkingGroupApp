@@ -3,7 +3,9 @@ package com.teal.a276.walkinggroup.activities.auth;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
@@ -48,7 +50,9 @@ public class UserProfile extends AuthenticationActivity {
         EditText nameInput = findViewById(R.id.editName);
         EditText addressInput = findViewById(R.id.editAddress);
         EditText homePhoneInput = findViewById(R.id.editHome);
+        homePhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         EditText cellPhoneInput = findViewById(R.id.editCell);
+        cellPhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         EditText emailInput = findViewById(R.id.editEmail);
         EditText gradeInput = findViewById(R.id.editGrade);
         EditText teachersNameInput = findViewById(R.id.editTeacherName);
@@ -70,7 +74,6 @@ public class UserProfile extends AuthenticationActivity {
         }
         if (!(user.getEmail() == null)) {
             emailInput.setText(user.getEmail(), TextView.BufferType.EDITABLE);
-            emailInput.setKeyListener(null);
         }
         if (!(user.getGrade() == null)) {
             gradeInput.setText(user.getGrade(), TextView.BufferType.EDITABLE);
@@ -105,9 +108,10 @@ public class UserProfile extends AuthenticationActivity {
             EditText contactInfoInput = findViewById(R.id.editContactInfo);
 
 
-            if (!hasValidProfileInfo(nameInput, addressInput, homePhoneInput, cellPhoneInput, emailInput, gradeInput)) {
+            if (!hasValidProfileInfo(nameInput, addressInput, homePhoneInput, cellPhoneInput, emailInput)) {
                 return;
             }
+
             toggleSpinner(View.VISIBLE);
 
             String name = nameInput.getText().toString();
@@ -119,6 +123,21 @@ public class UserProfile extends AuthenticationActivity {
             String teachersName = teachersNameInput.getText().toString();
             String contactInfo = contactInfoInput.getText().toString();
 
+            if(!User.validateEmail(email)){
+                emailInput.setError("Email address is invalid");
+                toggleSpinner(View.INVISIBLE);
+                return;
+            }
+            if (!User.validatePhoneNumber(homePhone)) {
+                homePhoneInput.setError("Phone is invalid");
+                toggleSpinner(View.INVISIBLE);
+                return;
+            }
+            if (!User.validatePhoneNumber(cellPhone)) {
+                cellPhoneInput.setError("Phone is invalid");
+                toggleSpinner(View.INVISIBLE);
+                return;
+            }
 
             user.setBirthMonth(dateTime.get(Calendar.MONTH));
             user.setBirthYear(dateTime.get(Calendar.YEAR));
@@ -130,6 +149,12 @@ public class UserProfile extends AuthenticationActivity {
             user.setGrade(grade);
             user.setTeacherName(teachersName);
             user.setEmergencyContactInfo(contactInfo);
+
+            //update shared Prefs
+            SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(sharePrefUser, email);
+            editor.apply();
 
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<User> caller = proxy.updateUser(user.getId(), user);

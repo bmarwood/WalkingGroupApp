@@ -99,7 +99,7 @@ public abstract class AuthenticationActivity extends BaseActivity {
     }
 
     boolean hasValidProfileInfo(EditText name, EditText address, EditText homePhone, EditText cellPhone,
-                                EditText email, EditText grade){
+                                EditText email){
         boolean validInputs = true;
 
         if(isEmpty(name)){
@@ -120,10 +120,6 @@ public abstract class AuthenticationActivity extends BaseActivity {
         }
         if (isEmpty(email)) {
             email.setError("email is empty");
-            validInputs = false;
-        }
-        if(isEmpty(grade)) {
-            grade.setError("grade is empty");
             validInputs = false;
         }
         return validInputs;
