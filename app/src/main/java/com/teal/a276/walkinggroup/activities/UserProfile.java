@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.activities.auth;
+package com.teal.a276.walkinggroup.activities;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -6,15 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
@@ -24,15 +23,15 @@ import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.Comp
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import retrofit2.Call;
 
 public class UserProfile extends AuthenticationActivity {
-    DateFormat formatDate = DateFormat.getDateInstance();
-    Calendar dateTime = Calendar.getInstance();
-    private Button btn_date;
-
+    private DateFormat formatDate = DateFormat.getDateInstance();
+    private Calendar dateTime = Calendar.getInstance();
+    private Button btnDate;
+    private User user;
+    private DatePickerDialog.OnDateSetListener datePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +41,13 @@ public class UserProfile extends AuthenticationActivity {
         user = model.getCurrentUser();
 
         fillKnownInfo();
+        datePicker = (view, year, monthOfYear, dayOfMonth) -> {
+            dateTime.set(Calendar.YEAR, year);
+            dateTime.set(Calendar.MONTH, monthOfYear);
+            dateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            btnDate.setText(formatDate.format(dateTime.getTime()));
+        };
+
         setupBirthdayBtn();
         setUpSaveButton();
     }
@@ -57,7 +63,6 @@ public class UserProfile extends AuthenticationActivity {
         EditText gradeInput = findViewById(R.id.editGrade);
         EditText teachersNameInput = findViewById(R.id.editTeacherName);
         EditText contactInfoInput = findViewById(R.id.editContactInfo);
-
 
         if (!(user.getName() == null)) {
 
@@ -96,7 +101,7 @@ public class UserProfile extends AuthenticationActivity {
     }
 
     private void setUpSaveButton() {
-        Button btn = findViewById(R.id.save_Btn);
+        Button btn = findViewById(R.id.saveBtn);
         btn.setOnClickListener((View v) -> {
             EditText nameInput = findViewById(R.id.editName);
             EditText addressInput = findViewById(R.id.editAddress);
@@ -124,17 +129,17 @@ public class UserProfile extends AuthenticationActivity {
             String contactInfo = contactInfoInput.getText().toString();
 
             if(!User.validateEmail(email)){
-                emailInput.setError("Email address is invalid");
+                emailInput.setError(getString(R.string.email_invalid));
                 toggleSpinner(View.INVISIBLE);
                 return;
             }
             if (!User.validatePhoneNumber(homePhone)) {
-                homePhoneInput.setError("Phone is invalid");
+                homePhoneInput.setError(getString(R.string.phone_invalid));
                 toggleSpinner(View.INVISIBLE);
                 return;
             }
             if (!User.validatePhoneNumber(cellPhone)) {
-                cellPhoneInput.setError("Phone is invalid");
+                cellPhoneInput.setError(getString(R.string.phone_invalid));
                 toggleSpinner(View.INVISIBLE);
                 return;
             }
@@ -150,25 +155,26 @@ public class UserProfile extends AuthenticationActivity {
             user.setTeacherName(teachersName);
             user.setEmergencyContactInfo(contactInfo);
 
-            //update shared Prefs
-            SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(sharePrefUser, email);
-            editor.apply();
 
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<User> caller = proxy.updateUser(user.getId(), user);
             ServerManager.serverRequest(caller, result -> this.successfulSave(),
                     UserProfile.this::authError);
+
+            //update shared Prefs
+            SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(sharePrefUser, email);
+            editor.apply();
         });
     }
 
 
     private void setupBirthdayBtn() {
-        btn_date = findViewById(R.id.btn_datePicker);
-        btn_date.setOnClickListener(v -> updateDate());
+        btnDate = findViewById(R.id.btn_datePicker);
+        btnDate.setOnClickListener(v -> updateDate());
 
-        btn_date.setText(formatDate.format(dateTime.getTime()));
+        btnDate.setText(formatDate.format(dateTime.getTime()));
 
     }
 
@@ -176,15 +182,57 @@ public class UserProfile extends AuthenticationActivity {
         new DatePickerDialog(this, datePicker, dateTime.get(Calendar.YEAR), dateTime.get(Calendar.MONTH), dateTime.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            dateTime.set(Calendar.YEAR, year);
-            dateTime.set(Calendar.MONTH, monthOfYear);
-            dateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            btn_date.setText(formatDate.format(dateTime.getTime()));
+    boolean hasValidProfileInfo(EditText name, EditText address, EditText homePhone, EditText cellPhone,
+                                EditText email){
+        boolean validInputs = true;
+
+        if(isEmpty(name)){
+            name.setError("name is empty");
+            validInputs = false;
         }
-    };
+        if (isEmpty(address)){
+            address.setError("address is empty");
+            validInputs = false;
+        }
+        if (isEmpty(homePhone)){
+            homePhone.setError("homePhone is empty");
+            validInputs = false;
+        }
+        if (isEmpty(cellPhone)) {
+            cellPhone.setError("cellPhone is empty");
+            validInputs = false;
+        }
+        if (isEmpty(email)) {
+            email.setError("email is empty");
+            validInputs = false;
+        }
+        return validInputs;
+
+    }
+
+    private boolean isEmpty(EditText name) {
+        return name.getText().toString().isEmpty();
+    }
+    void authError(String error) {
+        toggleSpinner(View.INVISIBLE);
+        super.error(error);
+    }
+
+    void successfulSave(){
+        CompleteUserRequest request = new CompleteUserRequest(user, this::error);
+        request.makeServerRequest();
+        request.addObserver((observable, o) -> {
+            ModelFacade.getInstance().setCurrentUser((User) o);
+            ModelFacade.getInstance().setGroupManager(new GroupManager());
+
+            finish();
+        });
+
+    }
+    void toggleSpinner(int visibility) {
+        final ProgressBar spinner = findViewById(R.id.authenticationProgress);
+        runOnUiThread(() -> spinner.setVisibility(visibility));
+    }
 
     public static Intent makeIntent(Context context) {
         return new Intent(context, UserProfile.class);

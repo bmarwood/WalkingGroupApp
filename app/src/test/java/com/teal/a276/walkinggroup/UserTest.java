@@ -64,6 +64,16 @@ public class UserTest extends BaseTest {
     }
 
     @Test
+    public void testInvalidPhoneNumberValidation() throws Exception {
+        assertEquals(User.validateEmail("604iii5555"), false);
+        assertEquals(User.validateEmail("***unnnnn"), false);
+        assertEquals(User.validateEmail("iii8888888"), false);
+        assertEquals(User.validateEmail(""), false);
+        assertEquals(User.validateEmail(null), false);
+    }
+
+
+    @Test
     public void testGetSetHref() throws Exception {
         user.setHref("/1234");
         assertEquals(user.getHref(), "/1234");
@@ -149,6 +159,14 @@ public class UserTest extends BaseTest {
         assertEquals(user.getMemberOfGroups(), newUser.getMemberOfGroups());
         assertEquals(user.getMonitorsUsers(), newUser.getMonitorsUsers());
         assertEquals(user.getMonitoredByUsers(), newUser.getMonitoredByUsers());
+        assertEquals(user.getBirthYear(), newUser.getBirthYear());
+        assertEquals(user.getBirthMonth(), newUser.getBirthMonth());
+        assertEquals(user.getAddress(), newUser.getAddress());
+        assertEquals(user.getCellPhone(), newUser.getCellPhone());
+        assertEquals(user.getHomePhone(), newUser.getHomePhone());
+        assertEquals(user.getGrade(), newUser.getGrade());
+        assertEquals(user.getTeacherName(), newUser.getTeacherName());
+        assertEquals(user.getEmergencyContactInfo(), newUser.getEmergencyContactInfo());
     }
 
     @Test

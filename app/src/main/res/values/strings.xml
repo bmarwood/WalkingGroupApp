@@ -110,5 +110,7 @@
     <string name="messages">Messages</string>
     <string name="unread_messages">Unread Messages</string>
     <string name="read_messages">Read Messages</string>
+    <string name="email_invalid">Email address is invalid</string>
+    <string name="phone_invalid">Phone is invalid</string>
 
 </resources>
