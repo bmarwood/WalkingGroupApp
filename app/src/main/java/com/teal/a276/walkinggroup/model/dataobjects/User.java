@@ -2,6 +2,7 @@ package com.teal.a276.walkinggroup.model.dataobjects;
 
 import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -20,6 +21,14 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private Integer birthYear;
+    private Integer birthMonth;
+    private String address;
+    private String cellPhone;
+    private String homePhone;
+    private String grade;
+    private String teacherName;
+    private String emergencyContactInfo;
     //added
     private LatLng lastGPSLocation;
     private List<Group> memberOfGroups = new ArrayList<>();
@@ -70,7 +79,71 @@ public class User {
         this.password = password;
     }
 
+    public Integer getBirthYear() {
+        return birthYear;
+    }
 
+    public void setBirthYear(int birthYear) {
+        this.birthYear = birthYear;
+    }
+
+    public Integer getBirthMonth() {
+        return birthMonth;
+    }
+
+    public void setBirthMonth(int birthMonth) {
+        this.birthMonth = birthMonth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCellPhone() {
+        return cellPhone;
+    }
+
+    public void setCellPhone(String cellPhone) {
+        this.cellPhone = cellPhone;
+    }
+
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public String getEmergencyContactInfo() {
+        return emergencyContactInfo;
+    }
+
+    public void setEmergencyContactInfo(String emergencyContactInfo) {
+        this.emergencyContactInfo = emergencyContactInfo;
+    }
+
+    @JsonIgnore
     public List<User> getMonitoredByUsers() {
         return monitoredByUsers;
     }
@@ -79,6 +152,7 @@ public class User {
         this.monitoredByUsers = monitoredByUsers;
     }
 
+    @JsonIgnore
     public List<User> getMonitorsUsers() {
         return monitorsUsers;
     }
@@ -87,6 +161,7 @@ public class User {
         this.monitorsUsers = monitorsUsers;
     }
 
+    @JsonIgnore
     public List<Group> getMemberOfGroups() {
         return memberOfGroups;
     }
@@ -95,6 +170,7 @@ public class User {
         this.memberOfGroups = memberOfGroups;
     }
 
+    @JsonIgnore
     public List<Group> getLeadsGroups() {
         return leadsGroups;
     }
@@ -150,12 +226,24 @@ public class User {
         Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         return email != null && p.matcher(email).matches();
     }
+    public static boolean validatePhoneNumber(String phone){
+        Pattern p = Pattern.compile("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$", Pattern.CASE_INSENSITIVE);
+        return phone != null && p.matcher(phone).matches();
+    }
 
     public void copyUser(@NonNull User user) {
         setId(user.getId());
         setName(user.getName());
         setEmail(user.getEmail());
         setPassword(user.getPassword());
+        setBirthYear(user.birthYear);
+        setBirthMonth(user.birthMonth);
+        setAddress(user.address);
+        setCellPhone(user.cellPhone);
+        setHomePhone(user.homePhone);
+        setGrade(user.grade);
+        setTeacherName(user.teacherName);
+        setEmergencyContactInfo(user.emergencyContactInfo);
         setMemberOfGroups(user.getMemberOfGroups());
         setLeadsGroups(user.getLeadsGroups());
         setMonitoredByUsers(user.getMonitoredByUsers());
@@ -172,13 +260,7 @@ public class User {
             return false;
         }
         final User other = (User) obj;
-        if (!this.name.equals(other.name)) {
-            return false;
-        }
-        if (!this.id.equals(other.id)) {
-            return false;
-        }
-        return true;
+        return this.name.equals(other.name) && this.id.equals(other.id);
     }
 
     //added for Dashboard

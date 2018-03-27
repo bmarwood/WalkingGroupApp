@@ -6,6 +6,10 @@
         android:title="@string/dashboard"
         app:showAsAction="never" />
 
+    <item android:id="@+id/userProfile"
+        android:title="@string/user_profile"
+        app:showAsAction="never" />
+
     <item android:id="@+id/monitorItem"
         android:title="@string/monitor"
         app:showAsAction="never" />
