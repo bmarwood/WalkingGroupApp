@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
@@ -44,9 +45,9 @@ public abstract class AuthenticationActivity extends BaseActivity {
             ModelFacade.getInstance().setCurrentUser((User) o);
             ModelFacade.getInstance().setGroupManager(new GroupManager());
             storeLogin();
-
             Intent intent = MapsActivity.makeIntent(this);
             startActivity(intent);
+
             finish();
         });
     }
@@ -79,7 +80,6 @@ public abstract class AuthenticationActivity extends BaseActivity {
             emailInput.setError(getString(R.string.invalid_email));
             validInputs = false;
         }
-
         return validInputs;
     }
 

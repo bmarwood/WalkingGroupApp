@@ -83,6 +83,29 @@
     <string name="embedded_set_dest">Set Dest</string>
     <string name="embedded_leader_s_email">Leader\'s Email</string>
 
+
+    <string name="user_profile">User Profile</string>
+    <string name="name">Name</string>
+    <string name="birth">Birth</string>
+    <string name="home_number">Home Number</string>
+    <string name="address">address</string>
+    <string name="current_grade">Current Grade</string>
+    <string name="teachers_name">Teachers Name:</string>
+    <string name="emergency_contact_information">Emergency Contact Information</string>
+    <string name="birth_date">Birth Date:</string>
+    <string name="pick_your_birth_date">Pick Your Birth Date</string>
+    <string name="nametxt">Name:</string>
+    <string name="userImage">UserImage</string>
+    <string name="date">Date</string>
+    <string name="addressColon">Address:</string>
+    <string name="home_phone_number">Home Phone Number:</string>
+    <string name="cell_phone_number">Cell Phone Number:</string>
+    <string name="email_colon">Email:</string>
+    <string name="current_grade_colon">Current Grade:</string>
+    <string name="optional">(Optional)</string>
+    <string name="contact_info">Contact Info:</string>
+    <string name="save">Save</string>
+
     <!-- Messages activity string -->
     <string name="messages">Messages</string>
     <string name="unread_messages">Unread Messages</string>
@@ -91,5 +114,13 @@
     <string name="end_walk">End walk</string>
     <string name="msg">Msg</string>
     <string name="message">Message</string>
+    <string name="email_invalid">Email address is invalid</string>
+    <string name="phone_invalid">Phone is invalid</string>
+    <string name="updated_profile">Profile has been updated</string>
+    <string name="empty_email">email is empty</string>
+    <string name="empty_cell">cellPhone is empty</string>
+    <string name="empty_home">homePhone is empty</string>
+    <string name="empty_address">address is empty</string>
+    <string name="empty_name">name is empty</string>
 
 </resources>

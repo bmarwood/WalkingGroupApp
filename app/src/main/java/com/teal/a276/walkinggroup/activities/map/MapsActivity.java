@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.GroupMembersInfo;
 import com.teal.a276.walkinggroup.activities.Monitor;
+import com.teal.a276.walkinggroup.activities.UserProfile;
 import com.teal.a276.walkinggroup.activities.MyGroups;
 import com.teal.a276.walkinggroup.activities.auth.Login;
 import com.teal.a276.walkinggroup.activities.message.Messages;
@@ -315,6 +316,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.userProfile:
+                startActivity(UserProfile.makeIntent(this));
+                break;
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));
                 break;
