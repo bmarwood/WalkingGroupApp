@@ -1,9 +1,13 @@
 package com.teal.a276.walkinggroup.model.serverproxy;
 
+import android.support.annotation.Nullable;
+
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
+import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -12,6 +16,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 /**
  * Server ServerProxy interface exposing the end points and logout to the views
@@ -171,5 +176,18 @@ public interface ServerProxy {
      */
     @DELETE("/groups/{groupId}/memberUsers/{userId}")
     Call<Void> deleteUserFromGroup(@Path("groupId") Long groupId, @Path("userId") Long userId);
+
+
+    @GET("/messages")
+    Call<List<Message>> getMessages(@Nullable @QueryMap Map<String, Object> options);
+
+    @POST("/messages/toparentsof/{id}")
+    Call<Message> sendMessageToMonitors(@Path("id") Long userId, @Body Message message);
+
+    @POST("/messages/togroup/{groupId}")
+    Call<Message> sendMessageToGroup(@Path("groupId") Long groupId,  @Body Message message);
+
+    @POST("/messages/{messageId}/readby/{userId}")
+    Call<User> setMessageRead(@Path("messageId") Long messageId, @Path("userId") Long userId, @Body Boolean readStatus);
 
 }

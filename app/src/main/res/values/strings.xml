@@ -91,4 +91,9 @@
     <string name="contact_info">Contact Info:</string>
     <string name="save">Save</string>
 
+    <!-- Messages activity string -->
+    <string name="messages">Messages</string>
+    <string name="unread_messages">Unread Messages</string>
+    <string name="read_messages">Read Messages</string>
+
 </resources>
