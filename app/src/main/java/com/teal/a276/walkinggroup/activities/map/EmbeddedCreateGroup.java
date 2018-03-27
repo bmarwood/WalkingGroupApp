@@ -59,7 +59,7 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
                     .addApi(LocationServices.API)
                     .build();
         }
-        createLocationRequest();
+        createLocationRequest(0L,0L);
     }
 
     public static Intent makeIntent(Context context){
@@ -72,7 +72,7 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
             map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             meetingMarker = map.addMarker(new MarkerOptions().
                     position(latLng).
-                    title("Meeting"));
+                    title(String.valueOf(R.string.meeting)));
             meetingMarker.showInfoWindow();
 
             meetingLat = latLng.latitude;
@@ -86,10 +86,10 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         btn.setOnClickListener(v -> {
             isClicked = !isClicked;
             if(isClicked){
-                Toast.makeText(EmbeddedCreateGroup.this, "Please Select Destination Location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EmbeddedCreateGroup.this, R.string.leader_destination, Toast.LENGTH_SHORT).show();
                 btn.setText(R.string.embedded_set_meeting);
             }else{
-                Toast.makeText(EmbeddedCreateGroup.this, "Please Select Meeting Location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EmbeddedCreateGroup.this, R.string.user_destination, Toast.LENGTH_SHORT).show();
                 btn.setText(R.string.embedded_set_dest);
                 setMeetingCoordinates();
                 return;
@@ -131,7 +131,7 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
             if((meetingLat==0) && (meetingLng==0)){
                 Toast.makeText(
                         EmbeddedCreateGroup.this,
-                        "Location not set",
+                        "UserLocation not set",
                         Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -163,7 +163,7 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
     }
 
     private void addInitialMarkers() {
-        currentLocation = locationToLatLng();
+        currentLocation = locationToLatLng(lastLocation);
         meetingMarker = map.addMarker(new MarkerOptions().
                 position(currentLocation).
                 title("Meeting"));

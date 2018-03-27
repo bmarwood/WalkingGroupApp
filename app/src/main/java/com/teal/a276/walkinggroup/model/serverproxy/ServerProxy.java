@@ -3,6 +3,7 @@ package com.teal.a276.walkinggroup.model.serverproxy;
 import android.support.annotation.Nullable;
 
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
+import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
@@ -69,7 +70,7 @@ public interface ServerProxy {
      * @return The user with the specified email
      */
     @GET("/users/byEmail")
-    Call<User> getUserByEmail(@Query("email") String email);
+    Call<User> getUserByEmail(@Query("email") String email, @Header("JSON-DEPTH") Long depth);
 
     /**
      * @param monitorId Id of the monitor
@@ -195,4 +196,6 @@ public interface ServerProxy {
     @GET("/users/{id}/lastGpsLocation")
     Call<UserLocation> getLastGpsLocation(@Path("id") Long userId);
 
+    @POST("/users/{id}/lastGpsLocation")
+    Call<UserLocation> setLastLocation(@Path("id") Long userId, @Body UserLocation userLocation);
 }
