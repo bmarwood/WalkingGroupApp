@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 
 import java.util.List;
 import java.util.Map;
@@ -190,5 +191,8 @@ public interface ServerProxy {
 
     @POST("/messages/{messageId}/readby/{userId}")
     Call<User> setMessageRead(@Path("messageId") Long messageId, @Path("userId") Long userId, @Body Boolean readStatus);
+
+    @GET("/users/{id}/lastGpsLocation")
+    Call<UserLocation> getLastGpsLocation(@Path("id") Long userId);
 
 }

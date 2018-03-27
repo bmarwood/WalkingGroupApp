@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
+import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -26,8 +27,8 @@ import java.util.Observer;
 import retrofit2.Call;
 
 /**
- * Dashboard Activity for parents to check location of their monitorees (Children)
- * and the location of the leader
+ * Dashboard Activity for parents to check location of their children
+ * and the location of the leader.
  *
  */
 
@@ -90,45 +91,37 @@ public class DashBoard extends AbstractMapActivity implements Observer {
     private void monitorsResult(List<User> users) {
         for(User user: users) {
 
-            LatLng vancouver = new LatLng(52.282729, -123.120738);
-            user.setLastGPSLocation(vancouver);
-            addUsersMarker(user);
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
+            ServerManager.serverRequest(call, result -> placeMonitorsOnMap(result, user.getName()), this::error);
+
             List<Group> groups = user.getMemberOfGroups();
             for(Group group : groups){
-                ServerProxy proxy = ServerManager.getServerRequest();
-                Call<User> call = proxy.getUserById(group.getLeader().getId());
-                ServerManager.serverRequest(call, this::addLeadersMarker, this::error);
+                ServerProxy proxyForGroup = ServerManager.getServerRequest();
+                Call<User> callForGroup = proxyForGroup.getUserById(group.getLeader().getId());
+                ServerManager.serverRequest(callForGroup, this::addLeadersMarker, this::error);
             }
         }
     }
 
-    private void addUsersMarker(User user){
-        LatLng markerLocation = user.getLastGPSLocation();
-        placeMonitorsOnMap(markerLocation, user);
-    }
-
-    private void placeMonitorsOnMap(LatLng markerLocation, User user){
+    private void placeMonitorsOnMap(UserLocation location, String name){
+        LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
         MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-        String title = user.getName();
-        markerOptions.title(title);
+        markerOptions.title(name);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
         map.addMarker(markerOptions);
     }
 
     private void addLeadersMarker(User user){
-
-        //TODO: delete later
-        LatLng vancouver = new LatLng(49.282729, -123.120738);
-        user.setLastGPSLocation(vancouver);
-
-        LatLng markerLocation = user.getLastGPSLocation();
-        placeLeadersOnMap(markerLocation, user);
+        ServerProxy proxy = ServerManager.getServerRequest();
+        Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
+        ServerManager.serverRequest(call, result -> placeLeadersOnMap(result, user.getName()), this::error);
     }
 
-    private void placeLeadersOnMap(LatLng markerLocation, User user){
+    private void placeLeadersOnMap(UserLocation location, String name) {
+        LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
         MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-        String title = user.getName();
-        markerOptions.title(title);
+        markerOptions.title(name);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
         map.addMarker(markerOptions);
     }
