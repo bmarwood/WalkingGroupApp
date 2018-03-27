@@ -82,6 +82,10 @@
     <string name="embedded_set_meeting">Set Meeting</string>
     <string name="embedded_set_dest">Set Dest</string>
     <string name="embedded_leader_s_email">Leader\'s Email</string>
+    <string name="leader_destination">Please Select Destination UserLocation</string>
+    <string name="user_destination">Please Select Meeting UserLocation</string>
+    <string name="meeting">Meeting</string>
+
 
 
     <string name="user_profile">User Profile</string>
@@ -110,6 +114,10 @@
     <string name="messages">Messages</string>
     <string name="unread_messages">Unread Messages</string>
     <string name="read_messages">Read Messages</string>
+    <string name="start_walk">Start walk</string>
+    <string name="end_walk">End walk</string>
+    <string name="msg">Msg</string>
+    <string name="message">Message</string>
     <string name="email_invalid">Email address is invalid</string>
     <string name="phone_invalid">Phone is invalid</string>
     <string name="updated_profile">Profile has been updated</string>

@@ -3,6 +3,7 @@ package com.teal.a276.walkinggroup.model.serverproxy;
 import android.support.annotation.Nullable;
 
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
+import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
@@ -13,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -67,7 +69,7 @@ public interface ServerProxy {
      * @return The user with the specified email
      */
     @GET("/users/byEmail")
-    Call<User> getUserByEmail(@Query("email") String email);
+    Call<User> getUserByEmail(@Query("email") String email, @Header("JSON-DEPTH") Long depth);
 
     /**
      * @param monitorId Id of the monitor
@@ -190,4 +192,6 @@ public interface ServerProxy {
     @POST("/messages/{messageId}/readby/{userId}")
     Call<User> setMessageRead(@Path("messageId") Long messageId, @Path("userId") Long userId, @Body Boolean readStatus);
 
+    @POST("/users/{id}/lastGpsLocation")
+    Call<UserLocation> setLastLocation(@Path("id") Long userId, @Body UserLocation userLocation);
 }

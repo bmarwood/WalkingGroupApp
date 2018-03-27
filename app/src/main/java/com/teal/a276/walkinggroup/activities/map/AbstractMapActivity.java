@@ -75,12 +75,14 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
                     .build();
         }
 
-        createLocationRequest();
+        createLocationRequest(0L,0L);
     }
 
     // Handles any changes to be made based on the current state of the user’s location settings
-    protected void createLocationRequest() {
+    protected void createLocationRequest(Long interval, Long fastestInterval) {
         locationRequest = new LocationRequest();
+        locationRequest.setInterval(interval);
+        locationRequest.setFastestInterval(fastestInterval);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -201,7 +203,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
         if (null != locationAvailability && locationAvailability.isLocationAvailable()) {
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
-                LatLng currentLocation = locationToLatLng();
+                LatLng currentLocation = locationToLatLng(lastLocation);
                 placeMarkerOnMap(currentLocation, draggable, iconId);
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, ZOOM_LEVEL));
             }
@@ -251,7 +253,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     @NonNull
-    protected LatLng locationToLatLng() {
-        return new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+    protected LatLng locationToLatLng(Location location) {
+        return new LatLng(location.getLatitude(), location.getLongitude());
     }
 }

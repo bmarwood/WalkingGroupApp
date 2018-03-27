@@ -27,9 +27,11 @@ public abstract class AbstractServerRequest extends Observable {
 
     protected abstract void makeServerRequest();
 
-    protected void getUserForEmail(String email, @NonNull final ServerResult<User> resultCallback) {
+    protected void getUserForEmail(String email,
+                                   @NonNull final ServerResult<User> resultCallback,
+                                   Long depth) {
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<User> userByEmailCall = proxy.getUserByEmail(email);
+        Call<User> userByEmailCall = proxy.getUserByEmail(email, depth);
         ServerManager.serverRequest(userByEmailCall, resultCallback, errorCallback);
     }
 
