@@ -72,6 +72,12 @@ public class UserTest extends BaseTest {
         assertEquals(User.validateEmail(null), false);
     }
 
+    @Test
+    public void testValidPhoneNumberValidation() throws Exception {
+        assertEquals(User.validateEmail("6048888888"), true);
+        assertEquals(User.validateEmail("(604) 888-8888"), true);
+
+    }
 
     @Test
     public void testGetSetHref() throws Exception {
