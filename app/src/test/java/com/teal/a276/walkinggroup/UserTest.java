@@ -140,6 +140,14 @@ public class UserTest extends BaseTest {
         User newUser = new User("Name", "test@test.com", "password");
         newUser.setId(1234L);
         newUser.setHref("/1234");
+        newUser.setBirthMonth(4);
+        newUser.setBirthYear(1998);
+        newUser.setAddress("42 Towel St");
+        newUser.setCellPhone("888-888-8888");
+        newUser.setHomePhone("888-888-8888");
+        newUser.setGrade("4");
+        newUser.setTeacherName("Mrs. Lizzie");
+        newUser.setEmergencyContactInfo("oh no, call my mom");
 
         List<Group> groups = generateGroupList();
         newUser.setLeadsGroups(groups);
