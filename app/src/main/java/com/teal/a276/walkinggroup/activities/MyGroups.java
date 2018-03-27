@@ -65,7 +65,6 @@ public class MyGroups extends BaseActivity {
         setListViewNames(leadsGroupNames, memberOfGroupNames, groups);
         setArrayAdapters(leadsGroupNames, memberOfGroupNames);
 
-        // TODO: Extract into methods
         ListView leaderList = findViewById(R.id.leaderOfGroups);
         leaderList.setOnItemClickListener((parent, viewClicked, position, id) -> {
             Log.d("MyGroups", "Clicked  leads position " + position);
@@ -80,11 +79,10 @@ public class MyGroups extends BaseActivity {
             alertDialogBuilder.setPositiveButton(getString(R.string.post), (dialog, which) -> {
 
                 // Extract data from UI:
-                EditText editName = dialogView.findViewById(R.id.messageEditText);
-                String messageString = editName.getText().toString();
+                EditText msg = dialogView.findViewById(R.id.messageEditText);
+                String messageString = msg.getText().toString();
 
                 if(!messageString.isEmpty()){
-                    // TODO: Test this works; its posting 2 messages to current user other members get the message and the leader gets nothing
                     Message message = new Message();
                     message.setText(messageString);
                     Group groupSelected = leadsGroups.get(position);

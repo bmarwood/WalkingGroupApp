@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -35,10 +38,13 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.BaseActivity;
 import com.teal.a276.walkinggroup.activities.GroupMembersInfo;
 import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.activities.MyGroups;
@@ -47,6 +53,7 @@ import com.teal.a276.walkinggroup.activities.message.Messages;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
+import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -75,39 +82,54 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     private static final int REQUEST_CHECK_SETTINGS = 2;
     private boolean walkInProgress = false;
     private User currentUser;
-    private LatLng endLocation;
+    private Circle circle;
+    private Button endButton;
+    private Button startButton;
+    private Button msgButton;
+    Group groupSelected = new Group();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentUser = ModelFacade.getInstance().getCurrentUser();
+        groupManager = ModelFacade.getInstance().getGroupManager();
 
-        Button endButton = findViewById(R.id.endBtn);
-        endButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                map.clear();
-                populateGroupsOnMap();
-                placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
-            }
+        setGroups();
+        setUsers();
+        setStartEndButton();
+        setMsgButton();
+    }
+
+    private void setGroups() {
+        ServerProxy getGroupsProxy = ServerManager.getServerRequest();
+        Call<List<Group>> getGroupsCall = getGroupsProxy.getGroups();
+        ServerManager.serverRequest(getGroupsCall, this::groupsResult, this::error);
+    }
+
+    private void setUsers() {
+        ServerProxy getUsersProxy = ServerManager.getServerRequest();
+        Call<List<User>> getUsersCall = getUsersProxy.getUsers();
+        ServerManager.serverRequest(getUsersCall, this::getUsers, this::error);
+    }
+
+    private void setStartEndButton() {
+        endButton = findViewById(R.id.endBtn);
+        endButton.setOnClickListener(v -> {
+            map.clear();
+            populateGroupsOnMap();
+            placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
+            walkInProgress = false;
+            setButtonVisibility();
         });
 
-        Button startButton = findViewById(R.id.startBtn);
+        startButton = findViewById(R.id.startBtn);
         startButton.setOnClickListener((View v) -> {
-            walkInProgress = true;
-            map.clear();
-            User currentUser = ModelFacade.getInstance().getCurrentUser();
 
             List<String> groupNames = new ArrayList<>();
             List<Group> memberAndLeaderGroups = new ArrayList<>();
-            final Group[] groupSelected = {new Group()};
-
-            for (int i = 0; i < currentUser.getMemberOfGroups().size(); i++) {
-                memberAndLeaderGroups.add(currentUser.getMemberOfGroups().get(i));
-            }
-            for (int i = 0; i < currentUser.getLeadsGroups().size(); i++) {
-                memberAndLeaderGroups.add(currentUser.getLeadsGroups().get(i));
-            }
+            memberAndLeaderGroups.addAll(currentUser.getMemberOfGroups());
+            memberAndLeaderGroups.addAll(currentUser.getLeadsGroups());
             for (int i = 0; i < memberAndLeaderGroups.size(); i++) {
                 groupNames.add(memberAndLeaderGroups.get(i).getGroupDescription());
             }
@@ -115,7 +137,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             LayoutInflater inflater = this.getLayoutInflater();
             final View dialogView = inflater.inflate(R.layout.select_group_alertdialog, null);
-
 
             Spinner spinner = dialogView.findViewById(R.id.selectGroupSpinner);
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
@@ -125,8 +146,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    groupSelected[0] = memberAndLeaderGroups.get(position);
-
+                    groupSelected = memberAndLeaderGroups.get(position);
                 }
 
                 @Override
@@ -137,11 +157,11 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
             alertDialogBuilder.setView(dialogView);
             alertDialogBuilder.setTitle("Choose group to walk with");
-            alertDialogBuilder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    addStartEndMarkers(groupSelected[0]);
-                }
+            alertDialogBuilder.setPositiveButton("Start", (dialog, which) -> {
+                map.clear();
+                addStartEndMarkers(groupSelected);
+                walkInProgress = true;
+                setButtonVisibility();
             });
             alertDialogBuilder.setNegativeButton("Cancel", null);
             alertDialogBuilder.show();
@@ -149,24 +169,76 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             // Set map refresh for 30 seconds
             createLocationRequest(30000L, 5000L);
         });
-
-        groupManager = ModelFacade.getInstance().getGroupManager();
-
-        ServerProxy getGroupsProxy = ServerManager.getServerRequest();
-        Call<List<Group>> getGroupsCall = getGroupsProxy.getGroups();
-        ServerManager.serverRequest(getGroupsCall, this::groupsResult, this::error);
-
-        ServerProxy getUsersProxy = ServerManager.getServerRequest();
-        Call<List<User>> getUsersCall = getUsersProxy.getUsers();
-        ServerManager.serverRequest(getUsersCall, this::getUsers, this::error);
     }
 
+    private void setMsgButton() {
+        msgButton = findViewById(R.id.msgBtn);
+        msgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);
+                LayoutInflater inflater = getLayoutInflater();
+                final View dialogView = inflater.inflate(R.layout.message_alert_dialog, null);
+                alertDialogBuilder.setView(dialogView);
+                alertDialogBuilder.setTitle("Send a message");
+
+                alertDialogBuilder.setPositiveButton("Post", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Message message = getMessage(dialogView);
+                        // Message members and monitors me
+                        ServerProxy proxyGroup = ServerManager.getServerRequest();
+                        Call<Message> callGroup = proxyGroup.sendMessageToGroup(groupSelected.getId(), message);
+                        ServerManager.serverRequest(callGroup, MapsActivity.this::sendMessage, this::error);
+
+                        ServerProxy proxyMonitors = ServerManager.getServerRequest();
+                        Call<Message> callMonitors = proxyMonitors.sendMessageToMonitors(currentUser.getId(), message);
+                        ServerManager.serverRequest(callMonitors, MapsActivity.this::sendMessage, this::error);
+                    }
+
+                    private void error(String s) {
+                        Log.e("MapsActivity", s);
+                    }
+                });
+                alertDialogBuilder.setNegativeButton("Panic", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Message message = getMessage(dialogView);
+                        // Message leader and monitors me
+                        ServerProxy proxy = ServerManager.getServerRequest();
+                        Call<Message> call = proxy.sendMessageToMonitors(currentUser.getId(), message);
+                        ServerManager.serverRequest(call, MapsActivity.this::sendMessage, this::error);
+                    }
+
+                    private void error(String s) {
+                        Log.e("MapsActivity", s);
+                    }
+                });
+                alertDialogBuilder.setNeutralButton("Cancel", null);
+                alertDialogBuilder.show();
+            }
+        });
+    }
+
+    @NonNull
+    private Message getMessage(View dialogView) {
+        // Extract data from UI:
+        EditText msg = dialogView.findViewById(R.id.msg);
+        String messageString = msg.getText().toString();
+        Message message = new Message();
+        message.setText(messageString);
+        return message;
+    }
+
+    private <T> void sendMessage(T t) {
+
+    }
 
     private void addStartEndMarkers(Group group) {
         List<Double> routeLatArray = group.getRouteLatArray();
         List<Double> routeLngArray = group.getRouteLngArray();
 
-        if(routeLatArray.size() != routeLngArray.size()) {
+        if (routeLatArray.size() != routeLngArray.size()) {
             Log.e("Array lengths error ", String.format("Expected matching lengths. " +
                             "Got latArrayLength %d, lngArrayLength %d",
                     routeLatArray.size(), routeLngArray.size()));
@@ -174,11 +246,17 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         }
 
         //after dest has been implemented, there will be 2 elements in the array
-        if(!routeLatArray.isEmpty()) {
+        if (!routeLatArray.isEmpty()) {
             LatLng startMarkerLocation = new LatLng(routeLatArray.get(0), routeLngArray.get(0));
             LatLng endMarkerLocation = new LatLng(routeLatArray.get(routeLngArray.size() - 1), routeLngArray.get(routeLngArray.size() - 1));
 
-            endLocation = endMarkerLocation;
+            circle = map.addCircle(new CircleOptions()
+                    .center(endMarkerLocation)
+                    .radius(100)
+                    .strokeColor(Color.GRAY)
+                    .fillColor(Color.GRAY));
+
+
             MarkerOptions markerOptions = new MarkerOptions().position(startMarkerLocation);
             String titleStr = "Start";
             markerOptions.title(titleStr);
@@ -195,9 +273,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         }
     }
 
-    private void populateGroupsOnMap(){
+    private void populateGroupsOnMap() {
         List<Group> activeGroups = groupManager.getGroups();
-        for(Group group : activeGroups) {
+        for (Group group : activeGroups) {
             addMarker(group);
         }
     }
@@ -206,15 +284,15 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         List<Double> routeLatArray = group.getRouteLatArray();
         List<Double> routeLngArray = group.getRouteLngArray();
 
-        if(routeLatArray.size() != routeLngArray.size()) {
+        if (routeLatArray.size() != routeLngArray.size()) {
             Log.e("Array lengths error ", String.format("Expected matching lengths. " +
-                    "Got latArrayLength %d, lngArrayLength %d",
+                            "Got latArrayLength %d, lngArrayLength %d",
                     routeLatArray.size(), routeLngArray.size()));
             return;
         }
 
         //after dest has been implemented, there will be 2 elements in the array
-        if(!routeLatArray.isEmpty()) {
+        if (!routeLatArray.isEmpty()) {
             LatLng markerLocation = new LatLng(routeLatArray.get(0), routeLngArray.get(0));
             placeGroupMarker(markerLocation, group);
         }
@@ -233,7 +311,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
     private void groupsResult(List<Group> groups) {
         groupManager.setGroups(groups);
-        if(googleApiClient.isConnected() && map != null) {
+        if (googleApiClient.isConnected() && map != null) {
             populateGroupsOnMap();
         }
     }
@@ -281,7 +359,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     }
 
     private void logoutPrefs() {
-        SharedPreferences prefs = getSharedPreferences(sharePrefLogger,MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(sharePrefUser, null);
         editor.apply();
@@ -304,12 +382,14 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     public void onResume() {
         super.onResume();
         groupManager.addObserver(this);
+        setButtonVisibility();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         groupManager.deleteObserver(this);
+        setButtonVisibility();
     }
 
     @Override
@@ -320,19 +400,47 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             Call<UserLocation> call = proxy.setLastLocation(currentUser.getId(), new UserLocation(location));
             ServerManager.serverRequest(call, this::result, this::error);
 
-            if(endLocation.equals(locationToLatLng(location))){
-                // Start timer 10 mins
+
+            // Source: https://stackoverflow.com/questions/30170271/android-google-map-how-to-check-if-the-gps-location-is-inside-the-circle
+            float[] distance = new float[2];
+            Location.distanceBetween(location.getLatitude(), location.getLongitude(),
+                    circle.getCenter().latitude, circle.getCenter().longitude, distance);
+
+            if (distance[0] > circle.getRadius()) {
+                Log.d("MapsActivity", "Outside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
+            } else {
+                Toast.makeText(MapsActivity.this, "You have arrived at your location", Toast.LENGTH_LONG).show();
+                Log.d("MapsActivity", "Inside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
+
+                // Start timer 10 minutes
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        walkInProgress = false;
-                        // hide buttons
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            walkInProgress = false;
+                            map.clear();
+                            populateGroupsOnMap();
+                            placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
+                            setButtonVisibility();
+                        });
                     }
                 }, 600000);
             }
         }
+    }
 
+    private void setButtonVisibility() {
+        if (walkInProgress){
+            endButton.setVisibility(View.VISIBLE);
+            startButton.setVisibility(View.INVISIBLE);
+            msgButton.setVisibility(View.VISIBLE);
+
+        } else {
+            endButton.setVisibility(View.INVISIBLE);
+            startButton.setVisibility(View.VISIBLE);
+            msgButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void result(UserLocation location) {
@@ -343,8 +451,12 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         setUpMap();
-        refreshGroupMarkers();
-        placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
+
+        if (!walkInProgress) {
+            refreshGroupMarkers();
+            placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
+        }
+
         if (updateLocation) {
             startLocationUpdates();
         }
@@ -380,7 +492,8 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         });
 
         setupDialogInfo(group, alertDialogBuilder, dialogView);
@@ -421,8 +534,8 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         // Get leaders info
         List<User> users = ModelFacade.getInstance().getUsers();
         User leader = new User();
-        for(int i = 0; i < users.size(); i++){
-            if(group.getLeader().getId().equals(users.get(i).getId())){
+        for (int i = 0; i < users.size(); i++) {
+            if (group.getLeader().getId().equals(users.get(i).getId())) {
                 leader = users.get(i);
             }
         }
