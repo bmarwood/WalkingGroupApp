@@ -112,5 +112,11 @@
     <string name="read_messages">Read Messages</string>
     <string name="email_invalid">Email address is invalid</string>
     <string name="phone_invalid">Phone is invalid</string>
+    <string name="updated_profile">Profile has been updated</string>
+    <string name="empty_email">email is empty</string>
+    <string name="empty_cell">cellPhone is empty</string>
+    <string name="empty_home">homePhone is empty</string>
+    <string name="empty_address">address is empty</string>
+    <string name="empty_name">name is empty</string>
 
 </resources>

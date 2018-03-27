@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity;
@@ -65,7 +66,6 @@ public class UserProfile extends AuthenticationActivity {
         EditText contactInfoInput = findViewById(R.id.editContactInfo);
 
         if (!(user.getName() == null)) {
-
             nameInput.setText(user.getName(), TextView.BufferType.EDITABLE);
         }
         if (!(user.getAddress() == null)) {
@@ -93,7 +93,6 @@ public class UserProfile extends AuthenticationActivity {
             dateTime.set(user.getBirthYear(), user.getBirthMonth(), Calendar.DATE);
 
         }else {
-
             dateTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
                     Calendar.getInstance().get(Calendar.DATE));
         }
@@ -158,14 +157,8 @@ public class UserProfile extends AuthenticationActivity {
 
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<User> caller = proxy.updateUser(user.getId(), user);
-            ServerManager.serverRequest(caller, result -> this.successfulSave(),
-                    UserProfile.this::authError);
-
-            //update shared Prefs
-            SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(sharePrefUser, email);
-            editor.apply();
+            ServerManager.serverRequest(caller, UserProfile.this::successfulSave,
+                    UserProfile.this::error);
         });
     }
 
@@ -186,23 +179,23 @@ public class UserProfile extends AuthenticationActivity {
         boolean validInputs = true;
 
         if(isEmpty(name)){
-            name.setError("name is empty");
+            name.setError(getString(R.string.empty_name));
             validInputs = false;
         }
         if (isEmpty(address)){
-            address.setError("address is empty");
+            address.setError(getString(R.string.empty_address));
             validInputs = false;
         }
         if (isEmpty(homePhone)){
-            homePhone.setError("homePhone is empty");
+            homePhone.setError(getString(R.string.empty_home));
             validInputs = false;
         }
         if (isEmpty(cellPhone)) {
-            cellPhone.setError("cellPhone is empty");
+            cellPhone.setError(getString(R.string.empty_cell));
             validInputs = false;
         }
         if (isEmpty(email)) {
-            email.setError("email is empty");
+            email.setError(getString(R.string.empty_email));
             validInputs = false;
         }
         return validInputs;
@@ -212,22 +205,20 @@ public class UserProfile extends AuthenticationActivity {
     private boolean isEmpty(EditText name) {
         return name.getText().toString().isEmpty();
     }
-    void authError(String error) {
-        toggleSpinner(View.INVISIBLE);
-        super.error(error);
+
+    void successfulSave(User user){
+        ModelFacade.getInstance().setCurrentUser(user);
+        //update shared Prefs
+        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(sharePrefUser, user.getEmail());
+        editor.apply();
+
+        Toast.makeText(this, R.string.updated_profile,Toast.LENGTH_SHORT).show();
+
+        finish();
     }
 
-    void successfulSave(){
-        CompleteUserRequest request = new CompleteUserRequest(user, this::error);
-        request.makeServerRequest();
-        request.addObserver((observable, o) -> {
-            ModelFacade.getInstance().setCurrentUser((User) o);
-            ModelFacade.getInstance().setGroupManager(new GroupManager());
-
-            finish();
-        });
-
-    }
     void toggleSpinner(int visibility) {
         final ProgressBar spinner = findViewById(R.id.authenticationProgress);
         runOnUiThread(() -> spinner.setVisibility(visibility));
