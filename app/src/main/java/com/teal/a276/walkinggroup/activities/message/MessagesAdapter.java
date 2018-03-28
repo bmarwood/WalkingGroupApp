@@ -60,6 +60,12 @@ class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
        notifyItemRangeInserted(this.messages.size(), messages.size());
     }
 
+    void clear() {
+        int numberOfMessages = messages.size();
+        this.messages.clear();
+        notifyItemRangeRemoved(0, numberOfMessages);
+    }
+
     private void validateIndex(int index) throws IllegalArgumentException {
         if (index >= messages.size() || index < 0) {
             throw new IllegalArgumentException("Invalid index: " + index);

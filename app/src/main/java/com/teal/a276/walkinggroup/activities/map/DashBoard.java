@@ -47,6 +47,8 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     private User user;
     Timer timer = new Timer();
     String messageCount = "UNREAD MSG: ";
+    Button msgButton;
+    MessageUpdater messageUpdater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,37 +87,44 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         ServerManager.serverRequest(call, this::monitorsResult, this::error);
 
         populateUsersOnMap();
-        updateMessageCount();
     }
 
-    private void updateMessageCount() {
-        MessageUpdater messageUpdater = new MessageUpdater(user, this::error, 30000);
+    @Override
+    public void onPause() {
+        super.onPause();
+        messageUpdater.unsubscribeFromUpdates();
+        messageUpdater.deleteObserver(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        messageUpdater = new MessageUpdater(user, this::error, 30000);
         messageUpdater.addObserver(this);
     }
 
     private void setUpMsgButton() {
-        Button button = findViewById(R.id.dashMsgBtn);
-
-        getServerMessageCount(button);
-
-        button.setOnClickListener(v -> {
+        msgButton = findViewById(R.id.dashMsgBtn);
+        getServerMessageCount();
+        msgButton.setOnClickListener(v -> {
             startActivity(new Intent(this, Messages.class));
         });
     }
 
-    private void getServerMessageCount(Button button){
+    private void getServerMessageCount(){
         HashMap<String, Object> requestParameters = new HashMap<>();
         requestParameters.put(MessageRequestConstant.STATUS, MessageRequestConstant.UNREAD);
+        requestParameters.put(MessageRequestConstant.FOR_USER, user.getId());
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<List<Message>> call = proxy.getMessages(requestParameters);
 
-        ServerManager.serverRequest(call, ans -> {
-            String unreadCount = String.valueOf(ans.size());
+        ServerManager.serverRequest(call, this::updateUnreadMsg, this::error);
+    }
+    private void updateUnreadMsg(List<Message> messages){
+        String unreadCount = String.valueOf(messages.size());
 
-            //unreadCount = "1";
-            messageCount = "UNREAD MSG: " + unreadCount;
-            button.setText(messageCount);
-        }, this::error);
+        messageCount = "UNREAD MSG: " + unreadCount;
+        msgButton.setText(messageCount);
     }
 
     @Override
@@ -190,6 +199,6 @@ public class DashBoard extends AbstractMapActivity implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
-
+        updateUnreadMsg((List<Message>) arg);
     }
 }

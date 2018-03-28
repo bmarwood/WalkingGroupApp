@@ -5,9 +5,7 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Timer;
@@ -20,7 +18,6 @@ import retrofit2.Call;
  */
 public class MessageUpdater extends Observable {
     private Timer timer = new Timer();
-    private HashSet<Message> messageCache = new HashSet<>();
 
     public MessageUpdater(final User user, final ServerError errorCallback, long updateRate) {
         subscribeForUpdates(user, errorCallback, updateRate);
@@ -46,28 +43,9 @@ public class MessageUpdater extends Observable {
     }
 
     private void unreadMessages(List<Message> messages) {
-        List<Message> newMessages = getNewMessages(messages);
-        if (!newMessages.isEmpty()) {
             setChanged();
-            notifyObservers(getNewMessages(messages));
-            messageCache.addAll(messages);
+            notifyObservers(messages);
         }
-    }
-
-    private List<Message> getNewMessages(List<Message> messages) {
-        List<Message> newMessages = new ArrayList<>();
-        for(Message message : messages) {
-            if (!messageCache.contains(message)) {
-                newMessages.add(message);
-            }
-        }
-
-        return newMessages;
-    }
-
-    public void addCacheItems(List<Message> messages) {
-        messageCache.addAll(messages);
-    }
 
     public void unsubscribeFromUpdates() {
         timer.cancel();

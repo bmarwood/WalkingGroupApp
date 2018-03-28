@@ -80,7 +80,6 @@ public class Messages extends BaseActivity implements Observer {
 
     private void unreadMessagesResult(List<Message> messages) {
         this.unreadMessages = messages;
-        messageUpdater.addCacheItems(messages);
         RecyclerView.Adapter adapter = new MessagesAdapter(messages);
         unreadMessagesView.setAdapter(adapter);
     }
@@ -137,6 +136,7 @@ public class Messages extends BaseActivity implements Observer {
     public void update(Observable observable, Object o) {
         List<Message> messages = (List<Message>)o;
         MessagesAdapter adapter = (MessagesAdapter) unreadMessagesView.getAdapter();
+        adapter.clear();
         adapter.addAll(messages);
     }
 }
