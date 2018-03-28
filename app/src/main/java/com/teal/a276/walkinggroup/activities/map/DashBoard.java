@@ -54,7 +54,7 @@ public class DashBoard extends AbstractMapActivity implements Observer {
                     .addApi(LocationServices.API)
                     .build();
         }
-        createLocationRequest();
+        createLocationRequest(0L, 0L);
 
     }
 

@@ -152,7 +152,7 @@ public class User {
         this.monitoredByUsers = monitoredByUsers;
     }
 
-    @JsonIgnore
+    //@JsonIgnore
     public List<User> getMonitorsUsers() {
         return monitorsUsers;
     }
@@ -161,7 +161,7 @@ public class User {
         this.monitorsUsers = monitorsUsers;
     }
 
-    @JsonIgnore
+    //@JsonIgnore
     public List<Group> getMemberOfGroups() {
         return memberOfGroups;
     }
@@ -170,7 +170,7 @@ public class User {
         this.memberOfGroups = memberOfGroups;
     }
 
-    @JsonIgnore
+    //@JsonIgnore
     public List<Group> getLeadsGroups() {
         return leadsGroups;
     }
