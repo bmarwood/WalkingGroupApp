@@ -94,7 +94,6 @@ public class DashBoard extends AbstractMapActivity {
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
             ServerManager.serverRequest(call, result -> {
-                DashBoard.this.addMonitorName(user.getName(), result.getTimestamp(), user.getId());
                 DashBoard.this.placeMonitorsOnMap(result, user.getName());
             }, this::error);
 
@@ -144,27 +143,4 @@ public class DashBoard extends AbstractMapActivity {
 //            scrollDash.addView(leader);
 
     }
-
-    private void addMonitorName(String name, String timestamp, Long id) {
-        TableLayout scrollDash = findViewById(R.id.monitorsTable);
-
-        TableRow row = new TableRow(this);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-        row.setLayoutParams(layoutParams);
-
-
-        TextView leader = new TextView(this);
-        leader.setText("Sally");
-        //leader.setId(id.intValue());
-        row.addView(leader);
-
-
-        TextView gps = new TextView(this);
-        leader.setText(timestamp);
-        //leader.setId(user.getId().intValue()+1);
-        row.addView(gps);
-        scrollDash.addView(row);
-    }
-
-
 }
