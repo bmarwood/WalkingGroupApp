@@ -15,8 +15,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
-import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
@@ -105,11 +105,13 @@ public class DashBoard extends AbstractMapActivity implements Observer {
     }
 
     private void placeMonitorsOnMap(UserLocation location, String name){
-        LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
-        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-        markerOptions.title(name);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-        map.addMarker(markerOptions);
+        if(!(location.getLat() == null)) {
+            LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
+            MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
+            markerOptions.title(name);
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+            map.addMarker(markerOptions);
+        }
     }
 
     private void addLeadersMarker(User user){
@@ -119,10 +121,12 @@ public class DashBoard extends AbstractMapActivity implements Observer {
     }
 
     private void placeLeadersOnMap(UserLocation location, String name) {
-        LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
-        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-        markerOptions.title(name);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
-        map.addMarker(markerOptions);
+        if(!(location.getLat() == null)) {
+            LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
+            MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
+            markerOptions.title(name);
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+            map.addMarker(markerOptions);
+        }
     }
 }
