@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -154,6 +155,7 @@ public class User {
         return monitorsUsers;
     }
 
+    @JsonProperty
     public void setMonitorsUsers(List<User> monitorsUsers) {
         this.monitorsUsers = monitorsUsers;
     }
@@ -163,6 +165,7 @@ public class User {
         return memberOfGroups;
     }
 
+    @JsonProperty
     public void setMemberOfGroups(List<Group> memberOfGroups) {
         this.memberOfGroups = memberOfGroups;
     }
@@ -172,6 +175,7 @@ public class User {
         return leadsGroups;
     }
 
+    @JsonProperty
     public void setLeadsGroups(List<Group> leadsGroups) {
         this.leadsGroups = leadsGroups;
     }

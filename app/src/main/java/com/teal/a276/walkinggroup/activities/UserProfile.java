@@ -159,7 +159,7 @@ public class UserProfile extends AuthenticationActivity {
     }
 
     private void setupBirthdayBtn() {
-        dateBtn = findViewById(R.id.btn_datePicker);
+        dateBtn = findViewById(R.id.dateButton);
         dateBtn.setOnClickListener(v -> updateDate());
         dateBtn.setText(formatDate.format(dateTime.getTime()));
     }
