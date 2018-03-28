@@ -40,26 +40,38 @@
 
 
                 <LinearLayout
+                    android:id="@+id/dashboardBottomMonitorees"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/myMonitoreesTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="My Monitorees"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+                    <TableLayout
+                        android:id="@+id/monitorsTable"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </TableLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/dashboardBottomLeaders"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/dashboardBottomMonitorees"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/myMonitoreesTxt"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="My Monitorees"
-                            android:textAlignment="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Button" />
-
-                    </LinearLayout>
                     <TextView
                         android:id="@+id/leadersTxt"
                         android:layout_width="match_parent"
@@ -67,6 +79,17 @@
                         android:text="Leaders"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+                    <TableLayout
+                        android:id="@+id/leadersTable"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </TableLayout>
 
                 </LinearLayout>
 
