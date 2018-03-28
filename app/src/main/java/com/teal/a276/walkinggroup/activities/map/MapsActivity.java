@@ -316,6 +316,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.dashboard:
+                startActivity(DashBoard.makeIntent(this));
+                break;
             case R.id.userProfile:
                 startActivity(UserProfile.makeIntent(this));
                 break;

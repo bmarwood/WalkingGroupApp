@@ -183,7 +183,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     @SuppressLint("MissingPermission")
-    void setUpMap() {
+    protected void setUpMap() {
         if (!checkAndRequestPermissions()) {
             return;
         }

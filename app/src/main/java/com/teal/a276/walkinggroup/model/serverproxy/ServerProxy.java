@@ -3,9 +3,9 @@ package com.teal.a276.walkinggroup.model.serverproxy;
 import android.support.annotation.Nullable;
 
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
-import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 
 import java.util.List;
 import java.util.Map;
@@ -76,7 +76,7 @@ public interface ServerProxy {
      * @return A list of users that the specified user monitors
      */
     @GET("/users/{id}/monitorsUsers")
-    Call<List<User>> getMonitors(@Path("id") Long monitorId);
+    Call<List<User>> getMonitors(@Path("id") Long monitorId, @Header("JSON-DEPTH") Long depth);
 
     /**
      * @param userId Id for the user
@@ -191,6 +191,9 @@ public interface ServerProxy {
 
     @POST("/messages/{messageId}/readby/{userId}")
     Call<User> setMessageRead(@Path("messageId") Long messageId, @Path("userId") Long userId, @Body Boolean readStatus);
+
+    @GET("/users/{id}/lastGpsLocation")
+    Call<UserLocation> getLastGpsLocation(@Path("id") Long userId);
 
     @POST("/users/{id}/lastGpsLocation")
     Call<UserLocation> setLastLocation(@Path("id") Long userId, @Body UserLocation userLocation);
