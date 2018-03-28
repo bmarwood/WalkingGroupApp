@@ -6,109 +6,120 @@
     android:layout_height="match_parent"
     tools:context="com.teal.a276.walkinggroup.activities.map.DashBoard">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <!--<LinearLayout-->
+        <!--android:id="@+id/linearLayout"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:orientation="vertical"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent">-->
 
-        <ScrollView
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="252dp">
+        <!--<ScrollView-->
+            <!--android:id="@+id/map"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="252dp">-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="252dp"
-                android:orientation="vertical" />
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="252dp"-->
+                <!--android:orientation="vertical" />-->
 
-        </ScrollView>
+        <!--</ScrollView>-->
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <!--<ScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
 
-            <LinearLayout
-                android:id="@+id/dashboardBottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:id="@+id/dashboardBottom"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
 
 
-                <LinearLayout
-                    android:id="@+id/dashboardBottomMonitorees"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/dashboardBottomMonitorees"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:orientation="vertical">-->
 
-                    <TextView
-                        android:id="@+id/myMonitoreesTxt"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="My Monitorees"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/myMonitoreesTxt"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="My Monitorees"-->
+                        <!--android:textAlignment="center"-->
+                        <!--android:textAppearance="@style/TextAppearance.AppCompat.Button" />-->
 
-                    <TableLayout
-                        android:id="@+id/monitorsTable"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    <!--<TableLayout-->
+                        <!--android:id="@+id/monitorsTable"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent">-->
 
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                    <!--</TableLayout>-->
 
-                    </TableLayout>
+                <!--</LinearLayout>-->
 
-                </LinearLayout>
+                <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/dashboardBottomLeaders"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:orientation="vertical">&ndash;&gt;-->
 
-                <LinearLayout
-                    android:id="@+id/dashboardBottomLeaders"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/leadersTxt"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:text="Leaders"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:textAlignment="center"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:textAppearance="@style/TextAppearance.AppCompat.Button" />&ndash;&gt;-->
 
-                    <TextView
-                        android:id="@+id/leadersTxt"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Leaders"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+                    <!--&lt;!&ndash;<TableLayout&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/leadersTable"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="match_parent">&ndash;&gt;-->
 
-                    <TableLayout
-                        android:id="@+id/leadersTable"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        <!--&lt;!&ndash;<TableRow&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_height="match_parent" />&ndash;&gt;-->
 
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                    <!--&lt;!&ndash;</TableLayout>&ndash;&gt;-->
 
-                    </TableLayout>
-
-                </LinearLayout>
+                <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
 
 
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
 
-        </ScrollView>
+        <!--</ScrollView>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
     <fragment
         android:id="@+id/fragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="252dp"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+        app:layout_constraintTop_toTopOf="@+id/dashboardInfo" />
+
+    <ExpandableListView
+        android:id="@+id/dashboardInfo"
+        android:layout_width="366dp"
+        android:layout_height="242dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </android.support.constraint.ConstraintLayout>

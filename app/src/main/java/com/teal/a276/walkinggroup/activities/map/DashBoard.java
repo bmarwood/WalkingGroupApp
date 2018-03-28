@@ -37,7 +37,7 @@ import retrofit2.Call;
  *
  */
 
-public class DashBoard extends AbstractMapActivity implements Observer {
+public class DashBoard extends AbstractMapActivity {
 
     private User user;
 
@@ -78,11 +78,6 @@ public class DashBoard extends AbstractMapActivity implements Observer {
         return false;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-
-    }
-
     public static Intent makeIntent(Context context){
         return new Intent(context, DashBoard.class);
     }
@@ -98,12 +93,9 @@ public class DashBoard extends AbstractMapActivity implements Observer {
 
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
-            ServerManager.serverRequest(call, new ServerResult<UserLocation>() {
-                @Override
-                public void result(UserLocation result) {
-                    DashBoard.this.addMonitorName(user.getName(), result.getTimestamp(), user.getId());
-                    DashBoard.this.placeMonitorsOnMap(result, user.getName());
-                }
+            ServerManager.serverRequest(call, result -> {
+                DashBoard.this.addMonitorName(user.getName(), result.getTimestamp(), user.getId());
+                DashBoard.this.placeMonitorsOnMap(result, user.getName());
             }, this::error);
 
 
@@ -145,31 +137,31 @@ public class DashBoard extends AbstractMapActivity implements Observer {
 
     private void addLeaderName(User user) {
 
-        LinearLayout scrollDash = (LinearLayout) findViewById(R.id.dashboardBottomLeaders);
-            TextView leader = new TextView(this);
-            leader.setText(user.getName());
-            leader.setId(user.getId().intValue());
-            scrollDash.addView(leader);
+//        LinearLayout scrollDash = findViewById(R.id.dashboardBottomLeaders);
+//            TextView leader = new TextView(this);
+//            leader.setText(user.getName());
+//            leader.setId(user.getId().intValue());
+//            scrollDash.addView(leader);
 
     }
 
     private void addMonitorName(String name, String timestamp, Long id) {
-        TableLayout scrollDash = (TableLayout) findViewById(R.id.monitorsTable);
+        TableLayout scrollDash = findViewById(R.id.monitorsTable);
 
-        TableRow row= new TableRow(this);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow row = new TableRow(this);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
         row.setLayoutParams(layoutParams);
 
 
         TextView leader = new TextView(this);
         leader.setText("Sally");
-        leader.setId(id.intValue());
+        //leader.setId(id.intValue());
         row.addView(leader);
 
 
         TextView gps = new TextView(this);
         leader.setText(timestamp);
-        leader.setId(user.getId().intValue()+1);
+        //leader.setId(user.getId().intValue()+1);
         row.addView(gps);
         scrollDash.addView(row);
     }
