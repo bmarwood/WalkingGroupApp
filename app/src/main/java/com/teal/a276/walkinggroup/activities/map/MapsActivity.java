@@ -146,18 +146,18 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             });
 
             alertDialogBuilder.setView(dialogView);
-            alertDialogBuilder.setTitle("Choose group to walk with");
-            alertDialogBuilder.setPositiveButton("Start", (dialog, which) -> {
+            alertDialogBuilder.setTitle(R.string.choose_group);
+            alertDialogBuilder.setPositiveButton(R.string.start, (dialog, which) -> {
                 map.clear();
                 addStartEndMarkers(groupSelected);
                 walkInProgress = true;
                 setButtonVisibility();
             });
-            alertDialogBuilder.setNegativeButton("Cancel", null);
+            alertDialogBuilder.setNegativeButton(R.string.cancel, null);
             alertDialogBuilder.show();
 
             // Set map refresh for 30 seconds
-            createLocationRequest(30000L, 5000L);
+            createLocationRequest(30000L, 30000L);
         });
     }
 
@@ -170,17 +170,13 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 LayoutInflater inflater = getLayoutInflater();
                 final View dialogView = inflater.inflate(R.layout.message_alert_dialog, null);
                 alertDialogBuilder.setView(dialogView);
-                alertDialogBuilder.setTitle("Send a message");
+                alertDialogBuilder.setTitle(R.string.send_message);
 
-                alertDialogBuilder.setPositiveButton("Post", new DialogInterface.OnClickListener() {
+                alertDialogBuilder.setPositiveButton(R.string.post, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Message message = getMessage(dialogView);
                         // Message members and monitors me
-                        ServerProxy proxyGroup = ServerManager.getServerRequest();
-                        Call<Message> callGroup = proxyGroup.sendMessageToGroup(groupSelected.getId(), message);
-                        ServerManager.serverRequest(callGroup, MapsActivity.this::sendMessage, this::error);
-
                         ServerProxy proxyMonitors = ServerManager.getServerRequest();
                         Call<Message> callMonitors = proxyMonitors.sendMessageToMonitors(currentUser.getId(), message);
                         ServerManager.serverRequest(callMonitors, MapsActivity.this::sendMessage, this::error);
@@ -190,7 +186,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                         Log.e("MapsActivity", s);
                     }
                 });
-                alertDialogBuilder.setNegativeButton("Panic", new DialogInterface.OnClickListener() {
+                alertDialogBuilder.setNegativeButton(R.string.panic, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Message message = getMessage(dialogView);
@@ -204,7 +200,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                         Log.e("MapsActivity", s);
                     }
                 });
-                alertDialogBuilder.setNeutralButton("Cancel", null);
+                alertDialogBuilder.setNeutralButton(R.string.cancel, null);
                 alertDialogBuilder.show();
             }
         });
@@ -248,14 +244,14 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
 
             MarkerOptions markerOptions = new MarkerOptions().position(startMarkerLocation);
-            String titleStr = "Start";
+            String titleStr = getString(R.string.start);
             markerOptions.title(titleStr);
             markerOptions.icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             map.addMarker(markerOptions);
 
             MarkerOptions secondMarkerOptions = new MarkerOptions().position(endMarkerLocation);
-            String title = "Finish";
+            String title = getString(R.string.finish);
             markerOptions.title(title);
             markerOptions.icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_RED));
@@ -575,12 +571,12 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     }
 
     private void addGroupMemberResult(List<User> users, User user) {
-        Toast.makeText(this, String.format("Added %s to group", user.getName()),
+        Toast.makeText(this, String.format(getString(R.string.added_to_group), user.getName()),
                 Toast.LENGTH_SHORT).show();
     }
 
     private void removeGroupMemberResult(Void result, User user) {
-        Toast.makeText(this, String.format("Removed %s from group", user.getName()),
+        Toast.makeText(this, String.format(getString(R.string.removed_from_group), user.getName()),
                 Toast.LENGTH_SHORT).show();
     }
 

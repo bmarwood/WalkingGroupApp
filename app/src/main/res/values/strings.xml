@@ -83,9 +83,11 @@
     <string name="embedded_set_meeting">Set Meeting</string>
     <string name="embedded_set_dest">Set Dest</string>
     <string name="embedded_leader_s_email">Leader\'s Email</string>
-    <string name="leader_destination">Please Select Destination UserLocation</string>
-    <string name="user_destination">Please Select Meeting UserLocation</string>
+    <string name="leader_destination">Please Select Destination Location</string>
+    <string name="user_destination">Please Select Meeting Location</string>
     <string name="meeting">Meeting</string>
+    <string name="embedded_location_not_set">UserLocation not set</string>
+    <string name="embedded_destination">Destination</string>
 
 
 
@@ -127,5 +129,13 @@
     <string name="empty_home">homePhone is empty</string>
     <string name="empty_address">address is empty</string>
     <string name="empty_name">name is empty</string>
+    <string name="added_to_group">Added %s to group</string>
+    <string name="removed_from_group">Removed %s from group</string>
+    <string name="start">Start</string>
+    <string name="finish">Finish</string>
+    <string name="panic">Panic</string>
+    <string name="send_message">Send a message</string>
+    <string name="choose_group">Choose group to walk with</string>
+
 
 </resources>
