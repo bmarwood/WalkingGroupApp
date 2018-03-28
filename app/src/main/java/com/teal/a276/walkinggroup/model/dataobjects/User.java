@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.google.android.gms.maps.model.LatLng;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,8 +29,6 @@ public class User {
     private String grade;
     private String teacherName;
     private String emergencyContactInfo;
-    //added
-    private LatLng lastGPSLocation;
     private List<Group> memberOfGroups = new ArrayList<>();
     private List<Group> leadsGroups = new ArrayList<>();
 
@@ -152,29 +150,32 @@ public class User {
         this.monitoredByUsers = monitoredByUsers;
     }
 
-    //@JsonIgnore
+    @JsonIgnore
     public List<User> getMonitorsUsers() {
         return monitorsUsers;
     }
 
+    @JsonProperty
     public void setMonitorsUsers(List<User> monitorsUsers) {
         this.monitorsUsers = monitorsUsers;
     }
 
-    //@JsonIgnore
+    @JsonIgnore
     public List<Group> getMemberOfGroups() {
         return memberOfGroups;
     }
 
+    @JsonProperty
     public void setMemberOfGroups(List<Group> memberOfGroups) {
         this.memberOfGroups = memberOfGroups;
     }
 
-    //@JsonIgnore
+    @JsonIgnore
     public List<Group> getLeadsGroups() {
         return leadsGroups;
     }
 
+    @JsonProperty
     public void setLeadsGroups(List<Group> leadsGroups) {
         this.leadsGroups = leadsGroups;
     }
@@ -261,13 +262,5 @@ public class User {
         }
         final User other = (User) obj;
         return this.name.equals(other.name) && this.id.equals(other.id);
-    }
-
-    //added for Dashboard
-    public LatLng getLastGPSLocation(){
-        return lastGPSLocation;
-    }
-    public void setLastGPSLocation(LatLng location){
-        this.lastGPSLocation = location;
     }
 }
