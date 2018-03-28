@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -90,6 +92,7 @@ public class DashBoard extends AbstractMapActivity implements Observer {
 
     private void monitorsResult(List<User> users) {
         for(User user: users) {
+            addMonitorName(user);
 
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
@@ -115,6 +118,7 @@ public class DashBoard extends AbstractMapActivity implements Observer {
     }
 
     private void addLeadersMarker(User user){
+        addLeaderName(user);
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
         ServerManager.serverRequest(call, result -> placeLeadersOnMap(result, user.getName()), this::error);
@@ -129,4 +133,24 @@ public class DashBoard extends AbstractMapActivity implements Observer {
             map.addMarker(markerOptions);
         }
     }
+
+    private void addLeaderName(User user) {
+
+        LinearLayout scrollDash = (LinearLayout) findViewById(R.id.dashboardBottomLeaders);
+            TextView leader = new TextView(this);
+            leader.setText(user.getName());
+            leader.setId(user.getId().intValue());
+            scrollDash.addView(leader);
+
+    }
+
+    private void addMonitorName(User user) {
+        LinearLayout scrollDash = (LinearLayout) findViewById(R.id.dashboardBottomMonitorees);
+        TextView leader = new TextView(this);
+        leader.setText(user.getName());
+        leader.setId(user.getId().intValue());
+        scrollDash.addView(leader);
+    }
+
+
 }
