@@ -415,7 +415,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             if (distance[0] > circle.getRadius()) {
                 Log.d("MapsActivity", "Outside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
             } else {
-                Toast.makeText(MapsActivity.this, "You have arrived at your location", Toast.LENGTH_LONG).show();
+                Toast.makeText(MapsActivity.this, R.string.you_have_arrived, Toast.LENGTH_LONG).show();
                 Log.d("MapsActivity", "Inside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
 
                 // Start timer 10 minutes

@@ -144,4 +144,5 @@
     <string name="last_time_update"> - Last Updated: </string>
     <string name="panic_txt">Panic:</string>
     <string name="emerg_txt">Emergency:</string>
+    <string name="you_have_arrived">You have arrived at your location</string>
 </resources>
