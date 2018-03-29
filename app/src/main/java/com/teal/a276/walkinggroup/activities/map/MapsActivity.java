@@ -395,7 +395,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         super.onResume();
         groupManager.addObserver(this);
         setButtonVisibility();
-        currentUser = ModelFacade.getInstance().getCurrentUser();
+//        currentUser = ModelFacade.getInstance().getCurrentUser();
     }
 
     @Override

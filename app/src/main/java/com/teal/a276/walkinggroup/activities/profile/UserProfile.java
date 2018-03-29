@@ -30,7 +30,7 @@ public class UserProfile extends AuthenticationActivity {
     private DateFormat formatDate = DateFormat.getDateInstance();
     private Calendar dateTime = Calendar.getInstance();
     private Button dateBtn;
-    private User user;
+    protected User user;
     private DatePickerDialog.OnDateSetListener datePicker;
     private static final String USER = "user";
 

@@ -29,10 +29,13 @@ public class User {
     private String grade;
     private String teacherName;
     private String emergencyContactInfo;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Group> memberOfGroups = new ArrayList<>();
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Group> leadsGroups = new ArrayList<>();
-
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<User> monitoredByUsers = new ArrayList<>();
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<User> monitorsUsers = new ArrayList<>();
 
     private String href;
@@ -141,7 +144,6 @@ public class User {
         this.emergencyContactInfo = emergencyContactInfo;
     }
 
-    @JsonIgnore
     public List<User> getMonitoredByUsers() {
         return monitoredByUsers;
     }
@@ -150,32 +152,26 @@ public class User {
         this.monitoredByUsers = monitoredByUsers;
     }
 
-    @JsonIgnore
     public List<User> getMonitorsUsers() {
         return monitorsUsers;
     }
 
-    @JsonProperty
     public void setMonitorsUsers(List<User> monitorsUsers) {
         this.monitorsUsers = monitorsUsers;
     }
 
-    @JsonIgnore
     public List<Group> getMemberOfGroups() {
         return memberOfGroups;
     }
 
-    @JsonProperty
     public void setMemberOfGroups(List<Group> memberOfGroups) {
         this.memberOfGroups = memberOfGroups;
     }
 
-    @JsonIgnore
     public List<Group> getLeadsGroups() {
         return leadsGroups;
     }
 
-    @JsonProperty
     public void setLeadsGroups(List<Group> leadsGroups) {
         this.leadsGroups = leadsGroups;
     }

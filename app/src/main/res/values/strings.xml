@@ -10,7 +10,7 @@
     <!-- Strings related to login -->
 
     <string name="login">Login</string>
-    <string name="email">Email:</string>
+    <string name="parents_email">Email:</string>
     <string name="password">Password:</string>
     <string name="sign_in">Sign In</string>
     <string name="not_a_member_sign_up_here">Not a Member? Sign Up Here</string>
@@ -95,7 +95,7 @@
     <string name="dashboard_unread_message">UNREAD MSG:</string>
 
     <string name="user_profile">User Profile</string>
-    <string name="name">Name</string>
+    <string name="parents_name">Name</string>
     <string name="birth">Birth</string>
     <string name="home_number">Home Number</string>
     <string name="address">address</string>
@@ -145,4 +145,12 @@
     <string name="panic_txt">Panic:</string>
     <string name="emerg_txt">Emergency:</string>
     <string name="you_have_arrived">You have arrived at your location</string>
+    <string name="parents_view_name">Name</string>
+    <string name="email2">Email</string>
+    <string name="homephone">HomePhone</string>
+    <string name="cellphone">CellPhone</string>
+    <string name="name2">Name:</string>
+    <string name="parentsview_email">Email:</string>
+    <string name="home_phone">Home Phone:</string>
+    <string name="cell_phone">Cell Phone:</string>
 </resources>
