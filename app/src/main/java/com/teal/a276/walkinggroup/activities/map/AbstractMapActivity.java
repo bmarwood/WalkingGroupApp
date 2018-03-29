@@ -254,6 +254,10 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
 
     @NonNull
     protected LatLng locationToLatLng(Location location) {
+        if (location == null) {
+            return new LatLng(0, 0);
+        }
+
         return new LatLng(location.getLatitude(), location.getLongitude());
     }
 }
