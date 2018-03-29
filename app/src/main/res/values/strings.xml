@@ -139,6 +139,8 @@
     <string name="send_message">Send a message</string>
     <string name="choose_group">Choose group to walk with</string>
     <string name="dash_unread_msg">UNREAD MSG:</string>
+    <string name="panic_txt">Panic:</string>
+    <string name="emerg_txt">Emergency:</string>
 
 
 </resources>

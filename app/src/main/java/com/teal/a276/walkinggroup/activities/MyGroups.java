@@ -96,7 +96,7 @@ public class MyGroups extends BaseActivity {
 
                 // Extract data from UI:
                 EditText msg = dialogView.findViewById(R.id.messageEditText);
-                String messageString = "Emergency: " + (msg.getText().toString());
+                String messageString = getString(R.string.emerg_txt) + (msg.getText().toString());
 
                 if (!messageString.isEmpty()) {
                     Message message = new Message();

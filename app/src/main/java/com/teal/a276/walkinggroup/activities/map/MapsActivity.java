@@ -189,11 +189,17 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 alertDialogBuilder.setNegativeButton(R.string.panic, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Message message = getMessage(dialogView);
-                        // Message leader and monitors me
-                        ServerProxy proxy = ServerManager.getServerRequest();
-                        Call<Message> call = proxy.sendMessageToMonitors(currentUser.getId(), message);
-                        ServerManager.serverRequest(call, MapsActivity.this::sendMessage, this::error);
+                        // Extract data from UI:
+                        EditText msg = dialogView.findViewById(R.id.msg);
+                        String messageString = getString(R.string.panic_txt) + (msg.getText().toString());
+
+                        if (!messageString.isEmpty()) {
+                            Message message = new Message();
+                            message.setText(messageString);
+                            ServerProxy proxy = ServerManager.getServerRequest();
+                            Call<Message> call = proxy.sendMessageToMonitors(currentUser.getId(), message);
+                            ServerManager.serverRequest(call, MapsActivity.this::sendMessage, this::error);
+                        }
                     }
 
                     private void error(String s) {
