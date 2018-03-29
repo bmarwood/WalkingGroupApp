@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.activities;
+package com.teal.a276.walkinggroup.activities.profile;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
@@ -36,8 +37,9 @@ public class UserProfile extends AuthenticationActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        ModelFacade model = ModelFacade.getInstance();
-        user = model.getCurrentUser();
+//        ModelFacade model = ModelFacade.getInstance();
+//        user = model.getCurrentUser();
+        getDataFromIntent();
 
         fillKnownInfo();
         datePicker = (view, year, monthOfYear, dayOfMonth) -> {
@@ -215,7 +217,16 @@ public class UserProfile extends AuthenticationActivity {
         runOnUiThread(() -> spinner.setVisibility(visibility));
     }
 
-    public static Intent makeIntent(Context context) {
-        return new Intent(context, UserProfile.class);
+    public static Intent makeIntent(Context context, User user) {
+        Gson gson = new Gson();
+        Intent intent = new Intent(context, UserProfile.class);
+        intent.putExtra("user", gson.toJson(user));
+        return intent;
+    }
+
+    public void getDataFromIntent(){
+        Gson gson = new Gson();
+        String strObj = getIntent().getStringExtra("user");
+        user = gson.fromJson(strObj, User.class);
     }
 }
