@@ -28,11 +28,16 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.HashMap;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 
@@ -160,7 +165,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
 
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
-            ServerManager.serverRequest(call, result -> placeMonitorsOnMap(result, user.getName()), this::error);
+            ServerManager.serverRequest(call, result -> placeMonitorMarkerOnMap(result, user.getName()), this::error);
 
             List<Group> groups = user.getMemberOfGroups();
             for(Group group : groups){
@@ -171,24 +176,41 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         }
     }
 
-    private void placeMonitorsOnMap(UserLocation location, String name){
-        if(!(location.getLat() == null)) {
+    private void placeMonitorMarkerOnMap(UserLocation location, String name) {
+        if (!(location.getLat() == null)) {
             LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
             MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-            markerOptions.title(name);
+            String timeStamp = "";
+            try {
+                timeStamp = generateTimeCode(location.getTimestamp());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            markerOptions.title(name + " - Last Updated: " + timeStamp);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
             map.addMarker(markerOptions);
         }
     }
 
-    private void addLeadersMarker(User user){
+    private String generateTimeCode(String timestamp) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        Date date = format.parse(timestamp);
+        Long timeSince = System.currentTimeMillis() - date.getTime();
+        return String.format(Locale.getDefault(), "%d min, %d sec",
+                TimeUnit.MILLISECONDS.toMinutes(timeSince),
+                TimeUnit.MILLISECONDS.toSeconds(timeSince) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeSince))
+        );
+    }
+
+    private void addLeadersMarker(User user) {
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
         ServerManager.serverRequest(call, result -> placeLeadersOnMap(result, user.getName()), this::error);
     }
 
     private void placeLeadersOnMap(UserLocation location, String name) {
-        if(!(location.getLat() == null)) {
+        if (!(location.getLat() == null)) {
             LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
             MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
             markerOptions.title(name);
@@ -196,6 +218,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
             map.addMarker(markerOptions);
         }
     }
+
 
     @Override
     public void update(Observable o, Object arg) {
