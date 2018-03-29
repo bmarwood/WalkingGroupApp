@@ -36,8 +36,6 @@ public class User {
     private List<User> monitorsUsers = new ArrayList<>();
 
     private String href;
-    @JsonIgnore
-    private String timeStamp;
 
     public User() {
     }
@@ -208,14 +206,6 @@ public class User {
 
     public void setHref(String href) {
         this.href = href;
-    }
-
-    public String getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
     }
 
     @Override

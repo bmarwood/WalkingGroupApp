@@ -3,15 +3,7 @@ package com.teal.a276.walkinggroup.activities.map;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -21,22 +13,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
-import com.teal.a276.walkinggroup.model.serverproxy.ServerResult;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.SimpleTimeZone;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -101,7 +89,7 @@ public class DashBoard extends AbstractMapActivity {
         for (User user : users) {
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
-            ServerManager.serverRequest(call, result -> DashBoard.this.placeMonitorsOnMap(result, user.getName()), this::error);
+            ServerManager.serverRequest(call, result -> DashBoard.this.placeMonitorMarkerOnMap(result, user.getName()), this::error);
 
             List<Group> groups = user.getMemberOfGroups();
             for (Group group : groups) {
@@ -112,7 +100,7 @@ public class DashBoard extends AbstractMapActivity {
         }
     }
 
-    private void placeMonitorsOnMap(UserLocation location, String name) {
+    private void placeMonitorMarkerOnMap(UserLocation location, String name) {
         if (!(location.getLat() == null)) {
             LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
             MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
@@ -122,7 +110,7 @@ public class DashBoard extends AbstractMapActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            markerOptions.title(name + " " + timeStamp);
+            markerOptions.title(name + " - Last Updated: " + timeStamp);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
             map.addMarker(markerOptions);
         }
