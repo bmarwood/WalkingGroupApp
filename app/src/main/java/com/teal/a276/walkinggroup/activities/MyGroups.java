@@ -2,6 +2,7 @@ package com.teal.a276.walkinggroup.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -81,7 +82,7 @@ public class MyGroups extends BaseActivity {
                 EditText msg = dialogView.findViewById(R.id.messageEditText);
                 String messageString = msg.getText().toString();
 
-                if(!messageString.isEmpty()){
+                if (!messageString.isEmpty()) {
                     Message message = new Message();
                     message.setText(messageString);
 
@@ -90,7 +91,22 @@ public class MyGroups extends BaseActivity {
                     // Send message
                     ServerProxy proxy = ServerManager.getServerRequest();
                     Call<Message> call = proxy.sendMessageToGroup(groupSelected.getId(), message);
-                    ServerManager.serverRequest(call, this::sendMessage, this::error);
+                    ServerManager.serverRequest(call, MyGroups.this::sendMessage, MyGroups.this::error);
+                }
+            });
+            alertDialogBuilder.setNeutralButton(getString(R.string.Emergency), (dialog, which) -> {
+
+                // Extract data from UI:
+                EditText msg = dialogView.findViewById(R.id.messageEditText);
+                String messageString = getString(R.string.emerg_txt) + (msg.getText().toString());
+
+                if (!messageString.isEmpty()) {
+                    Message message = new Message();
+                    message.setText(messageString);
+                    Group groupSelected = leadsGroups.get(position);
+                    ServerProxy proxy = ServerManager.getServerRequest();
+                    Call<Message> call = proxy.sendMessageToGroup(groupSelected.getId(), message);
+                    ServerManager.serverRequest(call, MyGroups.this::sendMessage, MyGroups.this::error);
                 }
             });
 

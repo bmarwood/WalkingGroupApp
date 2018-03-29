@@ -58,7 +58,7 @@ public interface ServerProxy {
      * @return The user with the specified id
      */
     @POST("/users/{id}")
-    Call<User> updateUser(@Path("id") Long userId, @Body User user);
+    Call<User> updateUser(@Path("id") Long userId, @Body User user, @Header("JSON-DEPTH") Long depth);
 
     @GET("/users/{id}")
     Call<User> getUserById(@Path("id") Long userId, @Header("JSON-DEPTH") Long depth);

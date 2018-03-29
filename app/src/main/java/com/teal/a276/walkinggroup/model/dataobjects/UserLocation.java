@@ -26,7 +26,7 @@ public class UserLocation {
         this.lng = location.getLongitude();
 
         // Inspired by: https://stackoverflow.com/questions/3914404/how-to-get-current-moment-in-iso-8601-format-with-date-hour-and-minute
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         String time = df.format(new Date());
         Log.i("Time", time);
         this.timestamp = time;
