@@ -52,7 +52,8 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     public static final int MAP_UPDATE_RATE = 30000;
     private User user;
     Timer timer = new Timer();
-    String messageCount = getString(R.string.dash_unread_msg);
+    //String messageCount = getString(R.string.dash_unread_msg);
+    String messageCount = "Message Count: ";
     Button msgButton;
     MessageUpdater messageUpdater;
 
