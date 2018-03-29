@@ -66,9 +66,9 @@ public class Monitor extends BaseActivity {
         monitoringList.setAdapter(monitorsAdapter);
         monitoringList.setOnItemClickListener((parent, view, position, id) -> {
             // Pass group member with info to profile activity
-        User monitoringUser = user.getMonitorsUsers().get(position);
-        Intent intent = UserProfile.makeIntent(Monitor.this, monitoringUser);
-        startActivity(intent);
+            User monitoringUser = user.getMonitorsUsers().get(position);
+            Intent intent = UserProfile.makeIntent(Monitor.this, monitoringUser);
+            startActivity(intent);
         });
 
         monitoredByAdapter = new ListItemAdapter(this, user.getMonitoredByUsers(), false);
@@ -108,7 +108,7 @@ public class Monitor extends BaseActivity {
             alertDialog.setCancelable(false);
 
             final EditText input = new EditText(Monitor.this);
-            input.setInputType(InputType.TYPE_CLASS_TEXT| InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
             alertDialog.setView(input);
 
             alertDialog.setNegativeButton(R.string.cancel, null);
@@ -154,7 +154,7 @@ public class Monitor extends BaseActivity {
         return true;
     }
 
-    public static Intent makeIntent(Context context){
+    public static Intent makeIntent(Context context) {
         return new Intent(context, Monitor.class);
     }
 
@@ -174,7 +174,7 @@ public class Monitor extends BaseActivity {
         @NonNull
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View itemView = convertView;
-            if(itemView == null) {
+            if (itemView == null) {
                 LayoutInflater inflater = LayoutInflater.from(context);
                 itemView = inflater.inflate(R.layout.list_item, parent, false);
             }

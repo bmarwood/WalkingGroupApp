@@ -9,6 +9,7 @@ import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 public class UserInfo extends UserProfile {
+    private static final String USER = "user";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,7 @@ public class UserInfo extends UserProfile {
     public static Intent makeIntent(Context context, User user) {
         Gson gson = new Gson();
         Intent intent = new Intent(context, UserInfo.class);
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra(USER, gson.toJson(user));
         return intent;
     }
 }

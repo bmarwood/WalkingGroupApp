@@ -32,6 +32,8 @@ public class UserProfile extends AuthenticationActivity {
     private Button dateBtn;
     private User user;
     private DatePickerDialog.OnDateSetListener datePicker;
+    private static final String USER = "user";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,13 +235,13 @@ public class UserProfile extends AuthenticationActivity {
     public static Intent makeIntent(Context context, User user) {
         Gson gson = new Gson();
         Intent intent = new Intent(context, UserProfile.class);
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra(USER, gson.toJson(user));
         return intent;
     }
 
     public void getDataFromIntent() {
         Gson gson = new Gson();
-        String strObj = getIntent().getStringExtra("user");
+        String strObj = getIntent().getStringExtra(USER);
         user = gson.fromJson(strObj, User.class);
     }
 }

@@ -130,8 +130,8 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         memberAndLeaderGroups.addAll(user.getMemberOfGroups());
         memberAndLeaderGroups.addAll(user.getLeadsGroups());
 
-        for (int i = 0; i < memberAndLeaderGroups.size(); i++) {
-            groupNames.add(memberAndLeaderGroups.get(i).getGroupDescription());
+        for(Group group: memberAndLeaderGroups) {
+            groupNames.add(group.getGroupDescription());
         }
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -151,7 +151,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
