@@ -153,4 +153,7 @@
     <string name="parentsview_email">Email:</string>
     <string name="home_phone">Home Phone:</string>
     <string name="cell_phone">Cell Phone:</string>
+    <string name="user_profile_email">Email:</string>
+    <string name="unique_email">Email:</string>
+    <string name="unique_email_two">Email:</string>
 </resources>
