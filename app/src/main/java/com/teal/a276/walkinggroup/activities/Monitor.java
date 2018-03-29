@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.profile.UserInfo;
+import com.teal.a276.walkinggroup.activities.profile.UserProfile;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -61,9 +64,21 @@ public class Monitor extends BaseActivity {
         monitorsAdapter = new ListItemAdapter(this, user.getMonitorsUsers(), true);
         ListView monitoringList = findViewById(R.id.monitoringListView);
         monitoringList.setAdapter(monitorsAdapter);
+        monitoringList.setOnItemClickListener((parent, view, position, id) -> {
+            // Pass group member with info to profile activity
+            User monitoringUser = user.getMonitorsUsers().get(position);
+            Intent intent = UserProfile.makeIntent(Monitor.this, monitoringUser);
+            startActivity(intent);
+        });
 
         monitoredByAdapter = new ListItemAdapter(this, user.getMonitoredByUsers(), false);
         ListView monitoredBy = findViewById(R.id.monitoredByListView);
+        monitoredBy.setOnItemClickListener((parent, view, position, id) -> {
+            // Pass group member with info to profile activity
+            User monitoredByUser = user.getMonitoredByUsers().get(position);
+            Intent intent = UserInfo.makeIntent(Monitor.this, monitoredByUser);
+            startActivity(intent);
+        });
         monitoredBy.setAdapter(monitoredByAdapter);
     }
 
@@ -93,7 +108,7 @@ public class Monitor extends BaseActivity {
             alertDialog.setCancelable(false);
 
             final EditText input = new EditText(Monitor.this);
-            input.setInputType(InputType.TYPE_CLASS_TEXT| InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
             alertDialog.setView(input);
 
             alertDialog.setNegativeButton(R.string.cancel, null);
@@ -139,7 +154,7 @@ public class Monitor extends BaseActivity {
         return true;
     }
 
-    public static Intent makeIntent(Context context){
+    public static Intent makeIntent(Context context) {
         return new Intent(context, Monitor.class);
     }
 
@@ -159,7 +174,7 @@ public class Monitor extends BaseActivity {
         @NonNull
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View itemView = convertView;
-            if(itemView == null) {
+            if (itemView == null) {
                 LayoutInflater inflater = LayoutInflater.from(context);
                 itemView = inflater.inflate(R.layout.list_item, parent, false);
             }

@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.profile.UserInfo;
+import com.teal.a276.walkinggroup.activities.profile.UserProfile;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
@@ -123,12 +125,10 @@ public class GroupMembersInfo extends BaseActivity {
         list.setOnItemClickListener((parent, viewClicked, position, id) -> {
             Log.d("GroupMembersInfo", "Clicked " + position);
 
-            // TODO: Launch activity when profile issue is complete
             // Pass group member with info to profile activity
-//                Intent intent = Profile.makeIntent(GroupMembersInfo.this, groupMembersWithInfo.get(position) );
-//                startActivity(intent);
+                Intent intent = UserInfo.makeIntent(GroupMembersInfo.this, groupMembersWithInfo.get(position));
+                startActivity(intent);
         });
-
     }
 
     @Override

@@ -33,10 +33,11 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.GroupMembersInfo;
 import com.teal.a276.walkinggroup.activities.Monitor;
-import com.teal.a276.walkinggroup.activities.UserProfile;
+import com.teal.a276.walkinggroup.activities.profile.UserProfile;
 import com.teal.a276.walkinggroup.activities.MyGroups;
 import com.teal.a276.walkinggroup.activities.auth.Login;
 import com.teal.a276.walkinggroup.activities.message.Messages;
@@ -116,34 +117,42 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         startButton = findViewById(R.id.startBtn);
         startButton.setOnClickListener((View v) -> {
 
-            List<String> groupNames = new ArrayList<>();
-            List<Group> memberAndLeaderGroups = new ArrayList<>();
-            memberAndLeaderGroups.addAll(currentUser.getMemberOfGroups());
-            memberAndLeaderGroups.addAll(currentUser.getLeadsGroups());
-            for (int i = 0; i < memberAndLeaderGroups.size(); i++) {
-                groupNames.add(memberAndLeaderGroups.get(i).getGroupDescription());
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<User> call = proxy.getUserByEmail(currentUser.getEmail(), 1l);
+            ServerManager.serverRequest(call, this::updateInfo, this::error);
+        });
+    }
+
+    private void updateInfo(User user) {
+        List<String> groupNames = new ArrayList<>();
+        List<Group> memberAndLeaderGroups = new ArrayList<>();
+
+        memberAndLeaderGroups.addAll(user.getMemberOfGroups());
+        memberAndLeaderGroups.addAll(user.getLeadsGroups());
+
+        for(Group group: memberAndLeaderGroups) {
+            groupNames.add(group.getGroupDescription());
+        }
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.select_group_alertdialog, null);
+
+        Spinner spinner = dialogView.findViewById(R.id.selectGroupSpinner);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, groupNames);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                groupSelected = memberAndLeaderGroups.get(position);
             }
 
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = this.getLayoutInflater();
-            final View dialogView = inflater.inflate(R.layout.select_group_alertdialog, null);
-
-            Spinner spinner = dialogView.findViewById(R.id.selectGroupSpinner);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_spinner_item, groupNames);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(dataAdapter);
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    groupSelected = memberAndLeaderGroups.get(position);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
             alertDialogBuilder.setView(dialogView);
             alertDialogBuilder.setTitle(R.string.choose_group);
@@ -158,7 +167,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
             // Set map refresh for 30 seconds
             createLocationRequest(30000L, 30000L);
-        });
     }
 
     private void setMsgButton() {
@@ -176,7 +184,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Message message = getMessage(dialogView);
-                        // Message members and monitors me
+                        // Message group members and monitors me
                         ServerProxy proxyMonitors = ServerManager.getServerRequest();
                         Call<Message> callMonitors = proxyMonitors.sendMessageToMonitors(currentUser.getId(), message);
                         ServerManager.serverRequest(callMonitors, MapsActivity.this::sendMessage, this::error);
@@ -322,7 +330,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 startActivity(DashBoard.makeIntent(this));
                 break;
             case R.id.userProfile:
-                startActivity(UserProfile.makeIntent(this));
+                startActivity(UserProfile.makeIntent(this, currentUser));
                 break;
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));
@@ -429,7 +437,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     }
 
     private void setButtonVisibility() {
-        if (walkInProgress){
+        if (walkInProgress) {
             endButton.setVisibility(View.VISIBLE);
             startButton.setVisibility(View.INVISIBLE);
             msgButton.setVisibility(View.VISIBLE);
@@ -476,7 +484,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         currentUsers.addAll(currentUser.getMonitorsUsers());
         currentUsers.add(currentUser);
 
-        List<String> userNames = getUserNames();
+        List<String> userNames = getUserNames(group.getLeader());
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -501,11 +509,14 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         return false;
     }
 
-    private List<String> getUserNames() {
+    private List<String> getUserNames(User leader) {
         User user = ModelFacade.getInstance().getCurrentUser();
-        List<User> currentUsers = new ArrayList<>(user.getMonitoredByUsers().size() + 1);
+        List<User> currentUsers = new ArrayList<>(user.getMonitorsUsers().size() + 1);
         currentUsers.addAll(user.getMonitorsUsers());
-        currentUsers.add(user);
+
+        if (!user.getId().equals(leader.getId())) {
+            currentUsers.add(user);
+        }
 
         List<String> userNames = new ArrayList<>();
         for (int j = 0; j < currentUsers.size(); j++) {
@@ -588,6 +599,8 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        addMarker((Group) o);
+        Group group = (Group) o;
+        addMarker(group);
+        currentUser.getLeadsGroups().add(group);
     }
 }

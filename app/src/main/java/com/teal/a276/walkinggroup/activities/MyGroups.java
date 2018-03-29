@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
@@ -50,7 +49,7 @@ public class MyGroups extends BaseActivity {
 
     private void callServerForUserList() {
         ServerProxy proxy = ServerManager.getServerRequest();
-        Call<User> call = proxy.getUserById(user.getId());
+        Call<User> call = proxy.getUserById(user.getId(), 1L);
         ServerManager.serverRequest(call, this::setInfo, this::error);
     }
 
@@ -86,7 +85,10 @@ public class MyGroups extends BaseActivity {
                 if (!messageString.isEmpty()) {
                     Message message = new Message();
                     message.setText(messageString);
+
                     Group groupSelected = leadsGroups.get(position);
+
+                    // Send message
                     ServerProxy proxy = ServerManager.getServerRequest();
                     Call<Message> call = proxy.sendMessageToGroup(groupSelected.getId(), message);
                     ServerManager.serverRequest(call, MyGroups.this::sendMessage, MyGroups.this::error);

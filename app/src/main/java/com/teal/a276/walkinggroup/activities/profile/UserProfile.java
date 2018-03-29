@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.activities;
+package com.teal.a276.walkinggroup.activities.profile;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
@@ -31,13 +32,14 @@ public class UserProfile extends AuthenticationActivity {
     private Button dateBtn;
     private User user;
     private DatePickerDialog.OnDateSetListener datePicker;
+    private static final String USER = "user";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        ModelFacade model = ModelFacade.getInstance();
-        user = model.getCurrentUser();
+        getDataFromIntent();
 
         fillKnownInfo();
         datePicker = (view, year, monthOfYear, dayOfMonth) -> {
@@ -51,23 +53,20 @@ public class UserProfile extends AuthenticationActivity {
         setUpSaveButton();
     }
 
-    private void fillKnownInfo() {
+    protected void fillBasicInfo(boolean editable) {
+
         EditText nameInput = findViewById(R.id.editName);
-        EditText addressInput = findViewById(R.id.editAddress);
         EditText homePhoneInput = findViewById(R.id.editHome);
-        homePhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         EditText cellPhoneInput = findViewById(R.id.editCell);
-        cellPhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         EditText emailInput = findViewById(R.id.editEmail);
-        EditText gradeInput = findViewById(R.id.editGrade);
-        EditText teachersNameInput = findViewById(R.id.editTeacherName);
-        EditText contactInfoInput = findViewById(R.id.editContactInfo);
+
+        nameInput.setEnabled(editable);
+        homePhoneInput.setEnabled(editable);
+        cellPhoneInput.setEnabled(editable);
+        emailInput.setEnabled(editable);
 
         if (!(user.getName() == null)) {
             nameInput.setText(user.getName(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getAddress() == null)) {
-            addressInput.setText(user.getAddress(), TextView.BufferType.EDITABLE);
         }
         if (!(user.getHomePhone() == null)) {
             homePhoneInput.setText(user.getHomePhone(), TextView.BufferType.EDITABLE);
@@ -77,6 +76,22 @@ public class UserProfile extends AuthenticationActivity {
         }
         if (!(user.getEmail() == null)) {
             emailInput.setText(user.getEmail(), TextView.BufferType.EDITABLE);
+        }
+
+        if (editable) {
+            cellPhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+            homePhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        }
+    }
+
+    private void fillKnownInfo() {
+        EditText addressInput = findViewById(R.id.editAddress);
+        EditText gradeInput = findViewById(R.id.editGrade);
+        EditText teachersNameInput = findViewById(R.id.editTeacherName);
+        EditText contactInfoInput = findViewById(R.id.editContactInfo);
+
+        if (!(user.getAddress() == null)) {
+            addressInput.setText(user.getAddress(), TextView.BufferType.EDITABLE);
         }
         if (!(user.getGrade() == null)) {
             gradeInput.setText(user.getGrade(), TextView.BufferType.EDITABLE);
@@ -89,10 +104,12 @@ public class UserProfile extends AuthenticationActivity {
         }
         if (!(user.getBirthYear() == 0)) {
             dateTime.set(user.getBirthYear(), user.getBirthMonth(), Calendar.DATE);
-        }else {
+        } else {
             dateTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
                     Calendar.getInstance().get(Calendar.DATE));
         }
+
+        fillBasicInfo(true);
     }
 
     private void setUpSaveButton() {
@@ -122,7 +139,7 @@ public class UserProfile extends AuthenticationActivity {
             String teachersName = teachersNameInput.getText().toString();
             String contactInfo = contactInfoInput.getText().toString();
 
-            if(!User.validateEmail(email)){
+            if (!User.validateEmail(email)) {
                 emailInput.setError(getString(R.string.email_invalid));
                 toggleSpinner(View.INVISIBLE);
                 return;
@@ -167,18 +184,18 @@ public class UserProfile extends AuthenticationActivity {
     }
 
     boolean hasValidProfileInfo(EditText name, EditText address, EditText homePhone, EditText cellPhone,
-                                EditText email){
+                                EditText email) {
         boolean validInputs = true;
 
-        if(isEmpty(name)){
+        if (isEmpty(name)) {
             name.setError(getString(R.string.empty_name));
             validInputs = false;
         }
-        if (isEmpty(address)){
+        if (isEmpty(address)) {
             address.setError(getString(R.string.empty_address));
             validInputs = false;
         }
-        if (isEmpty(homePhone)){
+        if (isEmpty(homePhone)) {
             homePhone.setError(getString(R.string.empty_home));
             validInputs = false;
         }
@@ -197,7 +214,7 @@ public class UserProfile extends AuthenticationActivity {
         return name.getText().toString().isEmpty();
     }
 
-    void successfulSave(User user){
+    void successfulSave(User user) {
         ModelFacade.getInstance().setCurrentUser(user);
         //update shared Prefs
         SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
@@ -205,7 +222,7 @@ public class UserProfile extends AuthenticationActivity {
         editor.putString(sharePrefUser, user.getEmail());
         editor.apply();
 
-        Toast.makeText(this, R.string.updated_profile,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.updated_profile, Toast.LENGTH_SHORT).show();
 
         finish();
     }
@@ -215,7 +232,16 @@ public class UserProfile extends AuthenticationActivity {
         runOnUiThread(() -> spinner.setVisibility(visibility));
     }
 
-    public static Intent makeIntent(Context context) {
-        return new Intent(context, UserProfile.class);
+    public static Intent makeIntent(Context context, User user) {
+        Gson gson = new Gson();
+        Intent intent = new Intent(context, UserProfile.class);
+        intent.putExtra(USER, gson.toJson(user));
+        return intent;
+    }
+
+    public void getDataFromIntent() {
+        Gson gson = new Gson();
+        String strObj = getIntent().getStringExtra(USER);
+        user = gson.fromJson(strObj, User.class);
     }
 }
