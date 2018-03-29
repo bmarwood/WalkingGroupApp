@@ -28,6 +28,7 @@ import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerResult;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -98,13 +99,9 @@ public class DashBoard extends AbstractMapActivity {
 
     private void monitorsResult(List<User> users) {
         for (User user : users) {
-
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
-            ServerManager.serverRequest(call, result -> {
-                DashBoard.this.placeMonitorsOnMap(result, user.getName());
-            }, this::error);
-
+            ServerManager.serverRequest(call, result -> DashBoard.this.placeMonitorsOnMap(result, user.getName()), this::error);
 
             List<Group> groups = user.getMemberOfGroups();
             for (Group group : groups) {
@@ -135,13 +132,11 @@ public class DashBoard extends AbstractMapActivity {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         Date date = format.parse(timestamp);
         Long timeSince = System.currentTimeMillis() - date.getTime();
-        return String.format("%d min, %d sec",
+        return String.format(Locale.getDefault(), "%d min, %d sec",
                 TimeUnit.MILLISECONDS.toMinutes(timeSince),
                 TimeUnit.MILLISECONDS.toSeconds(timeSince) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeSince))
         );
-
-
     }
 
     private void addLeadersMarker(User user) {
