@@ -49,10 +49,10 @@ import retrofit2.Call;
 
 public class DashBoard extends AbstractMapActivity implements Observer{
 
-    public static final int updateDelay = 30000;
+    public static final int MAP_UPDATE_RATE = 30000;
     private User user;
     Timer timer = new Timer();
-    String messageCount = "UNREAD MSG: ";
+    String messageCount = getString(R.string.dash_unread_msg);
     Button msgButton;
     MessageUpdater messageUpdater;
 
@@ -105,7 +105,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     @Override
     public void onResume() {
         super.onResume();
-        messageUpdater = new MessageUpdater(user, this::error, updateDelay);
+        messageUpdater = new MessageUpdater(user, this::error);
         messageUpdater.addObserver(this);
     }
 
@@ -157,7 +157,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
                     ServerManager.serverRequest(call, DashBoard.this::monitorsResult, DashBoard.this::error);
                 });
             }
-        }, updateDelay, updateDelay);
+        }, MAP_UPDATE_RATE, MAP_UPDATE_RATE);
     }
 
     private void monitorsResult(List<User> users) {

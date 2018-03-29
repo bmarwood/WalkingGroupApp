@@ -16,20 +16,22 @@ import retrofit2.Call;
 /**
  * Class to handle polling the server for message updates. When created it starts polling the server.
  */
+
 public class MessageUpdater extends Observable {
     private Timer timer = new Timer();
+    final private int UPDATE_RATE = 60000;
 
-    public MessageUpdater(final User user, final ServerError errorCallback, long updateRate) {
-        subscribeForUpdates(user, errorCallback, updateRate);
+    public MessageUpdater(final User user, final ServerError errorCallback) {
+        subscribeForUpdates(user, errorCallback);
     }
 
-    private void subscribeForUpdates(final User user, final ServerError errorCallback, long updateRate) {
+    private void subscribeForUpdates(final User user, final ServerError errorCallback) {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 getMessages(user, errorCallback);
             }
-        }, updateRate, updateRate);
+        }, UPDATE_RATE, UPDATE_RATE);
     }
 
     private void getMessages(User user, ServerError errorCallback) {
