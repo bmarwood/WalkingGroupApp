@@ -50,7 +50,7 @@ import retrofit2.Call;
 
 public class DashBoard extends AbstractMapActivity implements Observer{
 
-    public static final int MAP_UPDATE_RATE = 30000;
+    public static final int MAP_UPDATE_RATE = 5000;
     private User user;
     Timer timer = new Timer();
     String messageCount;
@@ -76,7 +76,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
                     .addApi(LocationServices.API)
                     .build();
         }
-        createLocationRequest(0L, 0L);
+        createLocationRequest(5000L, 5000L);
 
     }
 

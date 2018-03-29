@@ -330,7 +330,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 startActivity(DashBoard.makeIntent(this));
                 break;
             case R.id.userProfile:
-                startActivity(UserProfile.makeIntent(this, currentUser));
+                ServerProxy proxy = ServerManager.getServerRequest();
+                Call<User> call = proxy.getUserById(currentUser.getId(), null);
+                ServerManager.serverRequest(call, MapsActivity.this::getUser, this::error);
                 break;
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));
@@ -352,6 +354,10 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         }
 
         return true;
+    }
+
+    private void getUser(User user) {
+        startActivity(UserProfile.makeIntent(this, user));
     }
 
     private void logout() {
@@ -389,6 +395,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         super.onResume();
         groupManager.addObserver(this);
         setButtonVisibility();
+        currentUser = ModelFacade.getInstance().getCurrentUser();
     }
 
     @Override

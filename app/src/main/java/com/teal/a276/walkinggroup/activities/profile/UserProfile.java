@@ -227,6 +227,11 @@ public class UserProfile extends AuthenticationActivity {
         finish();
     }
 
+    protected void error(String error) {
+        toggleSpinner(View.INVISIBLE);
+        super.error(error);
+    }
+
     void toggleSpinner(int visibility) {
         final ProgressBar spinner = findViewById(R.id.authenticationProgress);
         runOnUiThread(() -> spinner.setVisibility(visibility));

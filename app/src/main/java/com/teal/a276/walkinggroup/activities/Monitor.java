@@ -66,20 +66,32 @@ public class Monitor extends BaseActivity {
         monitoringList.setAdapter(monitorsAdapter);
         monitoringList.setOnItemClickListener((parent, view, position, id) -> {
             // Pass group member with info to profile activity
-            User monitoringUser = user.getMonitorsUsers().get(position);
-            Intent intent = UserProfile.makeIntent(Monitor.this, monitoringUser);
-            startActivity(intent);
+            User selectedUser = this.user.getMonitorsUsers().get(position);
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<User> call = proxy.getUserById(selectedUser.getId(), null);
+            ServerManager.serverRequest(call, this::getUsers, this::error);
         });
 
         monitoredByAdapter = new ListItemAdapter(this, user.getMonitoredByUsers(), false);
         ListView monitoredBy = findViewById(R.id.monitoredByListView);
         monitoredBy.setOnItemClickListener((parent, view, position, id) -> {
             // Pass group member with info to profile activity
-            User monitoredByUser = user.getMonitoredByUsers().get(position);
-            Intent intent = UserInfo.makeIntent(Monitor.this, monitoredByUser);
-            startActivity(intent);
+            User selectedUser = this.user.getMonitoredByUsers().get(position);
+            ServerProxy proxy = ServerManager.getServerRequest();
+            Call<User> call = proxy.getUserById(selectedUser.getId(), null);
+            ServerManager.serverRequest(call, this::getMonitoredByUsers, this::error);
         });
         monitoredBy.setAdapter(monitoredByAdapter);
+    }
+
+    private void getMonitoredByUsers(User user) {
+        Intent intent = UserInfo.makeIntent(Monitor.this, user);
+        startActivity(intent);
+    }
+
+    private void getUsers(User user) {
+        Intent intent = UserProfile.makeIntent(Monitor.this, user);
+        startActivity(intent);
     }
 
     private void removeMonitoree(Void ans, User user) {
