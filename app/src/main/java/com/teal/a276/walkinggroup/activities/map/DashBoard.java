@@ -2,6 +2,7 @@ package com.teal.a276.walkinggroup.activities.map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -52,7 +53,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     public static final int MAP_UPDATE_RATE = 30000;
     private User user;
     Timer timer = new Timer();
-    String messageCount = getString(R.string.dash_unread_msg);
+    String messageCount;
     Button msgButton;
     MessageUpdater messageUpdater;
 
@@ -66,6 +67,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment);
         mapFragment.getMapAsync(this);
+        messageCount = getString(R.string.dash_unread_msg);
 
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(this)
@@ -176,17 +178,22 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         }
     }
 
+    private String generateMarkerTitle(UserLocation location, String name) {
+        String timeStamp = "";
+        try {
+            timeStamp = generateTimeCode(location.getTimestamp());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return name + getString(R.string.last_time_update) + timeStamp;
+    }
+
     private void placeMonitorMarkerOnMap(UserLocation location, String name) {
         if (!(location.getLat() == null)) {
             LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
             MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-            String timeStamp = "";
-            try {
-                timeStamp = generateTimeCode(location.getTimestamp());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            markerOptions.title(name + " - Last Updated: " + timeStamp);
+            markerOptions.title(generateMarkerTitle(location, name));
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
             map.addMarker(markerOptions);
         }
@@ -213,12 +220,11 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         if (!(location.getLat() == null)) {
             LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
             MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-            markerOptions.title(name);
+            markerOptions.title(generateMarkerTitle(location, name));
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
             map.addMarker(markerOptions);
         }
     }
-
 
     @Override
     public void update(Observable o, Object arg) {

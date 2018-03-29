@@ -85,7 +85,6 @@ public class CreateGroup extends BaseActivity {
                 return;
             }
 
-            //ModelFacade.getInstance().getGroupManager().addNewGroup(leadersEmailStr, nameValStr, latlng, CreateGroup.this::error);
             finish();
         });
 

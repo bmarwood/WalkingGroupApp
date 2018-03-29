@@ -150,7 +150,7 @@ public class UserProfile extends AuthenticationActivity {
             user.setEmergencyContactInfo(contactInfo);
 
             ServerProxy proxy = ServerManager.getServerRequest();
-            Call<User> caller = proxy.updateUser(user.getId(), user);
+            Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
             ServerManager.serverRequest(caller, UserProfile.this::successfulSave,
                     UserProfile.this::error);
         });

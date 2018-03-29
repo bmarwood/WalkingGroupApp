@@ -75,6 +75,7 @@
     <string name="leader_of_groups">Leader of Groups</string>
     <string name="my_groups">My Groups</string>
     <string name="post">Post</string>
+    <string name="Emergency">Emergency</string>
     <string name="msg_group">Message Group: %1$s</string>
 
     <string name="dashboard">Dashboard</string>
@@ -139,5 +140,7 @@
     <string name="choose_group">Choose group to walk with</string>
     <string name="dash_unread_msg">UNREAD MSG:</string>
 
-
+    <string name="last_time_update"> - Last Updated: </string>
+    <string name="panic_txt">Panic:</string>
+    <string name="emerg_txt">Emergency:</string>
 </resources>
