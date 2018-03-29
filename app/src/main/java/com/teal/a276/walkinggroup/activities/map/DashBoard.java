@@ -98,7 +98,7 @@ public class DashBoard extends AbstractMapActivity implements Observer {
             List<Group> groups = user.getMemberOfGroups();
             for(Group group : groups){
                 ServerProxy proxyForGroup = ServerManager.getServerRequest();
-                Call<User> callForGroup = proxyForGroup.getUserById(group.getLeader().getId());
+                Call<User> callForGroup = proxyForGroup.getUserById(group.getLeader().getId(), null);
                 ServerManager.serverRequest(callForGroup, this::addLeadersMarker, this::error);
             }
         }

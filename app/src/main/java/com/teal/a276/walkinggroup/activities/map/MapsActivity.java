@@ -185,11 +185,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Message message = getMessage(dialogView);
-                        // Message members and monitors me
-                        ServerProxy proxyGroup = ServerManager.getServerRequest();
-                        Call<Message> callGroup = proxyGroup.sendMessageToGroup(groupSelected.getId(), message);
-                        ServerManager.serverRequest(callGroup, MapsActivity.this::sendMessage, this::error);
-
+                        // Message group members and monitors me
                         ServerProxy proxyMonitors = ServerManager.getServerRequest();
                         Call<Message> callMonitors = proxyMonitors.sendMessageToMonitors(currentUser.getId(), message);
                         ServerManager.serverRequest(callMonitors, MapsActivity.this::sendMessage, this::error);
@@ -436,7 +432,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     }
 
     private void setButtonVisibility() {
-        if (walkInProgress){
+        if (walkInProgress) {
             endButton.setVisibility(View.VISIBLE);
             startButton.setVisibility(View.INVISIBLE);
             msgButton.setVisibility(View.VISIBLE);
@@ -513,7 +509,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         List<User> currentUsers = new ArrayList<>(user.getMonitorsUsers().size() + 1);
         currentUsers.addAll(user.getMonitorsUsers());
 
-        if(!user.getId().equals(leader.getId())) {
+        if (!user.getId().equals(leader.getId())) {
             currentUsers.add(user);
         }
 

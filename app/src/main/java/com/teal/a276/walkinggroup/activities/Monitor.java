@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.profile.UserInfo;
+import com.teal.a276.walkinggroup.activities.profile.UserProfile;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -61,9 +64,21 @@ public class Monitor extends BaseActivity {
         monitorsAdapter = new ListItemAdapter(this, user.getMonitorsUsers(), true);
         ListView monitoringList = findViewById(R.id.monitoringListView);
         monitoringList.setAdapter(monitorsAdapter);
+        monitoringList.setOnItemClickListener((parent, view, position, id) -> {
+            // Pass group member with info to profile activity
+        User monitoringUser = user.getMonitorsUsers().get(position);
+        Intent intent = UserProfile.makeIntent(Monitor.this, monitoringUser);
+        startActivity(intent);
+        });
 
         monitoredByAdapter = new ListItemAdapter(this, user.getMonitoredByUsers(), false);
         ListView monitoredBy = findViewById(R.id.monitoredByListView);
+        monitoredBy.setOnItemClickListener((parent, view, position, id) -> {
+            // Pass group member with info to profile activity
+            User monitoredByUser = user.getMonitoredByUsers().get(position);
+            Intent intent = UserInfo.makeIntent(Monitor.this, monitoredByUser);
+            startActivity(intent);
+        });
         monitoredBy.setAdapter(monitoredByAdapter);
     }
 
