@@ -163,6 +163,10 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
     }
 
     private void addInitialMarkers() {
+        if(lastLocation == null) {
+            return;
+        }
+        
         currentLocation = locationToLatLng(lastLocation);
         meetingMarker = map.addMarker(new MarkerOptions().
                 position(currentLocation).
