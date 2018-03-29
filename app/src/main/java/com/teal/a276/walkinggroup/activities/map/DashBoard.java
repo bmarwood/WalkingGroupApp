@@ -44,6 +44,7 @@ import retrofit2.Call;
 
 public class DashBoard extends AbstractMapActivity implements Observer{
 
+    public static final int updateDelay = 30000;
     private User user;
     Timer timer = new Timer();
     String messageCount = "UNREAD MSG: ";
@@ -99,7 +100,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     @Override
     public void onResume() {
         super.onResume();
-        messageUpdater = new MessageUpdater(user, this::error, 30000);
+        messageUpdater = new MessageUpdater(user, this::error, updateDelay);
         messageUpdater.addObserver(this);
     }
 
@@ -123,7 +124,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     private void updateUnreadMsg(List<Message> messages){
         String unreadCount = String.valueOf(messages.size());
 
-        messageCount = "UNREAD MSG: " + unreadCount;
+        messageCount = getString(R.string.dashboard_unread_message) + unreadCount;
         msgButton.setText(messageCount);
     }
 
@@ -146,13 +147,12 @@ public class DashBoard extends AbstractMapActivity implements Observer{
             public void run() {
                 new Handler(Looper.getMainLooper()).post(() -> {
                     map.clear();
-                    //Toast.makeText(DashBoard.this, "Timer", Toast.LENGTH_SHORT).show();
                     ServerProxy proxy = ServerManager.getServerRequest();
                     Call<List<User>> call = proxy.getMonitors(user.getId(), 1L);
                     ServerManager.serverRequest(call, DashBoard.this::monitorsResult, DashBoard.this::error);
                 });
             }
-        },30000, 30000);
+        }, updateDelay, updateDelay);
     }
 
     private void monitorsResult(List<User> users) {

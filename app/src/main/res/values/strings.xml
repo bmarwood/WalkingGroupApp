@@ -89,7 +89,8 @@
     <string name="embedded_location_not_set">UserLocation not set</string>
     <string name="embedded_destination">Destination</string>
 
-
+    <!-- Strings related to Dashboard-->
+    <string name="dashboard_unread_message">UNREAD MSG:</string>
 
     <string name="user_profile">User Profile</string>
     <string name="name">Name</string>
@@ -136,6 +137,7 @@
     <string name="panic">Panic</string>
     <string name="send_message">Send a message</string>
     <string name="choose_group">Choose group to walk with</string>
+
 
 
 </resources>
