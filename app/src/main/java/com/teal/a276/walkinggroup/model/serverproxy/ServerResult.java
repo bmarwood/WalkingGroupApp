@@ -1,5 +1,7 @@
 package com.teal.a276.walkinggroup.model.serverproxy;
 
+import java.text.ParseException;
+
 /**
  * Callback for server request between ServerManagers and Views
  * If a request has no return type in the body then result can be empty.
