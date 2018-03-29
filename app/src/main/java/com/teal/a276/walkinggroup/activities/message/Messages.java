@@ -29,8 +29,6 @@ import retrofit2.Call;
  * Activity that handles displaying all read and unread messages the user has received
  */
 public class Messages extends BaseActivity implements Observer {
-    //1 minute in ms
-    private final long UPDATE_RATE = 60000;
     private RecyclerView unreadMessagesView;
     private ArrayAdapter<String> readMessagesAdapter;
     private ListView readMessagesView;
@@ -80,7 +78,6 @@ public class Messages extends BaseActivity implements Observer {
 
     private void unreadMessagesResult(List<Message> messages) {
         this.unreadMessages = messages;
-        messageUpdater.addCacheItems(messages);
         RecyclerView.Adapter adapter = new MessagesAdapter(messages);
         unreadMessagesView.setAdapter(adapter);
     }
@@ -129,7 +126,7 @@ public class Messages extends BaseActivity implements Observer {
     @Override
     public void onResume() {
         super.onResume();
-        messageUpdater = new MessageUpdater(user, this::error, UPDATE_RATE);
+        messageUpdater = new MessageUpdater(user, this::error);
         messageUpdater.addObserver(this);
     }
 
@@ -137,6 +134,7 @@ public class Messages extends BaseActivity implements Observer {
     public void update(Observable observable, Object o) {
         List<Message> messages = (List<Message>)o;
         MessagesAdapter adapter = (MessagesAdapter) unreadMessagesView.getAdapter();
+        adapter.clear();
         adapter.addAll(messages);
     }
 }

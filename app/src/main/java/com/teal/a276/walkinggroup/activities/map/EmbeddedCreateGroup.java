@@ -72,7 +72,7 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
             map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             meetingMarker = map.addMarker(new MarkerOptions().
                     position(latLng).
-                    title(String.valueOf(R.string.meeting)));
+                    title(getString(R.string.meeting)));
             meetingMarker.showInfoWindow();
 
             meetingLat = latLng.latitude;
@@ -98,7 +98,7 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
                 destinationMarker.remove();
                 destinationMarker = map.addMarker(new MarkerOptions().
                         position(latLng).
-                        title("Destination").
+                        title(getString(R.string.embedded_destination)).
                         icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
                 destinationMarker.setVisible(true);
                 destinationMarker.showInfoWindow();
@@ -131,7 +131,7 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
             if((meetingLat==0) && (meetingLng==0)){
                 Toast.makeText(
                         EmbeddedCreateGroup.this,
-                        "UserLocation not set",
+                        R.string.embedded_location_not_set,
                         Toast.LENGTH_SHORT).show();
                 return;
             }
