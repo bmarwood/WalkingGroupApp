@@ -29,16 +29,13 @@ import java.util.Observer;
  * Class to create new groups, allowing users to select meeting/dest on mapView
  */
 
-public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer {
+public class EmbeddedCreateGroup extends AbstractMapActivity {
 
-    private LatLng currentLocation;
-    double meetingLat = 0;
-    double meetingLng = 0;
-    double destLat = 0;
-    double destLng = 0;
-    Marker meetingMarker;
-    Marker destinationMarker;
-    boolean isClicked = false;
+    private LatLng meetingLocation;
+    private LatLng destinationLocation;
+    private Marker meetingMarker;
+    private Marker destinationMarker;
+    private boolean isClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +73,8 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
                     MarkerColor.CYAN);
             meetingMarker.showInfoWindow();
 
-            meetingLat = latLng.latitude;
-            meetingLng = latLng.longitude;
-            Log.d("Lat (meeting)", "Lat: " + meetingLat + "Long: " + meetingLng);
+            meetingLocation = latLng;
+            Log.d("Lat (meeting)", "Lat: " + meetingLocation.latitude + "Long: " + meetingLocation.longitude);
         });
     }
 
@@ -86,10 +82,10 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         Button btn = findViewById(R.id.selectDestButton);
         btn.setOnClickListener(v -> {
             isClicked = !isClicked;
-            if(isClicked){
+            if(isClicked) {
                 Toast.makeText(EmbeddedCreateGroup.this, R.string.leader_destination, Toast.LENGTH_SHORT).show();
                 btn.setText(R.string.embedded_set_meeting);
-            }else{
+            } else {
                 Toast.makeText(EmbeddedCreateGroup.this, R.string.user_destination, Toast.LENGTH_SHORT).show();
                 btn.setText(R.string.embedded_set_dest);
                 setMeetingCoordinates();
@@ -104,10 +100,9 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
                 destinationMarker.setVisible(true);
                 destinationMarker.showInfoWindow();
 
-                destLat = latLng.latitude;
-                destLng = latLng.longitude;
-
-                Log.d("Lat (Dest)", "DestLat: " + destLat + "DestLng: " + destLng);
+                destinationLocation = latLng;
+                Log.d("Lat (Dest)", "DestLat: " + destinationLocation.latitude +
+                        "DestLng: " + destinationLocation.longitude);
             });
         });
     }
@@ -121,27 +116,31 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
             EditText leadersEmailVal = findViewById(R.id.embeddedEmailEdit);
             String leadersEmailStr = leadersEmailVal.getText().toString();
 
-            if(nameValStr.isEmpty()){
+            if(nameValStr.isEmpty()) {
                 nameVal.setError(getString(R.string.empty_group_name));
                 return;
             }
-            if(!User.validateEmail(leadersEmailStr)){
+            if(!User.validateEmail(leadersEmailStr)) {
                 leadersEmailVal.setError(getString(R.string.invalid_email));
                 return;
             }
-            if((meetingLat==0) && (meetingLng==0)){
+            if((meetingLocation.latitude == 0) && (meetingLocation.longitude == 0)) {
                 Toast.makeText(
                         EmbeddedCreateGroup.this,
                         R.string.embedded_location_not_set,
                         Toast.LENGTH_SHORT).show();
                 return;
             }
-            Log.d("Coords", "meetingLat/Lng: " + meetingLat + ", " + meetingLng + "destLat/Lng:" + destLat + destLng);
+            Log.d("Coords", "meetingLat/Lng: " + meetingLocation.latitude + "/"
+                    + meetingLocation.longitude + " destLat/Lng:" + destinationLocation.latitude
+                    + "/" + destinationLocation.longitude);
 
-            LatLng meetingLatlng = new LatLng(meetingLat, meetingLng);
-            LatLng destLatlng = new LatLng(destLat, destLng);
-
-            ModelFacade.getInstance().getGroupManager().addNewGroup(leadersEmailStr, nameValStr, meetingLatlng, destLatlng, EmbeddedCreateGroup.this::error);
+            ModelFacade.getInstance().getGroupManager().addNewGroup(
+                    leadersEmailStr,
+                    nameValStr,
+                    meetingLocation,
+                    destinationLocation,
+                    EmbeddedCreateGroup.this::error);
 
             finish();
         });
@@ -164,30 +163,21 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
     }
 
     private void addInitialMarkers() {
-        currentLocation = locationToLatLng(lastLocation);
+        meetingLocation = locationToLatLng(lastLocation);
         meetingMarker = map.addMarker(new MarkerOptions().
-                position(currentLocation).
-                title("Meeting"));
-        Log.d("initial location", "Lat" + currentLocation.latitude + "Lng" + currentLocation.longitude);
+                position(meetingLocation).
+                title(getString(R.string.meeting)));
 
-        //For case when user wants to choose current location as starting location.
-        meetingLat = currentLocation.latitude;
-        meetingLng = currentLocation.longitude;
-        Log.d("initial location", "Lat" + meetingLat + "Lng" + meetingLng);
+        Log.d("initial location", "Lat" + meetingLocation.latitude + "Lng" + meetingLocation.longitude);
 
         destinationMarker = map.addMarker(new MarkerOptions().
-                position(currentLocation).
-                title("Destination"));
+                position(meetingLocation).
+                title(getString(R.string.destination)));
         destinationMarker.setVisible(false);
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         return false;
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-
     }
 }

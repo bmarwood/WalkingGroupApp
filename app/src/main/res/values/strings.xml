@@ -87,6 +87,7 @@
     <string name="leader_destination">Please Select Destination Location</string>
     <string name="user_destination">Please Select Meeting Location</string>
     <string name="meeting">Meeting</string>
+    <string name="destination">Destination</string>
     <string name="embedded_location_not_set">UserLocation not set</string>
     <string name="embedded_destination">Destination</string>
 
