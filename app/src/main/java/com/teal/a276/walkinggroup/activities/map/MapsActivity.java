@@ -60,9 +60,6 @@ import java.util.TimerTask;
 
 import retrofit2.Call;
 
-import static com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity.sharePrefLogger;
-import static com.teal.a276.walkinggroup.activities.auth.AuthenticationActivity.sharePrefUser;
-
 /**
  * Displays Google maps interface for user to interact with
  */
@@ -361,20 +358,13 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     }
 
     private void logout() {
-        logoutPrefs();
+        saveAccountLoginInfo(null, null);
         ServerManager.logout();
         ModelFacade.getInstance().setCurrentUser(null);
         ModelFacade.getInstance().setAppResources(null);
 
         startActivity(Login.makeIntent(this));
         finish();
-    }
-
-    private void logoutPrefs() {
-        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(sharePrefUser, null);
-        editor.apply();
     }
 
     public static Intent makeIntent(Context context) {

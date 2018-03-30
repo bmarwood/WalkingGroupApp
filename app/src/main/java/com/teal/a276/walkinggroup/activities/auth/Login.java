@@ -57,9 +57,9 @@ public class Login extends AuthenticationActivity {
     }
 
     private void checkForLogin() {
-        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, Context.MODE_PRIVATE);
-        String userName = prefs.getString(sharePrefUser, null);
-        String password = prefs.getString(sharePrefPassword, null);
+        SharedPreferences prefs = getSharedPreferences(SHARED_PREF_LOGGER, Context.MODE_PRIVATE);
+        String userName = prefs.getString(SHARED_PREF_USERNAME, null);
+        String password = prefs.getString(SHARED_PREF_PASSWORD, null);
 
         if (userName != null && !userName.isEmpty()) {
             switcher.showNext();

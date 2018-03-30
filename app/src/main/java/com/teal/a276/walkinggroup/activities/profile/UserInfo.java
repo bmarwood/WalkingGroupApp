@@ -82,11 +82,11 @@ public class UserInfo extends UserProfile {
             TextView email = itemView.findViewById(R.id.emailTxt);
             email.setText(selectedUser.getEmail());
 
-            TextView hPhone = itemView.findViewById(R.id.homeTxt);
-            hPhone.setText(selectedUser.getHomePhone());
+            TextView homePhone = itemView.findViewById(R.id.homeTxt);
+            homePhone.setText(selectedUser.getHomePhone());
 
-            TextView cPhone = itemView.findViewById(R.id.cellTxt);
-            cPhone.setText(selectedUser.getCellPhone());
+            TextView cellPhone = itemView.findViewById(R.id.cellTxt);
+            cellPhone.setText(selectedUser.getCellPhone());
 
             return itemView;
         }

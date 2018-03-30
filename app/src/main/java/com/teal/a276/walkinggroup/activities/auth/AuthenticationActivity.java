@@ -20,9 +20,6 @@ import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.Comp
  */
 
 public abstract class AuthenticationActivity extends BaseActivity {
-    public static final String sharePrefLogger = "Logger";
-    public static final String sharePrefUser = "userName";
-    static final String sharePrefPassword = "password";
 
     User user = new User();
 
@@ -57,12 +54,7 @@ public abstract class AuthenticationActivity extends BaseActivity {
 
         String email = emailInput.getText().toString();
         String password = passwordInput.getText().toString();
-
-        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(sharePrefUser, email);
-        editor.putString(sharePrefPassword, password);
-        editor.apply();
+        saveAccountLoginInfo(email, password);
     }
 
     boolean validInput(EditText emailInput, EditText passwordInput) {

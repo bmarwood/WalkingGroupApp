@@ -53,8 +53,28 @@ public class UserProfile extends AuthenticationActivity {
         setUpSaveButton();
     }
 
-    protected void fillBasicInfo(boolean editable) {
+    private void fillKnownInfo() {
+        EditText addressInput = findViewById(R.id.editAddress);
+        EditText gradeInput = findViewById(R.id.editGrade);
+        EditText teachersNameInput = findViewById(R.id.editTeacherName);
+        EditText contactInfoInput = findViewById(R.id.editContactInfo);
 
+        addUserInfoToTextInput(user.getAddress(), addressInput);
+        addUserInfoToTextInput(user.getGrade(), gradeInput);
+        addUserInfoToTextInput(user.getTeacherName(), teachersNameInput);
+        addUserInfoToTextInput(user.getEmergencyContactInfo(), contactInfoInput);
+
+        if (user.getBirthYear() != 0) {
+            dateTime.set(user.getBirthYear(), user.getBirthMonth(), Calendar.DATE);
+        } else {
+            dateTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
+                    Calendar.getInstance().get(Calendar.DATE));
+        }
+
+        fillBasicInfo(true);
+    }
+
+    protected void fillBasicInfo(boolean editable) {
         EditText nameInput = findViewById(R.id.editName);
         EditText homePhoneInput = findViewById(R.id.editHome);
         EditText cellPhoneInput = findViewById(R.id.editCell);
@@ -65,51 +85,19 @@ public class UserProfile extends AuthenticationActivity {
         cellPhoneInput.setEnabled(editable);
         emailInput.setEnabled(editable);
 
-        if (!(user.getName() == null)) {
-            nameInput.setText(user.getName(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getHomePhone() == null)) {
-            homePhoneInput.setText(user.getHomePhone(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getCellPhone() == null)) {
-            cellPhoneInput.setText(user.getCellPhone(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getEmail() == null)) {
-            emailInput.setText(user.getEmail(), TextView.BufferType.EDITABLE);
-        }
+        addUserInfoToTextInput(user.getName(), nameInput);
+        addUserInfoToTextInput(user.getHomePhone(), homePhoneInput);
+        addUserInfoToTextInput(user.getCellPhone(), cellPhoneInput);
+        addUserInfoToTextInput(user.getEmail(), emailInput);
 
-        if (editable) {
-            cellPhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-            homePhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-        }
+        cellPhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        homePhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
 
-    private void fillKnownInfo() {
-        EditText addressInput = findViewById(R.id.editAddress);
-        EditText gradeInput = findViewById(R.id.editGrade);
-        EditText teachersNameInput = findViewById(R.id.editTeacherName);
-        EditText contactInfoInput = findViewById(R.id.editContactInfo);
-
-        if (!(user.getAddress() == null)) {
-            addressInput.setText(user.getAddress(), TextView.BufferType.EDITABLE);
+    private void addUserInfoToTextInput(String info, EditText input) {
+        if(info != null) {
+            input.setText(info, TextView.BufferType.EDITABLE);
         }
-        if (!(user.getGrade() == null)) {
-            gradeInput.setText(user.getGrade(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getTeacherName() == null)) {
-            teachersNameInput.setText(user.getTeacherName(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getEmergencyContactInfo() == null)) {
-            contactInfoInput.setText(user.getEmergencyContactInfo(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getBirthYear() == 0)) {
-            dateTime.set(user.getBirthYear(), user.getBirthMonth(), Calendar.DATE);
-        } else {
-            dateTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
-                    Calendar.getInstance().get(Calendar.DATE));
-        }
-
-        fillBasicInfo(true);
     }
 
     private void setUpSaveButton() {
@@ -216,14 +204,10 @@ public class UserProfile extends AuthenticationActivity {
 
     void successfulSave(User user) {
         ModelFacade.getInstance().setCurrentUser(user);
-        //update shared Prefs
-        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(sharePrefUser, user.getEmail());
-        editor.apply();
+        //update shared Prefs, password is always null from the server
+        saveAccountLoginInfo(user.getEmail(), null);
 
         Toast.makeText(this, R.string.updated_profile, Toast.LENGTH_SHORT).show();
-
         finish();
     }
 
@@ -244,7 +228,7 @@ public class UserProfile extends AuthenticationActivity {
         return intent;
     }
 
-    public void getDataFromIntent() {
+    protected void getDataFromIntent() {
         Gson gson = new Gson();
         String strObj = getIntent().getStringExtra(USER);
         user = gson.fromJson(strObj, User.class);
