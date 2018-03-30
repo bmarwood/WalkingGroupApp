@@ -2,7 +2,6 @@ package com.teal.a276.walkinggroup.activities.map;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,10 +11,7 @@ import android.widget.Button;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.message.Messages;
 import com.teal.a276.walkinggroup.model.ModelFacade;
@@ -84,7 +80,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     public void onConnected(@Nullable Bundle bundle) {
         setUpMsgButton();
         setUpMap();
-        placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
+        placeCurrentLocationMarker();
         if(updateLocation) {
             startLocationUpdates();
         }
@@ -195,7 +191,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         }
 
         String markerTitle = generateMarkerTitle(location, name);
-        placeMarkerWithColor(locationToLatLng(location) ,markerTitle, color);
+        placeMarker(locationToLatLng(location) ,markerTitle, color);
     }
 
     private String generateTimeCode(String timestamp) throws ParseException {

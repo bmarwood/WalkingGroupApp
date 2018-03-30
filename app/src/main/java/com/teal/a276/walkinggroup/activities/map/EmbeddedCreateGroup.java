@@ -14,16 +14,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
-
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Class to create new groups, allowing users to select meeting/dest on mapView
@@ -35,6 +30,8 @@ public class EmbeddedCreateGroup extends AbstractMapActivity {
     private LatLng destinationLocation;
     private Marker meetingMarker;
     private Marker destinationMarker;
+    private MarkerColor meetingColor = MarkerColor.CYAN;
+    private MarkerColor destinationColor = MarkerColor.RED;
     private boolean isClicked = false;
 
     @Override
@@ -63,46 +60,25 @@ public class EmbeddedCreateGroup extends AbstractMapActivity {
         return new Intent(context, EmbeddedCreateGroup.class);
     }
 
-    private void setMeetingCoordinates(){
-        map.setOnMapClickListener(latLng -> {
-            meetingMarker.remove();
-            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            meetingMarker = placeMarkerWithColor(
-                    latLng,
-                    getString(R.string.embedded_set_meeting),
-                    MarkerColor.CYAN);
-            meetingMarker.showInfoWindow();
-
-            meetingLocation = latLng;
-            Log.d("Lat (meeting)", "Lat: " + meetingLocation.latitude + "Long: " + meetingLocation.longitude);
-        });
-    }
-
     private void setupSelectDestinationButton(){
         Button btn = findViewById(R.id.selectDestButton);
         btn.setOnClickListener(v -> {
             isClicked = !isClicked;
-            if(isClicked) {
-                Toast.makeText(EmbeddedCreateGroup.this, R.string.leader_destination, Toast.LENGTH_SHORT).show();
-                btn.setText(R.string.embedded_set_meeting);
-            } else {
-                Toast.makeText(EmbeddedCreateGroup.this, R.string.user_destination, Toast.LENGTH_SHORT).show();
-                btn.setText(R.string.embedded_set_dest);
+            int toastMessageId = isClicked ? R.string.leader_destination : R.string.user_destination;
+            int buttonTextId = isClicked ? R.string.embedded_set_meeting : R.string.embedded_set_dest;
+
+            Toast.makeText(EmbeddedCreateGroup.this, toastMessageId, Toast.LENGTH_SHORT).show();
+            btn.setText(buttonTextId);
+           if (!isClicked) {
                 setMeetingCoordinates();
                 return;
             }
+
             map.setOnMapClickListener(latLng -> {
                 destinationMarker.remove();
-                destinationMarker = placeMarkerWithColor(
-                        latLng,
-                        getString(R.string.embedded_destination),
-                        MarkerColor.RED);
+                destinationMarker = replaceLocationMarker(latLng, R.string.embedded_destination, destinationColor);
                 destinationMarker.setVisible(true);
-                destinationMarker.showInfoWindow();
-
                 destinationLocation = latLng;
-                Log.d("Lat (Dest)", "DestLat: " + destinationLocation.latitude +
-                        "DestLng: " + destinationLocation.longitude);
             });
         });
     }
@@ -152,6 +128,24 @@ public class EmbeddedCreateGroup extends AbstractMapActivity {
         setMeetingCoordinates();
     }
 
+
+    private void setMeetingCoordinates(){
+        map.setOnMapClickListener(latLng -> {
+            meetingMarker.remove();
+            meetingMarker = replaceLocationMarker(latLng, R.string.embedded_set_meeting, meetingColor);
+            meetingLocation = latLng;
+        });
+    }
+
+    private Marker replaceLocationMarker(LatLng location, int titleId, MarkerColor color) {
+        map.animateCamera(CameraUpdateFactory.newLatLng(location));
+        Marker marker = placeMarker(location, getString(titleId), color);
+        marker.showInfoWindow();
+
+        Log.d("Marker placed at ", "Lat: " + location.latitude + "Long: " + location.longitude);
+        return marker;
+    }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         setUpMap();
@@ -164,16 +158,12 @@ public class EmbeddedCreateGroup extends AbstractMapActivity {
 
     private void addInitialMarkers() {
         meetingLocation = locationToLatLng(lastLocation);
-        meetingMarker = map.addMarker(new MarkerOptions().
-                position(meetingLocation).
-                title(getString(R.string.meeting)));
+        meetingMarker = placeMarker(meetingLocation, getString(R.string.meeting), meetingColor);
+
+        destinationMarker = placeMarker(meetingLocation, getString(R.string.destination), destinationColor);
+        destinationMarker.setVisible(false);
 
         Log.d("initial location", "Lat" + meetingLocation.latitude + "Lng" + meetingLocation.longitude);
-
-        destinationMarker = map.addMarker(new MarkerOptions().
-                position(meetingLocation).
-                title(getString(R.string.destination)));
-        destinationMarker.setVisible(false);
     }
 
     @Override

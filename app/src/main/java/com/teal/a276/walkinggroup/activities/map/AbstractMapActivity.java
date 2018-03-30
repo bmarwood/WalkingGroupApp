@@ -223,24 +223,29 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
                 LatLng currentLocation = locationToLatLng(lastLocation);
-                placeMarkerWithIcon(currentLocation, R.mipmap.ic_user_location);
+                placeMarker(currentLocation, getAddress(currentLocation), R.mipmap.ic_user_location);
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, ZOOM_LEVEL));
             }
         }
     }
 
-    private void placeMarkerWithIcon(LatLng markerLocation, Integer iconId) {
-        String title = getAddress(markerLocation);
-        MarkerOptions marker = new MarkerOptions().position(markerLocation).title(title);
-        marker.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource
-                (getResources(), iconId)));
-        map.addMarker(marker);
+    protected Marker placeMarker(LatLng markerLocation, String markerTitle) {
+        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation).title(markerTitle);
+        return map.addMarker(markerOptions);
     }
 
-    protected Marker placeMarkerWithColor(LatLng markerLocation, String markerTitle, MarkerColor markerColor) {
-        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-        markerOptions.title(markerTitle);
+    protected Marker placeMarker(LatLng markerLocation, String markerTitle, Integer iconId) {
+        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation).title(markerTitle);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource
+                    (getResources(), iconId)));
+
+        return map.addMarker(markerOptions);
+    }
+
+    protected Marker placeMarker(LatLng markerLocation, String markerTitle, MarkerColor markerColor) {
+        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation).title(markerTitle);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(markerColor.getColorValue()));
+
         return map.addMarker(markerOptions);
     }
 

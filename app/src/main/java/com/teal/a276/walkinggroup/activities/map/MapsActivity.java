@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -27,13 +26,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.GroupMembersInfo;
 import com.teal.a276.walkinggroup.activities.Monitor;
@@ -254,8 +250,8 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                     .fillColor(Color.GRAY));
 
 
-            placeMarkerWithColor(startMarkerLocation, getString(R.string.start), MarkerColor.GREEN);
-            placeMarkerWithColor(startMarkerLocation, getString(R.string.finish), MarkerColor.RED);
+            placeMarker(startMarkerLocation, getString(R.string.start), MarkerColor.GREEN);
+            placeMarker(startMarkerLocation, getString(R.string.finish), MarkerColor.RED);
         }
     }
 
@@ -281,7 +277,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         if (!routeLatArray.isEmpty()) {
             LatLng markerLocation = new LatLng(routeLatArray.get(0), routeLngArray.get(0));
             markerGroupHashMap.put(
-                    placeMarkerWithColor(markerLocation, group.getGroupDescription(), MarkerColor.AZURE),
+                    placeMarker(markerLocation, group.getGroupDescription(), MarkerColor.AZURE),
                     group);
         }
     }
