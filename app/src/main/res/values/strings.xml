@@ -156,4 +156,6 @@
     <string name="user_profile_email">Email:</string>
     <string name="unique_email">Email:</string>
     <string name="unique_email_two">Email:</string>
+
+    <string name="time_format">%1$d min, %2$d sec</string>
 </resources>

@@ -50,12 +50,12 @@ import retrofit2.Call;
 
 public class DashBoard extends AbstractMapActivity implements Observer{
 
-    public static final int MAP_UPDATE_RATE = 5000;
+    private final long MAP_UPDATE_RATE = 5000;
     private User user;
-    Timer timer = new Timer();
-    String messageCount;
-    Button msgButton;
-    MessageUpdater messageUpdater;
+    private Timer timer = new Timer();
+    private String messageCount;
+    private Button msgButton;
+    private MessageUpdater messageUpdater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
                     .addApi(LocationServices.API)
                     .build();
         }
-        createLocationRequest(5000L, 5000L);
+        createLocationRequest(MAP_UPDATE_RATE, MAP_UPDATE_RATE);
 
     }
 
@@ -114,9 +114,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     private void setUpMsgButton() {
         msgButton = findViewById(R.id.dashMsgBtn);
         getServerMessageCount();
-        msgButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, Messages.class));
-        });
+        msgButton.setOnClickListener(v -> startActivity(new Intent(this, Messages.class)));
     }
 
     private void getServerMessageCount(){
@@ -167,7 +165,9 @@ public class DashBoard extends AbstractMapActivity implements Observer{
 
             ServerProxy proxy = ServerManager.getServerRequest();
             Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
-            ServerManager.serverRequest(call, result -> placeMonitorMarkerOnMap(result, user.getName()), this::error);
+            ServerManager.serverRequest(call,
+                    result -> placeDashBoardMarker(result, user.getName(), MarkerColor.CYAN),
+                    this::error);
 
             List<Group> groups = user.getMemberOfGroups();
             for(Group group : groups){
@@ -189,21 +189,20 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         return name + getString(R.string.last_time_update) + timeStamp;
     }
 
-    private void placeMonitorMarkerOnMap(UserLocation location, String name) {
-        if (!(location.getLat() == null)) {
-            LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
-            MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-            markerOptions.title(generateMarkerTitle(location, name));
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-            map.addMarker(markerOptions);
+    private void placeDashBoardMarker(UserLocation location, String name, MarkerColor color) {
+        if(location.getLat() == null) {
+            return;
         }
+
+        String markerTitle = generateMarkerTitle(location, name);
+        placeMarkerWithColor(locationToLatLng(location) ,markerTitle, color);
     }
 
     private String generateTimeCode(String timestamp) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         Date date = format.parse(timestamp);
         Long timeSince = System.currentTimeMillis() - date.getTime();
-        return String.format(Locale.getDefault(), "%d min, %d sec",
+        return String.format(Locale.getDefault(), getString(R.string.time_format),
                 TimeUnit.MILLISECONDS.toMinutes(timeSince),
                 TimeUnit.MILLISECONDS.toSeconds(timeSince) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeSince))
@@ -213,17 +212,9 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     private void addLeadersMarker(User user) {
         ServerProxy proxy = ServerManager.getServerRequest();
         Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
-        ServerManager.serverRequest(call, result -> placeLeadersOnMap(result, user.getName()), this::error);
-    }
-
-    private void placeLeadersOnMap(UserLocation location, String name) {
-        if (!(location.getLat() == null)) {
-            LatLng markerLocation = new LatLng(location.getLat(), location.getLng());
-            MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-            markerOptions.title(generateMarkerTitle(location, name));
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
-            map.addMarker(markerOptions);
-        }
+        ServerManager.serverRequest(call,
+                result -> placeDashBoardMarker(result, user.getName(), MarkerColor.VIOLET),
+                this::error);
     }
 
     @Override

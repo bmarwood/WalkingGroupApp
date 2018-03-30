@@ -63,6 +63,7 @@ public class Messages extends BaseActivity implements Observer {
 
         Call<List<Message>> call = requestMessages(user.getId(), MessageRequestConstant.UNREAD);
         ServerManager.serverRequest(call, this::unreadMessagesResult, this::error);
+
         call = requestMessages(user.getId(), MessageRequestConstant.READ);
         ServerManager.serverRequest(call, this::readMessagesResult, this::error);
     }

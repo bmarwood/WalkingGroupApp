@@ -29,9 +29,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
+import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,6 +48,23 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener,
         LocationListener {
+
+    protected enum MarkerColor {
+        AZURE(BitmapDescriptorFactory.HUE_AZURE),
+        VIOLET(BitmapDescriptorFactory.HUE_VIOLET),
+        CYAN(BitmapDescriptorFactory.HUE_CYAN),
+        GREEN(BitmapDescriptorFactory.HUE_GREEN),
+        RED(BitmapDescriptorFactory.HUE_RED);
+
+        private final float colorValue;
+        MarkerColor(float colorValue) {
+            this.colorValue = colorValue;
+        }
+
+        public float getColorValue() {
+            return colorValue;
+        }
+    }
 
     private static final int MAX_RESULTS = 1;
     private final int ZOOM_LEVEL = 10;
@@ -204,13 +223,13 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
                 LatLng currentLocation = locationToLatLng(lastLocation);
-                placeMarkerOnMap(currentLocation, draggable, iconId);
+                placeMarkerWithIcon(currentLocation, draggable, iconId);
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, ZOOM_LEVEL));
             }
         }
     }
 
-    private void placeMarkerOnMap(LatLng markerLocation, boolean draggable, Integer iconId) {
+    private void placeMarkerWithIcon(LatLng markerLocation, boolean draggable, Integer iconId) {
         String title = getAddress(markerLocation);
         MarkerOptions marker = new MarkerOptions().position(markerLocation)
                                             .draggable(draggable).title(title);
@@ -222,6 +241,14 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
 
         map.addMarker(marker);
     }
+
+    protected Marker placeMarkerWithColor(LatLng markerLocation, String markerTitle, MarkerColor markerColor) {
+        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
+        markerOptions.title(markerTitle);
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(markerColor.getColorValue()));
+        return map.addMarker(markerOptions);
+    }
+
 
     private String getAddress(LatLng latLng) {
         Geocoder geocoder = new Geocoder(this);
@@ -259,5 +286,14 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
         }
 
         return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    @NonNull
+    protected LatLng locationToLatLng(UserLocation location) {
+        if (location == null) {
+            return new LatLng(0, 0);
+        }
+
+        return new LatLng(location.getLat(), location.getLng());
     }
 }

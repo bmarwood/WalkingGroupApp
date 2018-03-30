@@ -4,6 +4,7 @@ import android.location.Location;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import java.text.DateFormat;
@@ -13,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserLocation {
     private Double lat;
     private Double lng;

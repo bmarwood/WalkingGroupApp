@@ -70,9 +70,10 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
         map.setOnMapClickListener(latLng -> {
             meetingMarker.remove();
             map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            meetingMarker = map.addMarker(new MarkerOptions().
-                    position(latLng).
-                    title(getString(R.string.meeting)));
+            meetingMarker = placeMarkerWithColor(
+                    latLng,
+                    getString(R.string.embedded_set_meeting),
+                    MarkerColor.CYAN);
             meetingMarker.showInfoWindow();
 
             meetingLat = latLng.latitude;
@@ -96,10 +97,10 @@ public class EmbeddedCreateGroup extends AbstractMapActivity implements Observer
             }
             map.setOnMapClickListener(latLng -> {
                 destinationMarker.remove();
-                destinationMarker = map.addMarker(new MarkerOptions().
-                        position(latLng).
-                        title(getString(R.string.embedded_destination)).
-                        icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                destinationMarker = placeMarkerWithColor(
+                        latLng,
+                        getString(R.string.embedded_destination),
+                        MarkerColor.RED);
                 destinationMarker.setVisible(true);
                 destinationMarker.showInfoWindow();
 

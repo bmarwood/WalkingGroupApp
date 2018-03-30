@@ -254,19 +254,8 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                     .fillColor(Color.GRAY));
 
 
-            MarkerOptions markerOptions = new MarkerOptions().position(startMarkerLocation);
-            String titleStr = getString(R.string.start);
-            markerOptions.title(titleStr);
-            markerOptions.icon(BitmapDescriptorFactory
-                    .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            map.addMarker(markerOptions);
-
-            MarkerOptions secondMarkerOptions = new MarkerOptions().position(endMarkerLocation);
-            String title = getString(R.string.finish);
-            markerOptions.title(title);
-            markerOptions.icon(BitmapDescriptorFactory
-                    .defaultMarker(BitmapDescriptorFactory.HUE_RED));
-            map.addMarker(secondMarkerOptions);
+            placeMarkerWithColor(startMarkerLocation, getString(R.string.start), MarkerColor.GREEN);
+            placeMarkerWithColor(startMarkerLocation, getString(R.string.finish), MarkerColor.RED);
         }
     }
 
@@ -291,19 +280,10 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         //after dest has been implemented, there will be 2 elements in the array
         if (!routeLatArray.isEmpty()) {
             LatLng markerLocation = new LatLng(routeLatArray.get(0), routeLngArray.get(0));
-            placeGroupMarker(markerLocation, group);
+            markerGroupHashMap.put(
+                    placeMarkerWithColor(markerLocation, group.getGroupDescription(), MarkerColor.AZURE),
+                    group);
         }
-    }
-
-    private void placeGroupMarker(LatLng markerLocation, Group group) {
-        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation);
-        String titleStr = group.getGroupDescription();
-        markerOptions.title(titleStr);
-        markerOptions.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-
-        Marker mapMarker = map.addMarker(markerOptions);
-        markerGroupHashMap.put(mapMarker, group);
     }
 
     private void groupsResult(List<Group> groups) {
