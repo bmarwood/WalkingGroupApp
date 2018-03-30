@@ -106,7 +106,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         endButton.setOnClickListener(v -> {
             map.clear();
             populateGroupsOnMap();
-            placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
+            placeCurrentLocationMarker();
             walkInProgress = false;
             setButtonVisibility();
         });
@@ -404,7 +404,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                             walkInProgress = false;
                             map.clear();
                             populateGroupsOnMap();
-                            placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
+                            placeCurrentLocationMarker();
                             setButtonVisibility();
                         });
                     }
@@ -437,7 +437,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
         if (!walkInProgress) {
             refreshGroupMarkers();
-            placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
+            placeCurrentLocationMarker();
         }
 
         if (updateLocation) {

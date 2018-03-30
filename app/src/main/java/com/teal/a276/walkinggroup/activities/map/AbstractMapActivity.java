@@ -212,7 +212,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     @SuppressLint("MissingPermission")
-    void placeCurrentLocationMarker(boolean draggable, Integer iconId) {
+    void placeCurrentLocationMarker() {
         if(!checkAndRequestPermissions()) {
             return;
         }
@@ -223,22 +223,17 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
                 LatLng currentLocation = locationToLatLng(lastLocation);
-                placeMarkerWithIcon(currentLocation, draggable, iconId);
+                placeMarkerWithIcon(currentLocation, R.mipmap.ic_user_location);
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, ZOOM_LEVEL));
             }
         }
     }
 
-    private void placeMarkerWithIcon(LatLng markerLocation, boolean draggable, Integer iconId) {
+    private void placeMarkerWithIcon(LatLng markerLocation, Integer iconId) {
         String title = getAddress(markerLocation);
-        MarkerOptions marker = new MarkerOptions().position(markerLocation)
-                                            .draggable(draggable).title(title);
-
-        if(iconId != null) {
-            marker.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource
-                    (getResources(), iconId)));
-        }
-
+        MarkerOptions marker = new MarkerOptions().position(markerLocation).title(title);
+        marker.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource
+                (getResources(), iconId)));
         map.addMarker(marker);
     }
 

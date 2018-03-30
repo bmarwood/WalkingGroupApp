@@ -155,7 +155,7 @@ public class EmbeddedCreateGroup extends AbstractMapActivity {
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         setUpMap();
-        placeCurrentLocationMarker(false, R.mipmap.ic_user_location);
+        placeCurrentLocationMarker();
         if(updateLocation) {
             startLocationUpdates();
         }
