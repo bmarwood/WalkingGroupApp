@@ -72,19 +72,16 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     private final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     final int REQUEST_CHECK_SETTINGS = 2;
 
-    GoogleMap map;
-    GoogleApiClient googleApiClient;
-    Location lastLocation;
-    private LocationRequest locationRequest;
-    boolean updateLocation;
+    protected GoogleMap map;
+    protected GoogleApiClient googleApiClient;
+    protected Location lastLocation;
+    protected boolean updateLocation;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+    private LocationRequest locationRequest;
+
+    protected void initializeMap(int fragmentId, Long interval, Long fastestInterval) {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(fragmentId);
         mapFragment.getMapAsync(this);
 
         if (googleApiClient == null) {
@@ -95,7 +92,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
                     .build();
         }
 
-        createLocationRequest(0L,0L);
+        createLocationRequest(interval, fastestInterval);
     }
 
     // Handles any changes to be made based on the current state of the user’s location settings

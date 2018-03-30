@@ -57,23 +57,10 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
+        initializeMap(R.id.dashboardMap, MAP_UPDATE_RATE, MAP_UPDATE_RATE);
 
         user = ModelFacade.getInstance().getCurrentUser();
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment);
-        mapFragment.getMapAsync(this);
-        messageCount = getString(R.string.dash_unread_msg);
-
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-        createLocationRequest(MAP_UPDATE_RATE, MAP_UPDATE_RATE);
-
+        messageCount = getString(R.string.dashboard_unread_message);
     }
 
     @Override

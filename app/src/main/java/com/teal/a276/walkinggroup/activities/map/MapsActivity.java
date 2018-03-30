@@ -76,6 +76,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
+        initializeMap(R.id.map, 0L, 0L);
+
         currentUser = ModelFacade.getInstance().getCurrentUser();
         groupManager = ModelFacade.getInstance().getGroupManager();
 

@@ -140,7 +140,6 @@
     <string name="panic">Panic</string>
     <string name="send_message">Send a message</string>
     <string name="choose_group">Choose group to walk with</string>
-    <string name="dash_unread_msg">UNREAD MSG:</string>
 
     <string name="last_time_update"> - Last Updated: </string>
     <string name="panic_txt">Panic:</string>

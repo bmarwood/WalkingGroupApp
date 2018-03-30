@@ -38,22 +38,10 @@ public class EmbeddedCreateGroup extends AbstractMapActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_embedded_create_group);
+        initializeMap(R.id.embeddedMap, 0L, 0L);
 
         setupSelectDestinationButton();
         setupCreateButton();
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.embeddedFragment);
-        mapFragment.getMapAsync(this);
-
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-        createLocationRequest(0L,0L);
     }
 
     public static Intent makeIntent(Context context){

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="57dp"
         android:layout_marginEnd="43dp"
-        android:layout_marginStart="39dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="53dp"
         android:text="@string/group_name"
         app:layout_constraintBottom_toTopOf="@+id/embeddedEmail"
@@ -26,14 +26,14 @@
         android:id="@+id/embeddedEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="12dp"
         android:layout_marginEnd="30dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginStart="39dp"
+        android:layout_marginStart="8dp"
         android:text="@string/embedded_leader_s_email"
-        app:layout_constraintBottom_toTopOf="@+id/embeddedFragment"
+        app:layout_constraintBottom_toTopOf="@+id/embeddedMap"
         app:layout_constraintEnd_toStartOf="@+id/embeddedEmailEdit"
-        app:layout_constraintHorizontal_bias="0.433"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="RtlHardcoded" />
@@ -60,7 +60,7 @@
         android:layout_marginEnd="36dp"
         android:ems="10"
         android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/embeddedFragment"
+        app:layout_constraintBottom_toTopOf="@+id/embeddedMap"
         app:layout_constraintEnd_toEndOf="parent" />
 
 
@@ -85,7 +85,7 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <fragment
-        android:id="@+id/embeddedFragment"
+        android:id="@+id/embeddedMap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="413dp"
         android:layout_height="432dp"
