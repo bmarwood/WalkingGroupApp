@@ -429,15 +429,10 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        setUpMap();
-
+        super.onConnected(bundle);
         if (!walkInProgress) {
             refreshGroupMarkers();
             placeCurrentLocationMarker();
-        }
-
-        if (updateLocation) {
-            startLocationUpdates();
         }
     }
 

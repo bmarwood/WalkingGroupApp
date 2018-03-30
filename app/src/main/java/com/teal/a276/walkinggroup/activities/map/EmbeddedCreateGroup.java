@@ -128,7 +128,6 @@ public class EmbeddedCreateGroup extends AbstractMapActivity {
         setMeetingCoordinates();
     }
 
-
     private void setMeetingCoordinates(){
         map.setOnMapClickListener(latLng -> {
             meetingMarker.remove();
@@ -148,11 +147,8 @@ public class EmbeddedCreateGroup extends AbstractMapActivity {
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        setUpMap();
+        super.onConnected(bundle);
         placeCurrentLocationMarker();
-        if(updateLocation) {
-            startLocationUpdates();
-        }
         addInitialMarkers();
     }
 

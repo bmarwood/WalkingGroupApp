@@ -78,12 +78,9 @@ public class DashBoard extends AbstractMapActivity implements Observer{
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        super.onConnected(bundle);
         setUpMsgButton();
-        setUpMap();
         placeCurrentLocationMarker();
-        if(updateLocation) {
-            startLocationUpdates();
-        }
 
         //First call to populate pins before timer starts
         ServerProxy proxy = ServerManager.getServerRequest();
