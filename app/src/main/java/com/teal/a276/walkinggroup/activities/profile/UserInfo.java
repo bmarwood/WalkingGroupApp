@@ -8,13 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -43,8 +41,8 @@ public class UserInfo extends UserProfile {
         return intent;
     }
 
-    public void populateListView() {
-        ServerProxy proxy = ServerManager.getServerRequest();
+    private void populateListView() {
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<User> call = proxy.getUserByEmail(user.getEmail(), 1L);
         ServerManager.serverRequest(call, this::getUser, this::error);
     }
@@ -60,7 +58,7 @@ public class UserInfo extends UserProfile {
         private final Context context;
 
         private ListItemAdapter(Context context, List<User> listItems) {
-            super(context, R.layout.parents_list_items, listItems);
+            super(context, R.layout.parents_list_item, listItems);
             this.listItems = listItems;
             this.context = context;
         }
@@ -71,22 +69,22 @@ public class UserInfo extends UserProfile {
             View itemView = convertView;
             if (itemView == null) {
                 LayoutInflater inflater = LayoutInflater.from(context);
-                itemView = inflater.inflate(R.layout.parents_list_items, parent, false);
+                itemView = inflater.inflate(R.layout.parents_list_item, parent, false);
             }
 
             User selectedUser = listItems.get(position);
 
-            TextView name = itemView.findViewById(R.id.nameTxt);
+            TextView name = itemView.findViewById(R.id.parentName);
             name.setText(selectedUser.getName());
 
-            TextView email = itemView.findViewById(R.id.emailTxt);
+            TextView email = itemView.findViewById(R.id.parentEmail);
             email.setText(selectedUser.getEmail());
 
-            TextView hPhone = itemView.findViewById(R.id.homeTxt);
-            hPhone.setText(selectedUser.getHomePhone());
+            TextView homePhone = itemView.findViewById(R.id.parentHomePhone);
+            homePhone.setText(selectedUser.getHomePhone());
 
-            TextView cPhone = itemView.findViewById(R.id.cellTxt);
-            cPhone.setText(selectedUser.getCellPhone());
+            TextView cellPhone = itemView.findViewById(R.id.parentCellphone);
+            cellPhone.setText(selectedUser.getCellPhone());
 
             return itemView;
         }

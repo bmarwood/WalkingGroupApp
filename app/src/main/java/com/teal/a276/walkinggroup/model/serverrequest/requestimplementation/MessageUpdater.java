@@ -1,5 +1,7 @@
-package com.teal.a276.walkinggroup.model.dataobjects;
+package com.teal.a276.walkinggroup.model.serverrequest.requestimplementation;
 
+import com.teal.a276.walkinggroup.model.dataobjects.Message;
+import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -18,7 +20,7 @@ import retrofit2.Call;
  */
 
 public class MessageUpdater extends Observable {
-    private Timer timer = new Timer();
+    private final Timer timer = new Timer();
     final private int UPDATE_RATE = 60000;
 
     public MessageUpdater(final User user, final ServerError errorCallback) {
@@ -38,7 +40,7 @@ public class MessageUpdater extends Observable {
         HashMap<String, Object> requestParameters = new HashMap<>();
         requestParameters.put(MessageRequestConstant.FOR_USER, user.getId());
         requestParameters.put(MessageRequestConstant.STATUS, MessageRequestConstant.UNREAD);
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
 
         Call<List<Message>> call = proxy.getMessages(requestParameters);
         ServerManager.serverRequest(call, this::unreadMessages, errorCallback);

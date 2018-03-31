@@ -54,7 +54,7 @@ public class CreateGroupRequest extends AbstractServerRequest {
         group.setRouteLatArray(latArray);
         group.setRouteLngArray(lngArray);
 
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<Group> call = proxy.createGroup(group);
         ServerManager.serverRequest(call, this::groupResult, errorCallback);
     }

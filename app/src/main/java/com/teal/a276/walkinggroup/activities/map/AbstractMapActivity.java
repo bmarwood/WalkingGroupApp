@@ -9,6 +9,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -29,9 +30,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
+import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,24 +50,38 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
         GoogleMap.OnMarkerClickListener,
         LocationListener {
 
+    protected enum MarkerColor {
+        AZURE(BitmapDescriptorFactory.HUE_AZURE),
+        VIOLET(BitmapDescriptorFactory.HUE_VIOLET),
+        CYAN(BitmapDescriptorFactory.HUE_CYAN),
+        GREEN(BitmapDescriptorFactory.HUE_GREEN),
+        RED(BitmapDescriptorFactory.HUE_RED);
+
+        private final float colorValue;
+        MarkerColor(float colorValue) {
+            this.colorValue = colorValue;
+        }
+
+        public float getColorValue() {
+            return colorValue;
+        }
+    }
+
     private static final int MAX_RESULTS = 1;
     private final int ZOOM_LEVEL = 10;
     private final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    final int REQUEST_CHECK_SETTINGS = 2;
+    private final int REQUEST_CHECK_SETTINGS = 2;
 
-    GoogleMap map;
-    GoogleApiClient googleApiClient;
-    Location lastLocation;
+    protected GoogleMap map;
+    protected GoogleApiClient googleApiClient;
+    protected Location lastLocation;
+    protected boolean updateLocation;
+
     private LocationRequest locationRequest;
-    boolean updateLocation;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+    protected void initializeMap(int fragmentId, Long interval, Long fastestInterval) {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(fragmentId);
         mapFragment.getMapAsync(this);
 
         if (googleApiClient == null) {
@@ -75,7 +92,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
                     .build();
         }
 
-        createLocationRequest(0L,0L);
+        createLocationRequest(interval, fastestInterval);
     }
 
     // Handles any changes to be made based on the current state of the user’s location settings
@@ -147,6 +164,14 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        setUpMap();
+        if(updateLocation) {
+            startLocationUpdates();
+        }
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -193,7 +218,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     }
 
     @SuppressLint("MissingPermission")
-    void placeCurrentLocationMarker(boolean draggable, Integer iconId) {
+    void placeCurrentLocationMarker() {
         if(!checkAndRequestPermissions()) {
             return;
         }
@@ -204,24 +229,27 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
                 LatLng currentLocation = locationToLatLng(lastLocation);
-                placeMarkerOnMap(currentLocation, draggable, iconId);
+                placeMarker(currentLocation, getAddress(currentLocation), R.mipmap.ic_user_location);
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, ZOOM_LEVEL));
             }
         }
     }
 
-    private void placeMarkerOnMap(LatLng markerLocation, boolean draggable, Integer iconId) {
-        String title = getAddress(markerLocation);
-        MarkerOptions marker = new MarkerOptions().position(markerLocation)
-                                            .draggable(draggable).title(title);
-
-        if(iconId != null) {
-            marker.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource
+    protected Marker placeMarker(LatLng markerLocation, String markerTitle, Integer iconId) {
+        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation).title(markerTitle);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource
                     (getResources(), iconId)));
-        }
 
-        map.addMarker(marker);
+        return map.addMarker(markerOptions);
     }
+
+    protected Marker placeMarker(LatLng markerLocation, String markerTitle, MarkerColor markerColor) {
+        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation).title(markerTitle);
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(markerColor.getColorValue()));
+
+        return map.addMarker(markerOptions);
+    }
+
 
     private String getAddress(LatLng latLng) {
         Geocoder geocoder = new Geocoder(this);
@@ -259,5 +287,14 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
         }
 
         return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    @NonNull
+    protected LatLng locationToLatLng(UserLocation location) {
+        if (location == null) {
+            return new LatLng(0, 0);
+        }
+
+        return new LatLng(location.getLat(), location.getLng());
     }
 }

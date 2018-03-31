@@ -30,7 +30,7 @@ public class MonitoredByRequest extends AbstractServerRequest {
     }
 
     private void userResult(User user) {
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<List<User>> call = proxy.monitoredByUser(this.currentUser.getId(), user);
         ServerManager.serverRequest(call, this::monitorsResult, this.errorCallback);
     }

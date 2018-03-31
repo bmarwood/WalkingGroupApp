@@ -3,7 +3,6 @@ package com.teal.a276.walkinggroup.activities.profile;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.View;
@@ -27,10 +26,10 @@ import java.util.Calendar;
 import retrofit2.Call;
 
 public class UserProfile extends AuthenticationActivity {
-    private DateFormat formatDate = DateFormat.getDateInstance();
-    private Calendar dateTime = Calendar.getInstance();
+    private final DateFormat formatDate = DateFormat.getDateInstance();
+    private final Calendar dateTime = Calendar.getInstance();
     private Button dateBtn;
-    protected User user;
+    User user;
     private DatePickerDialog.OnDateSetListener datePicker;
     private static final String USER = "user";
 
@@ -53,8 +52,28 @@ public class UserProfile extends AuthenticationActivity {
         setUpSaveButton();
     }
 
-    protected void fillBasicInfo(boolean editable) {
+    private void fillKnownInfo() {
+        EditText addressInput = findViewById(R.id.editAddress);
+        EditText gradeInput = findViewById(R.id.editGrade);
+        EditText teachersNameInput = findViewById(R.id.editTeacherName);
+        EditText contactInfoInput = findViewById(R.id.editContactInfo);
 
+        addUserInfoToTextInput(user.getAddress(), addressInput);
+        addUserInfoToTextInput(user.getGrade(), gradeInput);
+        addUserInfoToTextInput(user.getTeacherName(), teachersNameInput);
+        addUserInfoToTextInput(user.getEmergencyContactInfo(), contactInfoInput);
+
+        if (user.getBirthYear() != 0) {
+            dateTime.set(user.getBirthYear(), user.getBirthMonth(), Calendar.DATE);
+        } else {
+            dateTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
+                    Calendar.getInstance().get(Calendar.DATE));
+        }
+
+        fillBasicInfo(true);
+    }
+
+    void fillBasicInfo(boolean editable) {
         EditText nameInput = findViewById(R.id.editName);
         EditText homePhoneInput = findViewById(R.id.editHome);
         EditText cellPhoneInput = findViewById(R.id.editCell);
@@ -65,51 +84,19 @@ public class UserProfile extends AuthenticationActivity {
         cellPhoneInput.setEnabled(editable);
         emailInput.setEnabled(editable);
 
-        if (!(user.getName() == null)) {
-            nameInput.setText(user.getName(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getHomePhone() == null)) {
-            homePhoneInput.setText(user.getHomePhone(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getCellPhone() == null)) {
-            cellPhoneInput.setText(user.getCellPhone(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getEmail() == null)) {
-            emailInput.setText(user.getEmail(), TextView.BufferType.EDITABLE);
-        }
+        addUserInfoToTextInput(user.getName(), nameInput);
+        addUserInfoToTextInput(user.getHomePhone(), homePhoneInput);
+        addUserInfoToTextInput(user.getCellPhone(), cellPhoneInput);
+        addUserInfoToTextInput(user.getEmail(), emailInput);
 
-        if (editable) {
-            cellPhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-            homePhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-        }
+        cellPhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        homePhoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
 
-    private void fillKnownInfo() {
-        EditText addressInput = findViewById(R.id.editAddress);
-        EditText gradeInput = findViewById(R.id.editGrade);
-        EditText teachersNameInput = findViewById(R.id.editTeacherName);
-        EditText contactInfoInput = findViewById(R.id.editContactInfo);
-
-        if (!(user.getAddress() == null)) {
-            addressInput.setText(user.getAddress(), TextView.BufferType.EDITABLE);
+    private void addUserInfoToTextInput(String info, EditText input) {
+        if(info != null) {
+            input.setText(info, TextView.BufferType.EDITABLE);
         }
-        if (!(user.getGrade() == null)) {
-            gradeInput.setText(user.getGrade(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getTeacherName() == null)) {
-            teachersNameInput.setText(user.getTeacherName(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getEmergencyContactInfo() == null)) {
-            contactInfoInput.setText(user.getEmergencyContactInfo(), TextView.BufferType.EDITABLE);
-        }
-        if (!(user.getBirthYear() == 0)) {
-            dateTime.set(user.getBirthYear(), user.getBirthMonth(), Calendar.DATE);
-        } else {
-            dateTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
-                    Calendar.getInstance().get(Calendar.DATE));
-        }
-
-        fillBasicInfo(true);
     }
 
     private void setUpSaveButton() {
@@ -166,7 +153,7 @@ public class UserProfile extends AuthenticationActivity {
             user.setTeacherName(teachersName);
             user.setEmergencyContactInfo(contactInfo);
 
-            ServerProxy proxy = ServerManager.getServerRequest();
+            ServerProxy proxy = ServerManager.getServerProxy();
             Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
             ServerManager.serverRequest(caller, UserProfile.this::successfulSave,
                     UserProfile.this::error);
@@ -183,8 +170,8 @@ public class UserProfile extends AuthenticationActivity {
         new DatePickerDialog(this, datePicker, dateTime.get(Calendar.YEAR), dateTime.get(Calendar.MONTH), dateTime.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    boolean hasValidProfileInfo(EditText name, EditText address, EditText homePhone, EditText cellPhone,
-                                EditText email) {
+    private boolean hasValidProfileInfo(EditText name, EditText address, EditText homePhone, EditText cellPhone,
+                                        EditText email) {
         boolean validInputs = true;
 
         if (isEmpty(name)) {
@@ -214,16 +201,12 @@ public class UserProfile extends AuthenticationActivity {
         return name.getText().toString().isEmpty();
     }
 
-    void successfulSave(User user) {
+    private void successfulSave(User user) {
         ModelFacade.getInstance().setCurrentUser(user);
-        //update shared Prefs
-        SharedPreferences prefs = getSharedPreferences(sharePrefLogger, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(sharePrefUser, user.getEmail());
-        editor.apply();
+        //update shared Prefs, password is always null from the server
+        saveAccountLoginInfo(user.getEmail(), null);
 
         Toast.makeText(this, R.string.updated_profile, Toast.LENGTH_SHORT).show();
-
         finish();
     }
 
@@ -232,7 +215,7 @@ public class UserProfile extends AuthenticationActivity {
         super.error(error);
     }
 
-    void toggleSpinner(int visibility) {
+    private void toggleSpinner(int visibility) {
         final ProgressBar spinner = findViewById(R.id.authenticationProgress);
         runOnUiThread(() -> spinner.setVisibility(visibility));
     }
@@ -244,7 +227,7 @@ public class UserProfile extends AuthenticationActivity {
         return intent;
     }
 
-    public void getDataFromIntent() {
+    void getDataFromIntent() {
         Gson gson = new Gson();
         String strObj = getIntent().getStringExtra(USER);
         user = gson.fromJson(strObj, User.class);

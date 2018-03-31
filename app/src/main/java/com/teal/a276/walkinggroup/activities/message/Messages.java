@@ -11,7 +11,7 @@ import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
-import com.teal.a276.walkinggroup.model.dataobjects.MessageUpdater;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.MessageUpdater;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
@@ -50,7 +50,7 @@ public class Messages extends BaseActivity implements Observer {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 Message message = unreadMessages.get(viewHolder.getAdapterPosition());
-                ServerProxy proxy = ServerManager.getServerRequest();
+                ServerProxy proxy = ServerManager.getServerProxy();
                 Call<User> call = proxy.setMessageRead(message.getId(), user.getId(), true);
                 ServerManager.serverRequest(call,
                         result -> messageMarkedAsRead(result, viewHolder.getAdapterPosition()),
@@ -63,6 +63,7 @@ public class Messages extends BaseActivity implements Observer {
 
         Call<List<Message>> call = requestMessages(user.getId(), MessageRequestConstant.UNREAD);
         ServerManager.serverRequest(call, this::unreadMessagesResult, this::error);
+
         call = requestMessages(user.getId(), MessageRequestConstant.READ);
         ServerManager.serverRequest(call, this::readMessagesResult, this::error);
     }
@@ -71,7 +72,7 @@ public class Messages extends BaseActivity implements Observer {
         HashMap<String, Object> requestParameters = new HashMap<>();
         requestParameters.put(MessageRequestConstant.FOR_USER, userId);
         requestParameters.put(MessageRequestConstant.STATUS, status);
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
 
         return proxy.getMessages(requestParameters);
     }
