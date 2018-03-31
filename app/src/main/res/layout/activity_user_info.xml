@@ -42,7 +42,6 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/user_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/name" />
@@ -59,21 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
                 <TextView
-                    android:id="@+id/homeNumberTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/home_phone_number" />
@@ -91,7 +76,6 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/CellNumberTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/cell_phone_number" />
@@ -120,25 +104,6 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textEmailAddress" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
             </TableRow>
 
 
