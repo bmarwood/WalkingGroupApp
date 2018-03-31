@@ -114,7 +114,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         startButton.setOnClickListener((View v) -> {
 
             ServerProxy proxy = ServerManager.getServerProxy();
-            Call<User> call = proxy.getUserByEmail(currentUser.getEmail(), 1l);
+            Call<User> call = proxy.getUserByEmail(currentUser.getEmail(), 1L);
             ServerManager.serverRequest(call, this::updateInfo, this::error);
         });
     }
@@ -250,7 +250,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
 
             placeMarker(startMarkerLocation, getString(R.string.start), MarkerColor.GREEN);
-            placeMarker(startMarkerLocation, getString(R.string.finish), MarkerColor.RED);
+            placeMarker(endMarkerLocation, getString(R.string.finish), MarkerColor.RED);
         }
     }
 

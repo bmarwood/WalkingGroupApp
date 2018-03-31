@@ -45,7 +45,6 @@ import retrofit2.Call;
 public class DashBoard extends AbstractMapActivity implements Observer{
     private final long MAP_UPDATE_RATE = 5000;
     private User user;
-    private Timer timer = new Timer();
     private String messageCount;
     private Button msgButton;
     private MessageUpdater messageUpdater;
