@@ -1,5 +1,7 @@
-package com.teal.a276.walkinggroup.model.dataobjects;
+package com.teal.a276.walkinggroup.model.serverrequest.requestimplementation;
 
+import com.teal.a276.walkinggroup.model.dataobjects.Message;
+import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;

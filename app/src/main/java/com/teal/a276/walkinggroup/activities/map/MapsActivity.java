@@ -176,40 +176,10 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 alertDialogBuilder.setView(dialogView);
                 alertDialogBuilder.setTitle(R.string.send_message);
 
-                alertDialogBuilder.setPositiveButton(R.string.post, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Message message = getMessage(dialogView);
-                        // Message group members and monitors me
-                        ServerProxy proxyMonitors = ServerManager.getServerProxy();
-                        Call<Message> callMonitors = proxyMonitors.sendMessageToMonitors(currentUser.getId(), message);
-                        ServerManager.serverRequest(callMonitors, null, this::error);
-                    }
-
-                    private void error(String s) {
-                        Log.e("MapsActivity", s);
-                    }
-                });
-                alertDialogBuilder.setNegativeButton(R.string.panic, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Extract data from UI:
-                        EditText msg = dialogView.findViewById(R.id.msg);
-                        String messageString = getString(R.string.panic_txt) + (msg.getText().toString());
-
-                        if (!messageString.isEmpty()) {
-                            Message message = new Message();
-                            message.setText(messageString);
-                            ServerProxy proxy = ServerManager.getServerProxy();
-                            Call<Message> call = proxy.sendMessageToMonitors(currentUser.getId(), message);
-                            ServerManager.serverRequest(call, null, this::error);
-                        }
-                    }
-
-                    private void error(String s) {
-                        Log.e("MapsActivity", s);
-                    }
-                });
+                alertDialogBuilder.setPositiveButton(R.string.post, (dialogInterface, i) ->
+                        sendMessage(getMessage(dialogView, null)));
+                alertDialogBuilder.setNegativeButton(R.string.panic, (dialogInterface, i) ->
+                        sendMessage(getMessage(dialogView, R.string.panic_txt)));
                 alertDialogBuilder.setNeutralButton(R.string.cancel, null);
                 alertDialogBuilder.show();
             }
@@ -217,13 +187,29 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     }
 
     @NonNull
-    private Message getMessage(View dialogView) {
+    private Message getMessage(View dialogView, Integer resourceId) {
         // Extract data from UI:
         EditText msg = dialogView.findViewById(R.id.msg);
         String messageString = msg.getText().toString();
+
+        String resourceString = "";
+        if(resourceId != null) {
+            resourceString = getString(resourceId);
+        }
+
         Message message = new Message();
-        message.setText(messageString);
+        message.setText(resourceString + messageString);
         return message;
+    }
+
+    private void sendMessage(Message message) {
+        ServerProxy proxy = ServerManager.getServerProxy();
+        Call<Message> call = proxy.sendMessageToMonitors(currentUser.getId(), message);
+        ServerManager.serverRequest(call, this::messageResult, this::error);
+    }
+
+    private void messageResult(Message message) {
+        Toast.makeText(this, R.string.message_sent, Toast.LENGTH_SHORT).show();
     }
 
     private void addStartEndMarkers(Group group) {

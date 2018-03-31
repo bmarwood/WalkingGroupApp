@@ -11,7 +11,7 @@ import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
-import com.teal.a276.walkinggroup.model.dataobjects.MessageUpdater;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.MessageUpdater;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;

@@ -158,4 +158,5 @@
     <string name="unique_email_two">Email:</string>
 
     <string name="time_format">%1$d min, %2$d sec</string>
+    <string name="message_sent">Message sent</string>
 </resources>

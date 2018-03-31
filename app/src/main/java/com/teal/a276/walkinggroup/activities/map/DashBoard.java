@@ -3,8 +3,6 @@ package com.teal.a276.walkinggroup.activities.map;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.widget.Button;
 
@@ -12,9 +10,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.message.Messages;
 import com.teal.a276.walkinggroup.model.ModelFacade;
-import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
-import com.teal.a276.walkinggroup.model.dataobjects.MessageUpdater;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.MessageUpdater;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
@@ -29,8 +26,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
