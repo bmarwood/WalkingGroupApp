@@ -18,7 +18,9 @@ import java.util.TimerTask;
 import retrofit2.Call;
 
 /**
- * Created by scott on 30/03/18.
+ * Wrapper for requesting location from all monitors of the current user and their leaders. Returns the
+ * result of these locations as a list of users to an activity. Can be initialized to make a timer based
+ * request.
  */
 
 public class DashboardLocationRequest extends AbstractServerRequest {

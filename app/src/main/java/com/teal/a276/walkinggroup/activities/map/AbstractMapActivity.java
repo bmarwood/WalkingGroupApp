@@ -70,7 +70,7 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
     private static final int MAX_RESULTS = 1;
     private final int ZOOM_LEVEL = 10;
     private final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    final int REQUEST_CHECK_SETTINGS = 2;
+    private final int REQUEST_CHECK_SETTINGS = 2;
 
     protected GoogleMap map;
     protected GoogleApiClient googleApiClient;

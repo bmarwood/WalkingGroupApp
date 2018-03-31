@@ -30,8 +30,8 @@ public class GroupMembersInfo extends BaseActivity {
     private static final String EXTRA_GROUP_NAME = "com.teal.a276.walkinggroup.activities.GroupMembersInfo - groupName";
     private static final String EXTRA_GROUP_ID = "com.teal.a276.walkinggroup.activities.GroupMembersInfo - groupID";
     private Group groupSelected = new Group();
-    User leader = new User();
-    List<User> groupMembersWithInfo = new ArrayList<>();
+    private User leader = new User();
+    private final List<User> groupMembersWithInfo = new ArrayList<>();
 
     public static Intent makeIntent(Context context, Group group) {
         Intent intent = new Intent(context, GroupMembersInfo.class);

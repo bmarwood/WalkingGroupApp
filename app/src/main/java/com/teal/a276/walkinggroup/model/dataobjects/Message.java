@@ -2,8 +2,6 @@ package com.teal.a276.walkinggroup.model.dataobjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.List;
-
 /**
  * Simple Message class to store the data the server expects and returns.
  */

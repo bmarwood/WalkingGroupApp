@@ -41,7 +41,7 @@ public class UserInfo extends UserProfile {
         return intent;
     }
 
-    public void populateListView() {
+    private void populateListView() {
         ServerProxy proxy = ServerManager.getServerProxy();
         Call<User> call = proxy.getUserByEmail(user.getEmail(), 1L);
         ServerManager.serverRequest(call, this::getUser, this::error);

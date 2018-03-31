@@ -8,7 +8,7 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Created by scott on 10/03/18.
+ * Test for model facade
  */
 
 public class FacadeTest {

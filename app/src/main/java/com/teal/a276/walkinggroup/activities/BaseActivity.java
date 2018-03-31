@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.model.dataobjects.User;
 
 /**
  * Class that other activities derive off of.

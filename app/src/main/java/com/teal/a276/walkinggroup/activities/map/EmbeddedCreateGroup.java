@@ -9,11 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.teal.a276.walkinggroup.R;
@@ -30,8 +27,8 @@ public class EmbeddedCreateGroup extends AbstractMapActivity {
     private LatLng destinationLocation;
     private Marker meetingMarker;
     private Marker destinationMarker;
-    private MarkerColor meetingColor = MarkerColor.CYAN;
-    private MarkerColor destinationColor = MarkerColor.RED;
+    private final MarkerColor meetingColor = MarkerColor.CYAN;
+    private final MarkerColor destinationColor = MarkerColor.RED;
     private boolean isClicked = false;
 
     @Override

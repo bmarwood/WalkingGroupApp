@@ -26,10 +26,10 @@ import java.util.Calendar;
 import retrofit2.Call;
 
 public class UserProfile extends AuthenticationActivity {
-    private DateFormat formatDate = DateFormat.getDateInstance();
-    private Calendar dateTime = Calendar.getInstance();
+    private final DateFormat formatDate = DateFormat.getDateInstance();
+    private final Calendar dateTime = Calendar.getInstance();
     private Button dateBtn;
-    protected User user;
+    User user;
     private DatePickerDialog.OnDateSetListener datePicker;
     private static final String USER = "user";
 
@@ -73,7 +73,7 @@ public class UserProfile extends AuthenticationActivity {
         fillBasicInfo(true);
     }
 
-    protected void fillBasicInfo(boolean editable) {
+    void fillBasicInfo(boolean editable) {
         EditText nameInput = findViewById(R.id.editName);
         EditText homePhoneInput = findViewById(R.id.editHome);
         EditText cellPhoneInput = findViewById(R.id.editCell);
@@ -170,8 +170,8 @@ public class UserProfile extends AuthenticationActivity {
         new DatePickerDialog(this, datePicker, dateTime.get(Calendar.YEAR), dateTime.get(Calendar.MONTH), dateTime.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    boolean hasValidProfileInfo(EditText name, EditText address, EditText homePhone, EditText cellPhone,
-                                EditText email) {
+    private boolean hasValidProfileInfo(EditText name, EditText address, EditText homePhone, EditText cellPhone,
+                                        EditText email) {
         boolean validInputs = true;
 
         if (isEmpty(name)) {
@@ -201,7 +201,7 @@ public class UserProfile extends AuthenticationActivity {
         return name.getText().toString().isEmpty();
     }
 
-    void successfulSave(User user) {
+    private void successfulSave(User user) {
         ModelFacade.getInstance().setCurrentUser(user);
         //update shared Prefs, password is always null from the server
         saveAccountLoginInfo(user.getEmail(), null);
@@ -215,7 +215,7 @@ public class UserProfile extends AuthenticationActivity {
         super.error(error);
     }
 
-    void toggleSpinner(int visibility) {
+    private void toggleSpinner(int visibility) {
         final ProgressBar spinner = findViewById(R.id.authenticationProgress);
         runOnUiThread(() -> spinner.setVisibility(visibility));
     }
@@ -227,7 +227,7 @@ public class UserProfile extends AuthenticationActivity {
         return intent;
     }
 
-    protected void getDataFromIntent() {
+    void getDataFromIntent() {
         Gson gson = new Gson();
         String strObj = getIntent().getStringExtra(USER);
         user = gson.fromJson(strObj, User.class);

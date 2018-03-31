@@ -1,7 +1,6 @@
 package com.teal.a276.walkinggroup.activities.auth;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;

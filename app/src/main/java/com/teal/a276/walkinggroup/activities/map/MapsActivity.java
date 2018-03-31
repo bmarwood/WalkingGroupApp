@@ -2,7 +2,6 @@ package com.teal.a276.walkinggroup.activities.map;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;

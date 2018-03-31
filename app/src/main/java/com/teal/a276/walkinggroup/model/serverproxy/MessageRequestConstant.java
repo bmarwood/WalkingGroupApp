@@ -1,7 +1,7 @@
 package com.teal.a276.walkinggroup.model.serverproxy;
 
 /**
- * Created by scott on 22/03/18.
+ * Constants for query map for messages end point
  */
 
 public class MessageRequestConstant {

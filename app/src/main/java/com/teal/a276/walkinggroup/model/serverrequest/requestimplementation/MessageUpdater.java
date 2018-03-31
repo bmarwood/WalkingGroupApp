@@ -20,7 +20,7 @@ import retrofit2.Call;
  */
 
 public class MessageUpdater extends Observable {
-    private Timer timer = new Timer();
+    private final Timer timer = new Timer();
     final private int UPDATE_RATE = 60000;
 
     public MessageUpdater(final User user, final ServerError errorCallback) {
