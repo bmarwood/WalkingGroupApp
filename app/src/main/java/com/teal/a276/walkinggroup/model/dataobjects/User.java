@@ -29,6 +29,7 @@ public class User {
     private String grade;
     private String teacherName;
     private String emergencyContactInfo;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Group> memberOfGroups = new ArrayList<>();
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -38,7 +39,13 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<User> monitorsUsers = new ArrayList<>();
 
+    @JsonIgnore
+    private UserLocation location;
+
     private String href;
+
+    @JsonIgnore
+    private boolean isLeader;
 
     public User() {
     }
@@ -174,6 +181,22 @@ public class User {
 
     public void setLeadsGroups(List<Group> leadsGroups) {
         this.leadsGroups = leadsGroups;
+    }
+
+    public UserLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(UserLocation location) {
+        this.location = location;
+    }
+
+    public boolean isLeader() {
+        return isLeader;
+    }
+
+    public void setLeader(boolean leader) {
+        isLeader = leader;
     }
 
     public void updateExistingGroup(@NonNull Group newGroup) {

@@ -13,7 +13,10 @@ import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
-import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.CompleteUserRequest;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
+
+import retrofit2.Call;
 
 /**
  * Abstract class that encapsulates the shared login code for create account and logging in.
@@ -35,17 +38,19 @@ public abstract class AuthenticationActivity extends BaseActivity {
     }
 
     void successfulLogin(Void ans) {
-        CompleteUserRequest request = new CompleteUserRequest(user, this::authError);
-        request.makeServerRequest();
-        request.addObserver((observable, o) -> {
-            ModelFacade.getInstance().setCurrentUser((User) o);
-            ModelFacade.getInstance().setGroupManager(new GroupManager());
-            storeLogin();
-            Intent intent = MapsActivity.makeIntent(this);
-            startActivity(intent);
+        ServerProxy proxy = ServerManager.getServerProxy();
+        Call<User> userByEmailCall = proxy.getUserByEmail(user.getEmail(), 1L);
+        ServerManager.serverRequest(userByEmailCall, this::userResult, this::authError);
+    }
 
-            finish();
-        });
+    private void userResult(User user) {
+        ModelFacade.getInstance().setCurrentUser(user);
+        ModelFacade.getInstance().setGroupManager(new GroupManager());
+        storeLogin();
+        Intent intent = MapsActivity.makeIntent(this);
+        startActivity(intent);
+
+        finish();
     }
 
     void storeLogin() {

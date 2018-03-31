@@ -25,7 +25,6 @@ public class ServerManager {
     private static final String API_KEY = "BB23730A-C1B3-4B65-855E-C538EE143FDC";
     private static String apiToken = null;
 
-
     /**
     * Return the proxy that client code can use to call server.
     * @return proxy object to call the server.

@@ -20,6 +20,7 @@ import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.DashboardLocationRequest;
 
 import java.util.HashMap;
 import java.text.ParseException;
@@ -42,13 +43,13 @@ import retrofit2.Call;
  */
 
 public class DashBoard extends AbstractMapActivity implements Observer{
-
     private final long MAP_UPDATE_RATE = 5000;
     private User user;
     private Timer timer = new Timer();
     private String messageCount;
     private Button msgButton;
     private MessageUpdater messageUpdater;
+    private DashboardLocationRequest locationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +68,11 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         placeCurrentLocationMarker();
 
         //First call to populate pins before timer starts
-        ServerProxy proxy = ServerManager.getServerProxy();
-        Call<List<User>> call = proxy.getMonitors(user.getId(), 1L);
-        ServerManager.serverRequest(call, this::monitorsResult, this::error);
+        DashboardLocationRequest initialLocationRequest = new DashboardLocationRequest(user, 0, this::error);
+        initialLocationRequest.addObserver(this);
 
-        populateUsersOnMap();
+        locationRequest = new DashboardLocationRequest(user, MAP_UPDATE_RATE, this::error);
+        locationRequest.addObserver(this);
     }
 
     @Override
@@ -79,6 +80,9 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         super.onPause();
         messageUpdater.unsubscribeFromUpdates();
         messageUpdater.deleteObserver(this);
+
+        locationRequest.unsubscribeFromUpdates();
+        locationRequest.deleteObserver(this);
     }
 
     @Override
@@ -123,38 +127,6 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         super.error(error);
     }
 
-    private void populateUsersOnMap(){
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    map.clear();
-                    ServerProxy proxy = ServerManager.getServerProxy();
-                    Call<List<User>> call = proxy.getMonitors(user.getId(), 1L);
-                    ServerManager.serverRequest(call, DashBoard.this::monitorsResult, DashBoard.this::error);
-                });
-            }
-        }, MAP_UPDATE_RATE, MAP_UPDATE_RATE);
-    }
-
-    private void monitorsResult(List<User> users) {
-        for(User user: users) {
-
-            ServerProxy proxy = ServerManager.getServerProxy();
-            Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
-            ServerManager.serverRequest(call,
-                    result -> placeDashBoardMarker(result, user.getName(), MarkerColor.CYAN),
-                    this::error);
-
-            List<Group> groups = user.getMemberOfGroups();
-            for(Group group : groups){
-                ServerProxy proxyForGroup = ServerManager.getServerProxy();
-                Call<User> callForGroup = proxyForGroup.getUserById(group.getLeader().getId(), null);
-                ServerManager.serverRequest(callForGroup, this::addLeadersMarker, this::error);
-            }
-        }
-    }
-
     private String generateMarkerTitle(UserLocation location, String name) {
         String timeStamp = "";
         try {
@@ -186,16 +158,20 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         );
     }
 
-    private void addLeadersMarker(User user) {
-        ServerProxy proxy = ServerManager.getServerProxy();
-        Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
-        ServerManager.serverRequest(call,
-                result -> placeDashBoardMarker(result, user.getName(), MarkerColor.VIOLET),
-                this::error);
-    }
-
     @Override
     public void update(Observable o, Object arg) {
-        updateUnreadMsg((List<Message>) arg);
+        if(o == messageUpdater) {
+            updateUnreadMsg((List<Message>) arg);
+        } else {
+            addMarkersForUsers((List<User>) arg);
+        }
+    }
+
+    private void addMarkersForUsers(List<User> users) {
+        map.clear();
+        for(User user : users) {
+            placeDashBoardMarker(user.getLocation(), user.getName(),
+                    user.isLeader() ? MarkerColor.VIOLET : MarkerColor.CYAN);
+        }
     }
 }
