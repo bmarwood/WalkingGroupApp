@@ -58,7 +58,7 @@ public class UserInfo extends UserProfile {
         private final Context context;
 
         private ListItemAdapter(Context context, List<User> listItems) {
-            super(context, R.layout.parents_list_items, listItems);
+            super(context, R.layout.parents_list_item, listItems);
             this.listItems = listItems;
             this.context = context;
         }
@@ -69,21 +69,21 @@ public class UserInfo extends UserProfile {
             View itemView = convertView;
             if (itemView == null) {
                 LayoutInflater inflater = LayoutInflater.from(context);
-                itemView = inflater.inflate(R.layout.parents_list_items, parent, false);
+                itemView = inflater.inflate(R.layout.parents_list_item, parent, false);
             }
 
             User selectedUser = listItems.get(position);
 
-            TextView name = itemView.findViewById(R.id.nameTxt);
+            TextView name = itemView.findViewById(R.id.parentName);
             name.setText(selectedUser.getName());
 
-            TextView email = itemView.findViewById(R.id.emailTxt);
+            TextView email = itemView.findViewById(R.id.parentEmail);
             email.setText(selectedUser.getEmail());
 
-            TextView homePhone = itemView.findViewById(R.id.homeTxt);
+            TextView homePhone = itemView.findViewById(R.id.parentHomePhone);
             homePhone.setText(selectedUser.getHomePhone());
 
-            TextView cellPhone = itemView.findViewById(R.id.cellTxt);
+            TextView cellPhone = itemView.findViewById(R.id.parentCellphone);
             cellPhone.setText(selectedUser.getCellPhone());
 
             return itemView;

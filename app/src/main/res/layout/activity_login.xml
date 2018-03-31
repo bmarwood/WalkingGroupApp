@@ -54,7 +54,7 @@
                 android:layout_marginEnd="4dp" />
 
             <TextView
-                android:id="@+id/emailTxt"
+                android:id="@+id/parentEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -82,7 +82,7 @@
                 app:layout_constraintHorizontal_bias="0.533"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/emailTxt" />
+                app:layout_constraintTop_toBottomOf="@+id/parentEmail" />
 
             <Button
                 android:id="@+id/signInBtn"
