@@ -30,7 +30,7 @@ public class ServerManager {
     * Return the proxy that client code can use to call server.
     * @return proxy object to call the server.
     */
-    public static ServerProxy getServerRequest() {
+    public static ServerProxy getServerProxy() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -56,7 +56,7 @@ public class ServerManager {
      * @param errorCallback   Client-code to execute when an error has occurred.
      * @param <T>       The type of data that Call object is expected to fetch
      */
-    public static <T> void serverRequest(Call<T> caller, @NonNull final ServerResult<T> resultCallback, @NonNull final ServerError errorCallback) {
+    public static <T> void serverRequest(Call<T> caller, final ServerResult<T> resultCallback, @NonNull final ServerError errorCallback) {
         caller.enqueue(new Callback<T>() {
             @Override
             public void onResponse(@NonNull Call<T> call, @NonNull retrofit2.Response<T> response) {
@@ -73,7 +73,10 @@ public class ServerManager {
                     if(body != null) {
                         Log.d("server response:", body.toString());
                     }
-                    resultCallback.result(body);
+
+                    if(resultCallback != null) {
+                        resultCallback.result(body);
+                    }
 
                 } else {
                     errorCallback.error(getError(response));

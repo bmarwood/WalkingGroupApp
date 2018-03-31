@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,7 +66,7 @@ public class Monitor extends BaseActivity {
         monitoringList.setOnItemClickListener((parent, view, position, id) -> {
             // Pass group member with info to profile activity
             User selectedUser = this.user.getMonitorsUsers().get(position);
-            ServerProxy proxy = ServerManager.getServerRequest();
+            ServerProxy proxy = ServerManager.getServerProxy();
             Call<User> call = proxy.getUserById(selectedUser.getId(), null);
             ServerManager.serverRequest(call, this::getUsers, this::error);
         });
@@ -77,7 +76,7 @@ public class Monitor extends BaseActivity {
         monitoredBy.setOnItemClickListener((parent, view, position, id) -> {
             // Pass group member with info to profile activity
             User selectedUser = this.user.getMonitoredByUsers().get(position);
-            ServerProxy proxy = ServerManager.getServerRequest();
+            ServerProxy proxy = ServerManager.getServerProxy();
             Call<User> call = proxy.getUserById(selectedUser.getId(), null);
             ServerManager.serverRequest(call, this::getMonitoredByUsers, this::error);
         });
@@ -200,7 +199,7 @@ public class Monitor extends BaseActivity {
 
             ImageView removeView = itemView.findViewById(R.id.removeUser);
             removeView.setOnClickListener(view -> {
-                ServerProxy proxy = ServerManager.getServerRequest();
+                ServerProxy proxy = ServerManager.getServerProxy();
                 if (monitorList) {
                     Call<Void> call = proxy.endMonitoring(user.getId(), selectedUser.getId());
                     ServerManager.serverRequest(call, result -> removeMonitoree(result, selectedUser), Monitor.this::error);

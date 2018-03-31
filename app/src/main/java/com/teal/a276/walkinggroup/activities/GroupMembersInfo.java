@@ -8,16 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.profile.UserInfo;
-import com.teal.a276.walkinggroup.activities.profile.UserProfile;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
@@ -97,7 +93,7 @@ public class GroupMembersInfo extends BaseActivity {
     }
 
     private void callServerForUserList() {
-           ServerProxy proxy = ServerManager.getServerRequest();
+           ServerProxy proxy = ServerManager.getServerProxy();
            Call<List<User>> call = proxy.getGroupMembers(groupSelected.getId());
            ServerManager.serverRequest(call, this::getUsers, this::error);
     }

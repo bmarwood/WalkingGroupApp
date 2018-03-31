@@ -97,7 +97,7 @@ public class Login extends AuthenticationActivity {
     }
 
     private void login() {
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<Void> caller = proxy.login(user);
         ServerManager.serverRequest(caller, this::successfulLogin, this::errorLogin);
     }

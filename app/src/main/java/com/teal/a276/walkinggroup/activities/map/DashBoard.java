@@ -8,9 +8,6 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.widget.Button;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Marker;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.message.Messages;
@@ -70,7 +67,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         placeCurrentLocationMarker();
 
         //First call to populate pins before timer starts
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<List<User>> call = proxy.getMonitors(user.getId(), 1L);
         ServerManager.serverRequest(call, this::monitorsResult, this::error);
 
@@ -101,7 +98,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         HashMap<String, Object> requestParameters = new HashMap<>();
         requestParameters.put(MessageRequestConstant.STATUS, MessageRequestConstant.UNREAD);
         requestParameters.put(MessageRequestConstant.FOR_USER, user.getId());
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<List<Message>> call = proxy.getMessages(requestParameters);
 
         ServerManager.serverRequest(call, this::updateUnreadMsg, this::error);
@@ -132,7 +129,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
             public void run() {
                 new Handler(Looper.getMainLooper()).post(() -> {
                     map.clear();
-                    ServerProxy proxy = ServerManager.getServerRequest();
+                    ServerProxy proxy = ServerManager.getServerProxy();
                     Call<List<User>> call = proxy.getMonitors(user.getId(), 1L);
                     ServerManager.serverRequest(call, DashBoard.this::monitorsResult, DashBoard.this::error);
                 });
@@ -143,7 +140,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     private void monitorsResult(List<User> users) {
         for(User user: users) {
 
-            ServerProxy proxy = ServerManager.getServerRequest();
+            ServerProxy proxy = ServerManager.getServerProxy();
             Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
             ServerManager.serverRequest(call,
                     result -> placeDashBoardMarker(result, user.getName(), MarkerColor.CYAN),
@@ -151,7 +148,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
 
             List<Group> groups = user.getMemberOfGroups();
             for(Group group : groups){
-                ServerProxy proxyForGroup = ServerManager.getServerRequest();
+                ServerProxy proxyForGroup = ServerManager.getServerProxy();
                 Call<User> callForGroup = proxyForGroup.getUserById(group.getLeader().getId(), null);
                 ServerManager.serverRequest(callForGroup, this::addLeadersMarker, this::error);
             }
@@ -190,7 +187,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     }
 
     private void addLeadersMarker(User user) {
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<UserLocation> call = proxy.getLastGpsLocation(user.getId());
         ServerManager.serverRequest(call,
                 result -> placeDashBoardMarker(result, user.getName(), MarkerColor.VIOLET),

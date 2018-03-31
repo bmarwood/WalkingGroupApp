@@ -46,7 +46,7 @@ public class CreateAccount extends AuthenticationActivity {
             String password = passwordInput.getText().toString();
             User user = new User(name, email, password);
 
-            ServerProxy proxy = ServerManager.getServerRequest();
+            ServerProxy proxy = ServerManager.getServerProxy();
             Call<User> caller = proxy.createNewUser(user);
             ServerManager.serverRequest(caller, result -> successfulResult(result, password),
                     CreateAccount.this::authError);
@@ -71,7 +71,7 @@ public class CreateAccount extends AuthenticationActivity {
         this.user = user;
 
         storeLogin();
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<Void> caller = proxy.login(this.user);
         ServerManager.serverRequest(caller, this::successfulLogin,
                 this::authError);

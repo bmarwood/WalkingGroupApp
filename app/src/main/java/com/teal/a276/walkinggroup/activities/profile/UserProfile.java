@@ -3,7 +3,6 @@ package com.teal.a276.walkinggroup.activities.profile;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.View;
@@ -154,7 +153,7 @@ public class UserProfile extends AuthenticationActivity {
             user.setTeacherName(teachersName);
             user.setEmergencyContactInfo(contactInfo);
 
-            ServerProxy proxy = ServerManager.getServerRequest();
+            ServerProxy proxy = ServerManager.getServerProxy();
             Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
             ServerManager.serverRequest(caller, UserProfile.this::successfulSave,
                     UserProfile.this::error);

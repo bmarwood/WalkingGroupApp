@@ -62,7 +62,7 @@ import retrofit2.Call;
 
 public class MapsActivity extends AbstractMapActivity implements Observer {
     private final HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
-    GroupManager groupManager;
+    private GroupManager groupManager;
     private static final int REQUEST_CHECK_SETTINGS = 2;
     private boolean walkInProgress = false;
     private User currentUser;
@@ -70,7 +70,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     private Button endButton;
     private Button startButton;
     private Button msgButton;
-    Group groupSelected = new Group();
+    private Group groupSelected = new Group();
 
 
     @Override
@@ -89,13 +89,13 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     }
 
     private void setGroups() {
-        ServerProxy getGroupsProxy = ServerManager.getServerRequest();
+        ServerProxy getGroupsProxy = ServerManager.getServerProxy();
         Call<List<Group>> getGroupsCall = getGroupsProxy.getGroups();
         ServerManager.serverRequest(getGroupsCall, this::groupsResult, this::error);
     }
 
     private void setUsers() {
-        ServerProxy getUsersProxy = ServerManager.getServerRequest();
+        ServerProxy getUsersProxy = ServerManager.getServerProxy();
         Call<List<User>> getUsersCall = getUsersProxy.getUsers();
         ServerManager.serverRequest(getUsersCall, this::getUsers, this::error);
     }
@@ -113,7 +113,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         startButton = findViewById(R.id.startBtn);
         startButton.setOnClickListener((View v) -> {
 
-            ServerProxy proxy = ServerManager.getServerRequest();
+            ServerProxy proxy = ServerManager.getServerProxy();
             Call<User> call = proxy.getUserByEmail(currentUser.getEmail(), 1l);
             ServerManager.serverRequest(call, this::updateInfo, this::error);
         });
@@ -181,9 +181,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Message message = getMessage(dialogView);
                         // Message group members and monitors me
-                        ServerProxy proxyMonitors = ServerManager.getServerRequest();
+                        ServerProxy proxyMonitors = ServerManager.getServerProxy();
                         Call<Message> callMonitors = proxyMonitors.sendMessageToMonitors(currentUser.getId(), message);
-                        ServerManager.serverRequest(callMonitors, MapsActivity.this::sendMessage, this::error);
+                        ServerManager.serverRequest(callMonitors, null, this::error);
                     }
 
                     private void error(String s) {
@@ -200,9 +200,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                         if (!messageString.isEmpty()) {
                             Message message = new Message();
                             message.setText(messageString);
-                            ServerProxy proxy = ServerManager.getServerRequest();
+                            ServerProxy proxy = ServerManager.getServerProxy();
                             Call<Message> call = proxy.sendMessageToMonitors(currentUser.getId(), message);
-                            ServerManager.serverRequest(call, MapsActivity.this::sendMessage, this::error);
+                            ServerManager.serverRequest(call, null, this::error);
                         }
                     }
 
@@ -224,10 +224,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         Message message = new Message();
         message.setText(messageString);
         return message;
-    }
-
-    private <T> void sendMessage(T t) {
-
     }
 
     private void addStartEndMarkers(Group group) {
@@ -306,7 +302,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 startActivity(DashBoard.makeIntent(this));
                 break;
             case R.id.userProfile:
-                ServerProxy proxy = ServerManager.getServerRequest();
+                ServerProxy proxy = ServerManager.getServerProxy();
                 Call<User> call = proxy.getUserById(currentUser.getId(), null);
                 ServerManager.serverRequest(call, MapsActivity.this::getUser, this::error);
                 break;
@@ -364,7 +360,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         super.onResume();
         groupManager.addObserver(this);
         setButtonVisibility();
-//        currentUser = ModelFacade.getInstance().getCurrentUser();
     }
 
     @Override
@@ -378,9 +373,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     public void onLocationChanged(Location location) {
         super.onLocationChanged(location);
         if (walkInProgress) {
-            ServerProxy proxy = ServerManager.getServerRequest();
+            ServerProxy proxy = ServerManager.getServerProxy();
             Call<UserLocation> call = proxy.setLastLocation(currentUser.getId(), new UserLocation(location));
-            ServerManager.serverRequest(call, this::result, this::error);
+            ServerManager.serverRequest(call, null, this::error);
 
 
             // Source: https://stackoverflow.com/questions/30170271/android-google-map-how-to-check-if-the-gps-location-is-inside-the-circle
@@ -423,11 +418,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             startButton.setVisibility(View.VISIBLE);
             msgButton.setVisibility(View.INVISIBLE);
         }
-    }
-
-    private void result(UserLocation location) {
-        // do nothing
-        Log.d("MapsActivity", "Location sent:" + location.toString());
     }
 
     @Override
@@ -543,13 +533,13 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     private void initializeAlertDialog(AlertDialog.Builder builder, Group selectedGroup, User selectedUser) {
 
         builder.setPositiveButton(getString(R.string.add_user), (dialog, which) -> {
-            ServerProxy proxy = ServerManager.getServerRequest();
+            ServerProxy proxy = ServerManager.getServerProxy();
             Call<List<User>> call = proxy.addUserToGroup(selectedGroup.getId(), selectedUser);
             ServerManager.serverRequest(call, result -> addGroupMemberResult(result, selectedUser), MapsActivity.this::error);
         });
 
         builder.setNegativeButton(getString(R.string.remove_user), (dialog, which) -> {
-            ServerProxy proxy = ServerManager.getServerRequest();
+            ServerProxy proxy = ServerManager.getServerProxy();
             Call<Void> call = proxy.deleteUserFromGroup(selectedGroup.getId(), selectedUser.getId());
             ServerManager.serverRequest(call, result -> removeGroupMemberResult(result, selectedUser), MapsActivity.this::error);
         });

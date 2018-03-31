@@ -50,7 +50,7 @@ public class Messages extends BaseActivity implements Observer {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 Message message = unreadMessages.get(viewHolder.getAdapterPosition());
-                ServerProxy proxy = ServerManager.getServerRequest();
+                ServerProxy proxy = ServerManager.getServerProxy();
                 Call<User> call = proxy.setMessageRead(message.getId(), user.getId(), true);
                 ServerManager.serverRequest(call,
                         result -> messageMarkedAsRead(result, viewHolder.getAdapterPosition()),
@@ -72,7 +72,7 @@ public class Messages extends BaseActivity implements Observer {
         HashMap<String, Object> requestParameters = new HashMap<>();
         requestParameters.put(MessageRequestConstant.FOR_USER, userId);
         requestParameters.put(MessageRequestConstant.STATUS, status);
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
 
         return proxy.getMessages(requestParameters);
     }

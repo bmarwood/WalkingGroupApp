@@ -33,7 +33,7 @@ public class CompleteUserRequest extends AbstractServerRequest {
     private void userResult(User user) {
         this.user = user;
 
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<List<User>> call = proxy.getMonitors(user.getId(), null);
         ServerManager.serverRequest(call, this::monitorsResult, errorCallback);
     }
@@ -41,7 +41,7 @@ public class CompleteUserRequest extends AbstractServerRequest {
     private void monitorsResult(List<User> users) {
         user.setMonitorsUsers(users);
 
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<List<User>> call = proxy.getMonitoredBy(user.getId());
         ServerManager.serverRequest(call, this::monitoredByResult, errorCallback);
     }
@@ -54,7 +54,7 @@ public class CompleteUserRequest extends AbstractServerRequest {
             return;
         }
 
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         for(int i = 0; i < user.getMemberOfGroups().size(); i++) {
             Group group = user.getMemberOfGroups().get(i);
             Call<Group> joinedGroupCall = proxy.getGroup(group.getId());

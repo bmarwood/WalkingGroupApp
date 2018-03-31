@@ -8,13 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -44,7 +42,7 @@ public class UserInfo extends UserProfile {
     }
 
     public void populateListView() {
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<User> call = proxy.getUserByEmail(user.getEmail(), 1L);
         ServerManager.serverRequest(call, this::getUser, this::error);
     }

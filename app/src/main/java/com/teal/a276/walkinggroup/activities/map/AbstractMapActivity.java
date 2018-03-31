@@ -235,11 +235,6 @@ public abstract class AbstractMapActivity extends BaseActivity implements OnMapR
         }
     }
 
-    protected Marker placeMarker(LatLng markerLocation, String markerTitle) {
-        MarkerOptions markerOptions = new MarkerOptions().position(markerLocation).title(markerTitle);
-        return map.addMarker(markerOptions);
-    }
-
     protected Marker placeMarker(LatLng markerLocation, String markerTitle, Integer iconId) {
         MarkerOptions markerOptions = new MarkerOptions().position(markerLocation).title(markerTitle);
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource

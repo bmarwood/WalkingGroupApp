@@ -38,7 +38,7 @@ public class MessageUpdater extends Observable {
         HashMap<String, Object> requestParameters = new HashMap<>();
         requestParameters.put(MessageRequestConstant.FOR_USER, user.getId());
         requestParameters.put(MessageRequestConstant.STATUS, MessageRequestConstant.UNREAD);
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
 
         Call<List<Message>> call = proxy.getMessages(requestParameters);
         ServerManager.serverRequest(call, this::unreadMessages, errorCallback);

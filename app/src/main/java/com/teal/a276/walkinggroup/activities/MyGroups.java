@@ -2,7 +2,6 @@ package com.teal.a276.walkinggroup.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -48,7 +47,7 @@ public class MyGroups extends BaseActivity {
     }
 
     private void callServerForUserList() {
-        ServerProxy proxy = ServerManager.getServerRequest();
+        ServerProxy proxy = ServerManager.getServerProxy();
         Call<User> call = proxy.getUserById(user.getId(), 1L);
         ServerManager.serverRequest(call, this::setInfo, this::error);
     }
@@ -89,9 +88,9 @@ public class MyGroups extends BaseActivity {
                     Group groupSelected = leadsGroups.get(position);
 
                     // Send message
-                    ServerProxy proxy = ServerManager.getServerRequest();
+                    ServerProxy proxy = ServerManager.getServerProxy();
                     Call<Message> call = proxy.sendMessageToGroup(groupSelected.getId(), message);
-                    ServerManager.serverRequest(call, MyGroups.this::sendMessage, MyGroups.this::error);
+                    ServerManager.serverRequest(call, null, MyGroups.this::error);
                 }
             });
             alertDialogBuilder.setNeutralButton(getString(R.string.Emergency), (dialog, which) -> {
@@ -104,9 +103,9 @@ public class MyGroups extends BaseActivity {
                     Message message = new Message();
                     message.setText(messageString);
                     Group groupSelected = leadsGroups.get(position);
-                    ServerProxy proxy = ServerManager.getServerRequest();
+                    ServerProxy proxy = ServerManager.getServerProxy();
                     Call<Message> call = proxy.sendMessageToGroup(groupSelected.getId(), message);
-                    ServerManager.serverRequest(call, MyGroups.this::sendMessage, MyGroups.this::error);
+                    ServerManager.serverRequest(call, null, MyGroups.this::error);
                 }
             });
 
@@ -121,10 +120,6 @@ public class MyGroups extends BaseActivity {
             // Launch group info
             makeIntent(memberOfGroupNames, position);
         });
-    }
-
-    private <T> void sendMessage(T t) {
-
     }
 
     private void setListViewNames(List<String> leadsGroupNames, List<String> memberOfGroupNames, List<Group> groups) {
