@@ -1,14 +1,16 @@
 <resources>
     <string name="app_name">Walking Group</string>
+
+    <!-- menu strings -->
+    <string name="dashboard">Dashboard</string>
+    <string name="user_profile">Profile</string>
+    <string name="monitor">Monitor</string>
     <string name="add_new_group">Add New Group</string>
-    <string name="group_name">Group Name:</string>
-    <string name="meeting_location">Meeting Location:</string>
-    <string name="monitored_by">Monitored By</string>
-    <string name="monitoring">Monitoring</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="my_groups">My Groups</string>
+    <string name="messages">Messages</string>
+    <string name="logout">Logout</string>
 
     <!-- Strings related to login -->
-
     <string name="login">Login</string>
     <string name="parents_email">Email:</string>
     <string name="password">Password:</string>
@@ -23,19 +25,16 @@
     <string name="hint_name">Name</string>
     <string name="defaultuserpicture">defaultUserPicture</string>
 
-
-    <string name="monitor">Monitor</string>
-
     <!-- Monitoring activity -->
     <string name="add_user_to_be_monitored_by">Add user to be monitored by</string>
     <string name="add_user_to_monitor">Add user to monitor</string>
+    <string name="monitored_by">Monitored By</string>
+    <string name="monitoring">Monitoring</string>
 
     <!-- General dialog strings -->
     <string name="ok">OK</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
-    <string name="logout">Logout</string>
-    <string name="title_activity_select_location_on_map">Map</string>
 
     <!-- Create New Group Activity Strings-->
     <string name="useThisLocation">Use this location?</string>
@@ -52,8 +51,6 @@
     <string name="empty_username">Name is Empty</string>
     <string name="address_error">Address not available</string>
     <string name="location_error">Location not set</string>
-
-
     <string name="email_or_password_is_incorrect">Email or Password is Incorrect</string>
 
     <!-- Autosign in -->
@@ -73,16 +70,16 @@
     <!-- Strings related to myGroups -->
     <string name="member_of_groups">Member of Groups</string>
     <string name="leader_of_groups">Leader of Groups</string>
-    <string name="my_groups">My Groups</string>
     <string name="post">Post</string>
     <string name="Emergency">Emergency</string>
     <string name="msg_group">Message Group: %1$s</string>
+    <string name="enter_message">Enter Message</string>
 
-    <string name="dashboard">Dashboard</string>
 
     <!-- Strings related to EmbeddedCreateGroup-->
     <string name="embedded_set_meeting">Set Meeting</string>
     <string name="embedded_set_dest">Set Dest</string>
+    <string name="group_name">Group Name:</string>
     <string name="embedded_leader_s_email">Leader\'s Email</string>
     <string name="leader_destination">Please Select Destination Location</string>
     <string name="user_destination">Please Select Meeting Location</string>
@@ -94,18 +91,19 @@
 
     <!-- Strings related to Dashboard-->
     <string name="dashboard_unread_message">UNREAD MSG:</string>
+    <string name="last_time_update"> - Last Updated: </string>
+    <string name="time_format">%1$d min, %2$d sec</string>
 
-    <string name="user_profile">User Profile</string>
+    <!-- profile strings -->
     <string name="parents_name">Name</string>
     <string name="birth">Birth</string>
-    <string name="home_number">Home Number</string>
     <string name="address">address</string>
     <string name="current_grade">Current Grade</string>
     <string name="teachers_name">Teachers Name:</string>
     <string name="emergency_contact_information">Emergency Contact Information</string>
     <string name="birth_date">Birth Date:</string>
     <string name="pick_your_birth_date">Pick Your Birth Date</string>
-    <string name="nametxt">Name:</string>
+    <string name="name">Name:</string>
     <string name="userImage">UserImage</string>
     <string name="date">Date</string>
     <string name="addressColon">Address:</string>
@@ -116,47 +114,38 @@
     <string name="optional">(Optional)</string>
     <string name="contact_info">Contact Info:</string>
     <string name="save">Save</string>
+    <string name="updated_profile">Profile has been updated</string>
 
-    <!-- Messages activity string -->
-    <string name="messages">Messages</string>
-    <string name="unread_messages">Unread Messages</string>
-    <string name="read_messages">Read Messages</string>
-    <string name="start_walk">Start walk</string>
-    <string name="end_walk">End walk</string>
-    <string name="msg">Msg</string>
+    <!-- profile errors -->
     <string name="message">Message</string>
     <string name="email_invalid">Email address is invalid</string>
     <string name="phone_invalid">Phone is invalid</string>
-    <string name="updated_profile">Profile has been updated</string>
     <string name="empty_email">email is empty</string>
     <string name="empty_cell">cellPhone is empty</string>
     <string name="empty_home">homePhone is empty</string>
     <string name="empty_address">address is empty</string>
     <string name="empty_name">name is empty</string>
-    <string name="added_to_group">Added %s to group</string>
-    <string name="removed_from_group">Removed %s from group</string>
+
+
+    <!-- Messages activity string -->
+    <string name="unread_messages">Unread Messages</string>
+    <string name="read_messages">Read Messages</string>
+    <string name="panic_txt">Panic:</string>
+    <string name="emerg_txt">Emergency:</string>
+
+
+    <!-- Map activity string -->
+    <string name="start_walk">Start walk</string>
+    <string name="end_walk">End walk</string>
+    <string name="msg">Msg</string>
     <string name="start">Start</string>
     <string name="finish">Finish</string>
     <string name="panic">Panic</string>
-    <string name="send_message">Send a message</string>
     <string name="choose_group">Choose group to walk with</string>
-
-    <string name="last_time_update"> - Last Updated: </string>
-    <string name="panic_txt">Panic:</string>
-    <string name="emerg_txt">Emergency:</string>
     <string name="you_have_arrived">You have arrived at your location</string>
-    <string name="parents_view_name">Name</string>
-    <string name="email2">Email</string>
-    <string name="homephone">HomePhone</string>
-    <string name="cellphone">CellPhone</string>
-    <string name="name2">Name:</string>
-    <string name="parentsview_email">Email:</string>
-    <string name="home_phone">Home Phone:</string>
-    <string name="cell_phone">Cell Phone:</string>
-    <string name="user_profile_email">Email:</string>
-    <string name="unique_email">Email:</string>
-    <string name="unique_email_two">Email:</string>
-
-    <string name="time_format">%1$d min, %2$d sec</string>
     <string name="message_sent">Message sent</string>
+    <string name="added_to_group">Added %s to group</string>
+    <string name="removed_from_group">Removed %s from group</string>
+    <string name="send_message">Send a message</string>
+
 </resources>

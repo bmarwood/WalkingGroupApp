@@ -167,22 +167,19 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
     private void setMsgButton() {
         msgButton = findViewById(R.id.msgBtn);
-        msgButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);
-                LayoutInflater inflater = getLayoutInflater();
-                final View dialogView = inflater.inflate(R.layout.message_alert_dialog, null);
-                alertDialogBuilder.setView(dialogView);
-                alertDialogBuilder.setTitle(R.string.send_message);
+        msgButton.setOnClickListener(view -> {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);
+            LayoutInflater inflater = getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.message_alert_dialog, null);
+            alertDialogBuilder.setView(dialogView);
+            alertDialogBuilder.setTitle(R.string.send_message);
 
-                alertDialogBuilder.setPositiveButton(R.string.post, (dialogInterface, i) ->
-                        sendMessage(getMessage(dialogView, null)));
-                alertDialogBuilder.setNegativeButton(R.string.panic, (dialogInterface, i) ->
-                        sendMessage(getMessage(dialogView, R.string.panic_txt)));
-                alertDialogBuilder.setNeutralButton(R.string.cancel, null);
-                alertDialogBuilder.show();
-            }
+            alertDialogBuilder.setPositiveButton(R.string.post, (dialogInterface, i) ->
+                    sendMessage(getMessage(dialogView, null)));
+            alertDialogBuilder.setNegativeButton(R.string.panic, (dialogInterface, i) ->
+                    sendMessage(getMessage(dialogView, R.string.panic_txt)));
+            alertDialogBuilder.setNeutralButton(R.string.cancel, null);
+            alertDialogBuilder.show();
         });
     }
 

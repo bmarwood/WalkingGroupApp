@@ -46,7 +46,7 @@
                     android:id="@+id/user_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/nametxt" />
+                    android:text="@string/name" />
 
                 <EditText
                     android:id="@+id/editName"
@@ -139,7 +139,7 @@
                     android:id="@+id/emailTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/user_profile_email" />
+                    android:text="@string/email_colon" />
 
                 <EditText
                     android:id="@+id/editEmail"
