@@ -136,4 +136,7 @@
     <string name="removed_from_group">Removed %s from group</string>
     <string name="send_message">Send a message</string>
 
+    <!-- Permissions string -->
+    <string name="requestedPermissions">Permission Requests</string>
+
 </resources>

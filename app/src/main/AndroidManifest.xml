@@ -38,9 +38,7 @@
 
         <activity
             android:name=".activities.map.MapsActivity"
-            android:label="@string/map">
-        </activity>
-
+            android:label="@string/map"></activity>
         <activity android:name=".activities.auth.CreateAccount" />
         <activity android:name=".activities.GroupMembersInfo" />
         <activity android:name=".activities.MyGroups" />
@@ -48,7 +46,8 @@
         <activity android:name=".activities.map.DashBoard" />
         <activity android:name=".activities.profile.UserProfile" />
         <activity android:name=".activities.map.EmbeddedCreateGroup" />
-        <activity android:name=".activities.profile.UserInfo"/>
+        <activity android:name=".activities.profile.UserInfo" />
+        <activity android:name=".activities.PermissionRequest"></activity>
     </application>
 
 </manifest>
