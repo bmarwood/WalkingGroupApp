@@ -14,6 +14,10 @@
         android:title="@string/monitor"
         app:showAsAction="never" />
 
+    <item android:id="@+id/permissions"
+        android:title="@string/requestedPermissions"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/addNewGroup"
         android:title="@string/add_new_group"

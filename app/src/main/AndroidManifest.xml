@@ -47,7 +47,7 @@
         <activity android:name=".activities.profile.UserProfile" />
         <activity android:name=".activities.map.EmbeddedCreateGroup" />
         <activity android:name=".activities.profile.UserInfo" />
-        <activity android:name=".activities.PermissionRequest"></activity>
+        <activity android:name=".activities.permission.PermissionRequest"></activity>
     </application>
 
 </manifest>

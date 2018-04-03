@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.teal.a276.walkinggroup.activities.PermissionRequest">
+    tools:context="com.teal.a276.walkinggroup.activities.permission.PermissionRequest">
 
     <TextView
         android:id="@+id/textView3"
@@ -20,6 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ExpandableListView
+        android:id="@+id/permissions"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
