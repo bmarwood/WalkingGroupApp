@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.GroupMembersInfo;
+import com.teal.a276.walkinggroup.activities.Leaderboard;
 import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.activities.profile.UserProfile;
 import com.teal.a276.walkinggroup.activities.MyGroups;
@@ -299,6 +300,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 break;
             case R.id.messages:
                 startActivity(new Intent(this, Messages.class));
+                break;
+            case R.id.leaderboard:
+                startActivity(Leaderboard.makeIntent(this));
                 break;
             case R.id.logoutItem:
                 logout();
