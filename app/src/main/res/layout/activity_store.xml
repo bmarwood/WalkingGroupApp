@@ -10,9 +10,9 @@
         android:id="@+id/storeTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="36dp"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="16dp"
-        android:text="Store"
+        android:text="@string/store"
         android:textSize="25sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +23,7 @@
         android:layout_height="16dp"
         android:layout_marginEnd="100dp"
         android:layout_marginTop="32dp"
-        android:text="Remaining Points:"
+        android:text="@string/remaining_points"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="100dp"
-        android:text="Backgrounds (100 Points)"
+        android:text="@string/backgrounds_100_points"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,19 +41,20 @@
         android:id="@+id/imageView2"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginLeft="36dp"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="140dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="?android:attr/fingerprintAuthDrawable" />
+        app:srcCompat="?android:attr/fingerprintAuthDrawable"
+        tools:targetApi="m" />
 
     <TextView
         android:id="@+id/storeColourTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
-        android:layout_marginLeft="36dp"
-        android:text="Colour Palette (100 Points)"
+        android:layout_marginStart="36dp"
+        android:text="@string/colour_palette_100_points"
         app:layout_constraintBottom_toTopOf="@+id/imageView6"
         app:layout_constraintLeft_toLeftOf="parent" />
 

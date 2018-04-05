@@ -136,4 +136,10 @@
     <string name="removed_from_group">Removed %s from group</string>
     <string name="send_message">Send a message</string>
 
+    <!-- Store activity -->
+    <string name="store">Store</string>
+    <string name="remaining_points">Remaining Points:</string>
+    <string name="backgrounds_100_points">Backgrounds (100 Points)</string>
+    <string name="colour_palette_100_points">Colour Palette (100 Points)</string>
+
 </resources>
