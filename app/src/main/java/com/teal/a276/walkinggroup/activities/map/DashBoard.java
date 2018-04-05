@@ -2,11 +2,18 @@ package com.teal.a276.walkinggroup.activities.map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Button;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.message.Messages;
 import com.teal.a276.walkinggroup.model.ModelFacade;
@@ -27,6 +34,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -59,14 +68,29 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     public void onConnected(@Nullable Bundle bundle) {
         super.onConnected(bundle);
         setUpMsgButton();
-        placeCurrentLocationMarker();
+
+
+        TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                new Handler(Looper.getMainLooper()).post(() -> checkLocation());
+                Log.i("Timer", "Timer has run");
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.schedule(task, new Date(), 6000);
+
+
+//        placeCurrentLocationMarker();
 
         //First call to populate pins before timer starts
-        DashboardLocationRequest initialLocationRequest = new DashboardLocationRequest(user, 0, this::error);
-        initialLocationRequest.addObserver(this);
+//        DashboardLocationRequest initialLocationRequest = new DashboardLocationRequest(user, 0, this::error);
+//        initialLocationRequest.addObserver(this);
 
-        locationRequest = new DashboardLocationRequest(user, MAP_UPDATE_RATE, this::error);
-        locationRequest.addObserver(this);
+//        locationRequest = new DashboardLocationRequest(user, MAP_UPDATE_RATE, this::error);
+//        locationRequest.addObserver(this);
     }
 
     @Override
@@ -75,8 +99,8 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         messageUpdater.unsubscribeFromUpdates();
         messageUpdater.deleteObserver(this);
 
-        locationRequest.unsubscribeFromUpdates();
-        locationRequest.deleteObserver(this);
+//        locationRequest.unsubscribeFromUpdates();
+//        locationRequest.deleteObserver(this);
     }
 
     @Override
@@ -154,11 +178,11 @@ public class DashBoard extends AbstractMapActivity implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
-        if(o == messageUpdater) {
-            updateUnreadMsg((List<Message>) arg);
-        } else {
-            addMarkersForUsers((List<User>) arg);
-        }
+//        if(o == messageUpdater) {
+//            updateUnreadMsg((List<Message>) arg);
+//        } else {
+//            addMarkersForUsers((List<User>) arg);
+//        }
     }
 
     private void addMarkersForUsers(List<User> users) {
@@ -167,5 +191,29 @@ public class DashBoard extends AbstractMapActivity implements Observer{
             placeDashBoardMarker(user.getLocation(), user.getName(),
                     user.isLeader() ? MarkerColor.VIOLET : MarkerColor.CYAN);
         }
+    }
+
+    // Call this every 30 seconds
+    private void checkLocation() {
+        map.clear();
+        ServerProxy proxy = ServerManager.getServerProxy();
+        Call<List<User>> call = proxy.getMonitors(user.getId(), 1L);
+        ServerManager.serverRequest(call, this::monitors, this::error);
+    }
+
+    private void monitors(List<User> users) {
+        for(int i = 0; i < users.size(); i++) {
+            ServerProxy proxy = ServerManager.getServerProxy();
+            Call<UserLocation> call = proxy.getLastGpsLocation(users.get(i).getId());
+            ServerManager.serverRequest(call, this::location, this::error);
+        }
+    }
+
+    private void location(UserLocation userLocation) {
+        Log.i("Matt", "Lat : " + userLocation.getLat() + " Lng: " + userLocation.getLng());
+
+        LatLng location = new LatLng(userLocation.getLat(), userLocation.getLng());
+        MarkerOptions markerOptions = new MarkerOptions().position(location).title("Marker ");
+        map.addMarker(markerOptions);
     }
 }
