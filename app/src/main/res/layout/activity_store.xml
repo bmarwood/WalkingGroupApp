@@ -10,7 +10,7 @@
         android:id="@+id/storeTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
+        android:layout_marginLeft="36dp"
         android:layout_marginTop="16dp"
         android:text="@string/store"
         android:textSize="25sp"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/storeYourPointsTv"
+        android:id="@+id/storeRemainingPointsTv"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginEnd="100dp"
@@ -38,7 +38,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/one"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginStart="36dp"
@@ -52,14 +52,17 @@
         android:id="@+id/storeColourTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
-        android:layout_marginStart="36dp"
+        android:layout_marginEnd="212dp"
+        android:layout_marginLeft="16dp"
         android:text="@string/colour_palette_100_points"
-        app:layout_constraintBottom_toTopOf="@+id/imageView6"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.583" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/two"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginTop="140dp"
@@ -70,7 +73,7 @@
         app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/three"
         android:layout_width="75dp"
         android:layout_height="76dp"
         android:layout_marginEnd="36dp"
@@ -80,10 +83,10 @@
         app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/five"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginBottom="148dp"
+        android:layout_marginBottom="120dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -91,23 +94,112 @@
         app:srcCompat="@android:color/holo_red_light" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/four"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginBottom="148dp"
+        android:layout_marginBottom="120dp"
         android:layout_marginStart="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:color/holo_blue_dark" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/six"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginBottom="148dp"
+        android:layout_marginBottom="120dp"
         android:layout_marginEnd="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:color/holo_purple" />
+
+    <Button
+        android:id="@+id/storeDefaultBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/default_string"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="36dp"
+        android:text="100 Pts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.477" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="100 Pts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.476" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginTop="8dp"
+        android:text="100 Pts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.476" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="100 pts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.865" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="100 pts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.865" />
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="100 pts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.911"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.866" />
 
 </android.support.constraint.ConstraintLayout>
