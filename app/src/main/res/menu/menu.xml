@@ -30,7 +30,7 @@
         app:showAsAction="never" />
 
     <item android:id="@+id/leaderboard"
-        android:title="Leaderboard"
+        android:title="@string/leaderboard"
         app:showAsAction="never" />
 
 

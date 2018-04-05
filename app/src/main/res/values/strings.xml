@@ -136,4 +136,8 @@
     <string name="removed_from_group">Removed %s from group</string>
     <string name="send_message">Send a message</string>
 
+    <!-- Leaderboard Activity String -->
+    <string name="leaderboard">Leaderboard</string>
+
+
 </resources>

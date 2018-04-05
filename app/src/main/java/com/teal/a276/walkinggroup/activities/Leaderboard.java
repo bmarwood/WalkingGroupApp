@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,18 +33,23 @@ public class Leaderboard extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
+
+
         initializeLeaderboardListView();
+        //getUsers();
     }
+    /*
+    private void getUsers() {
+        ServerProxy getUsersProxy = ServerManager.getServerProxy();
+        Call<List<User>> getUsersCall = getUsersProxy.getUsers();
+        ServerManager.serverRequest(getUsersCall, this::initializeLeaderboardListView, this::error);
+    }
+    */
 
     private void initializeLeaderboardListView() {
-
         User bob1 = new User();
         bob1.setName("Bob1");
         bob1.setTotalPointsEarned(1);
-
-        User bob2 = new User();
-        bob2.setName("Bob2");
-        bob2.setTotalPointsEarned(2);
 
         User bob3 = new User();
         bob3.setName("Bob3");
@@ -51,14 +57,25 @@ public class Leaderboard extends BaseActivity {
 
         User bob4 = new User();
         bob4.setName("Bob4");
-        bob4.setTotalPointsEarned(4);
+
+        User bob2 = new User();
+        bob2.setName("Bob2");
+        bob2.setTotalPointsEarned(2);
 
         testingUsers.add(bob1);
+        testingUsers.add(bob3);
         testingUsers.add(bob4);
         testingUsers.add(bob2);
-        testingUsers.add(bob3);
 
-        System.out.println(Arrays.deepToString(testingUsers.toArray()));
+
+        Log.d("listtesting", Arrays.deepToString(testingUsers.toArray()));
+
+        for(User user : testingUsers){
+            if(user.getTotalPointsEarned() == null){
+                user.setTotalPointsEarned(0);
+                //testingUsers.remove(testingUsers.indexOf(user));
+            }
+        }
 
         //Sort users from max to min
         Collections.sort(testingUsers, ((o1, o2) -> o2.getTotalPointsEarned()
@@ -69,25 +86,22 @@ public class Leaderboard extends BaseActivity {
             testingUsers.subList(100, testingUsers.size());
         }
 
-        leaderboardAdapter = new ListItemAdapter(this, testingUsers, true);
+        leaderboardAdapter = new ListItemAdapter(this, testingUsers);
         ListView leaderboardList = findViewById(R.id.leaderboardLv);
         leaderboardList.setAdapter(leaderboardAdapter);
     }
 
-
     private class ListItemAdapter extends ArrayAdapter<User> {
         private final List<User> listItems;
         private final Context context;
-        private final boolean leaderList;
 
-        public ListItemAdapter(Context context, List<User> listItems, boolean leaderList) {
+        public ListItemAdapter(Context context, List<User> listItems) {
+
             super(context, R.layout.list_item, listItems);
             this.listItems = listItems;
             this.context = context;
-            this.leaderList = leaderList;
         }
 
-        //@Override
         @NonNull
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View itemView = convertView;
@@ -105,7 +119,6 @@ public class Leaderboard extends BaseActivity {
             return itemView;
         }
     }
-
 
     public static Intent makeIntent(Context context){
         return new Intent(context, Leaderboard.class);
