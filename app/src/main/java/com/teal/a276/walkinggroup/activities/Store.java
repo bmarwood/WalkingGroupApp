@@ -16,6 +16,7 @@ import com.teal.a276.walkinggroup.model.dataobjects.User;
 public class Store extends BaseActivity implements View.OnClickListener {
 
     private User user;
+    private int remainingPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,25 +87,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
         }
     }
-
-    public void setupPurchaseButtonClickListener(){
-        Button one = findViewById(R.id.button1);
-        one.setOnClickListener((View v) ->{
-            purchaseItem(1);
-        });
-    }
-
-
-
-
-
-    public static Intent makeIntent(Context context) {
-        return new Intent(context, Store.class);
-    }
-
-
-
-
     public void switchToItem(int id){
         Toast.makeText(this, "The Item you clicked is: " + id, Toast.LENGTH_SHORT).show();
 
@@ -117,7 +99,63 @@ public class Store extends BaseActivity implements View.OnClickListener {
 */
     }
 
+
+    public void setupPurchaseButtonClickListener(){
+        Button one = findViewById(R.id.button1);
+        one.setOnClickListener((View v) ->{
+            purchaseItem(1);
+        });
+
+        Button two = findViewById(R.id.button2);
+        one.setOnClickListener((View v) ->{
+            purchaseItem(2);
+        });
+
+        Button three = findViewById(R.id.button3);
+        one.setOnClickListener((View v) ->{
+            purchaseItem(3);
+        });
+
+        Button four = findViewById(R.id.button4);
+        one.setOnClickListener((View v) ->{
+            purchaseItem(4);
+        });
+
+        Button five = findViewById(R.id.button5);
+        one.setOnClickListener((View v) ->{
+            purchaseItem(5);
+        });
+
+        Button six = findViewById(R.id.button6);
+        one.setOnClickListener((View v) ->{
+            purchaseItem(6);
+        });
+
+    }
+
+
+    public static Intent makeIntent(Context context) {
+        return new Intent(context, Store.class);
+    }
+
+
     public void purchaseItem(int id){
+        switch(id) {
+            case 1:
+                if (remainingPoints >= 100) {
+                    //TODO: unlock items
+
+
+                    //TODO: push remaining points to server after subtraction of 100
+                } else {
+                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+
+
+
+        }
 
     }
 }
