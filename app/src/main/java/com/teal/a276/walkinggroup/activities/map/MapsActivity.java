@@ -60,6 +60,7 @@ import retrofit2.Call;
  */
 
 public class MapsActivity extends AbstractMapActivity implements Observer {
+    public static final int DELAY = 600000;
     private final HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
     private GroupManager groupManager;
     private static final int REQUEST_CHECK_SETTINGS = 2;
@@ -388,7 +389,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                         setButtonVisibility();
                     });
                 }
-            }, 600000);
+            }, DELAY);
         }
     }
 
