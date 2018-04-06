@@ -57,7 +57,13 @@ public class MyGroups extends BaseActivity {
 
     private void setupCreateGroupButton() {
         Button btn = findViewById(R.id.createGroupBtn);
-        btn.setOnClickListener(view -> startActivity(EmbeddedCreateGroup.makeIntent(MyGroups.this)));
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(EmbeddedCreateGroup.makeIntent(MyGroups.this));
+                MyGroups.this.finish();
+            }
+        });
     }
 
     private void setInfo(User user) {
