@@ -28,6 +28,7 @@ public class Leaderboard extends BaseActivity {
 
     private ArrayAdapter<User> leaderboardAdapter;
     List<User> testingUsers = new ArrayList<>();
+    String firstName= "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +63,14 @@ public class Leaderboard extends BaseActivity {
         bob2.setName("Bob2");
         bob2.setTotalPointsEarned(2);
 
+        User lastNameTest = new User();
+        lastNameTest.setName("Jane Doe");
+        lastNameTest.setTotalPointsEarned(100);
+
         testingUsers.add(bob1);
         testingUsers.add(bob3);
         testingUsers.add(bob4);
+        testingUsers.add(lastNameTest);
         testingUsers.add(bob2);
 
 
@@ -112,9 +118,31 @@ public class Leaderboard extends BaseActivity {
             User selectedUser = listItems.get(position);
 
             TextView nameTextView = itemView.findViewById(R.id.userName);
-            String displayText = selectedUser.getName() + "    -    " +
+
+
+            //First Name Extraction
+            String currentName = selectedUser.getName();
+
+            if(currentName.split("\\w+").length>1){
+                firstName = currentName.substring(0, currentName.lastIndexOf(' '));
+            } else {
+                firstName = currentName;
+            }
+
+            //Last Name Extraction
+            char lastInitial = '\0';
+            for(int i=1;i<currentName.length();i++){
+                char c = currentName.charAt(i);
+                if(c == ' '){
+                    lastInitial = currentName.charAt(i+1);
+                }
+            }
+
+            String displayText =  firstName +  " " + lastInitial + "    -    " +
                     selectedUser.getTotalPointsEarned() + " Points";
+
             nameTextView.setText(displayText);
+
 
             return itemView;
         }
