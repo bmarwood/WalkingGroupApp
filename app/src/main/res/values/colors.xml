@@ -2,10 +2,19 @@
 <resources>
     <color name="colorPrimary">#b7b7b8</color>
     <color name="colorPrimaryDark">#a7a8ab</color>
-    <color name="colorAccent">#707070</color>
+    <color name="colorAccent">#5c0a52</color>
     <color name="primary_material_dark">#ffffff</color>
-    <color name="accent_material_light">#7afd1b</color>
-    <color name="primary_dark_material_dark">#734d4e4c</color>
-    <color name="foreground_material_light">#9fa0a1</color>
+    <color name="accent_material_light">#6adce7</color>
+    <color name="primary_dark_material_dark">#4f5357</color>
+    <color name="foreground_material_light">#669337</color>
     <color name="accent_material_light_1">#3e542e</color>
+    <color name="primary_material_light">#e9f0f9</color>
+    <color name="primary_dark_material_light">#05658d</color>
+    <color name="accent_material_dark">#e1b7e5</color>
+    <color name="background_material_dark">#a0a1a6</color>
+
+    <!-- app/src/main/res/values/colors.xml -->
+    <color name="darkColorPrimary">#1e2756</color>
+    <color name="darkColorPrimaryDark">#141831</color>
+    <color name="darkColorAccent">#2aac4b</color>
 </resources>
