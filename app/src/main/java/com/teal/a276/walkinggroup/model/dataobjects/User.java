@@ -29,8 +29,8 @@ public class User {
     private String grade;
     private String teacherName;
     private String emergencyContactInfo;
-    private Integer currentPoints;
-    private Integer totalPointsEarned;
+    private Integer currentPoints = 0;
+    private Integer totalPointsEarned = 0;
     private String customJson;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -265,7 +265,6 @@ public class User {
                 ", currentPoints='" + currentPoints +
                 ", totalPointsEarned='" + totalPointsEarned +
                 ", customJson='" + customJson + '\'' +
-                ", currentPoints='" + currentPoints +
                 ", monitoredByUsers=" + monitoredByUsers + '\'' +
                 ", monitorsUsers=" + monitorsUsers + '\'' +
                 ", leadsGroups=" + leadsGroups + '\'' +
