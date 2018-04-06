@@ -197,4 +197,7 @@ public interface ServerProxy {
 
     @POST("/users/{id}/lastGpsLocation")
     Call<UserLocation> setLastLocation(@Path("id") Long userId, @Body UserLocation userLocation);
+
+    @GET("/permissions")
+    Call<List<Permission>> getMessages(@Nullable @QueryMap Map<String, Object> options);
 }
