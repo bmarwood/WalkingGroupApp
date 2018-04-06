@@ -91,6 +91,7 @@ public class DashboardLocationRequest extends AbstractServerRequest {
 
         if(users.size() == numberOfUsersOnDashBoard) {
             setDataChanged(users);
+            users.clear();
         }
     }
 
