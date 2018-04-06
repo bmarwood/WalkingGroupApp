@@ -1,18 +1,16 @@
 package com.teal.a276.walkinggroup.activities.permission;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
-import com.teal.a276.walkinggroup.model.dataobjects.Permission;
+import com.teal.a276.walkinggroup.model.dataobjects.permissions.Authorizor;
+import com.teal.a276.walkinggroup.model.dataobjects.permissions.Permission;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,24 +28,24 @@ public class PermissionRequest extends BaseActivity {
         setContentView(R.layout.activity_permission_request);
 
         permissionView = findViewById(R.id.permissions);
-        List<String> fakeHeaderData = Arrays.asList("Test1", "test2", "test3");
-        HashMap<String, List<String>> fakeChildData = new HashMap<>();
-        fakeChildData.put(fakeHeaderData.get(0), Arrays.asList("child1", "child2", "child3"));
-        fakeChildData.put(fakeHeaderData.get(1), Arrays.asList("child4", "child5", "child6"));
-        fakeChildData.put(fakeHeaderData.get(2), Arrays.asList("child7", "child8", "child9"));
-
-        permissionAdapter = new PermissionAdapter(this, fakeHeaderData, fakeChildData);
-        permissionView.setAdapter(permissionAdapter);
 
         ServerProxy proxy = ServerManager.getServerProxy();
         Map<String, Object> map = new HashMap<>();
-        Call<List<Permission>> call = proxy.getPermissions(map);
+        Call<List<Permission>> call = proxy.getPermissions(map, 1L);
         ServerManager.serverRequest(call, this::test, this::error);
     }
 
     private void test(List<Permission> permissions) {
+        HashMap<Permission, List<Authorizor>> authorizors = new HashMap<>();
         for(Permission p : permissions) {
-            Log.d("permission", p.toString());
+            authorizors.put(p, p.getAuthorizors());
         }
+
+        permissionAdapter = new PermissionAdapter(this, permissions, authorizors);
+        permissionView.setAdapter(permissionAdapter);
+
+       for (int i = 0; i < permissionAdapter.getGroupCount(); i++) {
+           permissionView.expandGroup(i);
+       }
     }
 }

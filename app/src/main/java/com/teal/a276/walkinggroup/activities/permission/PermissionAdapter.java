@@ -8,6 +8,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.model.dataobjects.permissions.Authorizor;
+import com.teal.a276.walkinggroup.model.dataobjects.permissions.Permission;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,11 +20,12 @@ import java.util.List;
 
 public class PermissionAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private List<String> headerData;
-    private HashMap<String, List<String>> childData;
+    private List<Permission> headerData;
+    private HashMap<Permission, List<Authorizor>> childData;
 
-    public PermissionAdapter(Context context, List<String> headerData,
-                             HashMap<String, List<String>> childData) {
+
+    PermissionAdapter(Context context, List<Permission> headerData,
+                             HashMap<Permission, List<Authorizor>> childData) {
         this.context = context;
         this.headerData = headerData;
         this.childData = childData;
@@ -39,12 +42,12 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public String getGroup(int i) {
+    public Permission getGroup(int i) {
         return headerData.get(i);
     }
 
     @Override
-    public String getChild(int headerIndex, int childIndex) {
+    public Authorizor getChild(int headerIndex, int childIndex) {
         return getChildList(headerIndex).get(childIndex);
     }
 
@@ -71,7 +74,9 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
         }
 
         TextView textView = view.findViewById(R.id.headerTitle);
-        textView.setText(getGroup(headerIndex));
+        Permission permission = getGroup(headerIndex);
+        textView.setText(String.format("%s Wants to lead group %s", permission.getUserA().getName(),
+                permission.getGroupG().getGroupDescription()));
 
         return view;
     }
@@ -84,7 +89,8 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
         }
 
         TextView textView = view.findViewById(R.id.name);
-        textView.setText(getChild(headerIndex, childIndex));
+        Authorizor authorizor = getChild(headerIndex, childIndex);
+        textView.setText(authorizor.getUsers().get(0).getName());
 
         return view;
     }
@@ -94,8 +100,8 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    private List<String> getChildList(int index) {
-        String headerItem = headerData.get(index);
+    private List<Authorizor> getChildList(int index) {
+        Permission headerItem = headerData.get(index);
         return childData.get(headerItem);
     }
 }
