@@ -72,7 +72,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     private Button msgButton;
     private Group groupSelected = new Group();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -376,47 +375,39 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             Toast.makeText(MapsActivity.this, R.string.you_have_arrived, Toast.LENGTH_LONG).show();
             Log.d("MapsActivity", "Inside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
 
-                // Start timer 10 minutes
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-
-                            // Get user from server
-                            ServerProxy proxy = ServerManager.getServerProxy();
-                            Call<User> caller = proxy.getUserById(currentUser.getId(), 1L);
-                            ServerManager.serverRequest(caller, this::getUser, MapsActivity.this::error);
-
-                        });
-                    }
-
-                    private void getUser(User user) {
-                        // Add points
-                        user.setCurrentPoints(user.getCurrentPoints() + 100);
-                        user.setTotalPointsEarned(user.getTotalPointsEarned() + 100);
-
-                        // Update user in server
+            // Start timer 10 minutes
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    new Handler(Looper.getMainLooper()).post(() -> {
                         ServerProxy proxy = ServerManager.getServerProxy();
-                        Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-                        ServerManager.serverRequest(caller, this::updatePoints, MapsActivity.this::error);
-                    }
+                        Call<User> caller = proxy.getUserById(currentUser.getId(), 1L);
+                        ServerManager.serverRequest(caller, this::getUser, MapsActivity.this::error);
+                    });
+                }
 
-                    private void updatePoints(User user) {
-                        Toast.makeText(MapsActivity.this, "Congratulations you earned 100 Pts!", Toast.LENGTH_SHORT).show();
-                        // Update current user and user in Model facade
-                        ModelFacade.getInstance().setCurrentUser(user);
-                        currentUser = ModelFacade.getInstance().getCurrentUser();
+                private void getUser(User user) {
+                    // TODO: Change points to match
+                    user.setCurrentPoints(user.getCurrentPoints() + 100);
+                    user.setTotalPointsEarned(user.getTotalPointsEarned() + 100);
 
-                        walkInProgress = false;
-                        map.clear();
-                        populateGroupsOnMap();
-                        placeCurrentLocationMarker();
-                        setButtonVisibility();
-                    }
-                    // TODO: Change this back to 600000
-                }, DELAY);
-            }
+                    ServerProxy proxy = ServerManager.getServerProxy();
+                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
+                    ServerManager.serverRequest(caller, this::updatePoints, MapsActivity.this::error);
+                }
+
+                private void updatePoints(User user) {
+                    Toast.makeText(MapsActivity.this, "Congratulations you earned 100 Pts!", Toast.LENGTH_SHORT).show();
+                    ModelFacade.getInstance().setCurrentUser(user);
+                    currentUser = ModelFacade.getInstance().getCurrentUser();
+                    walkInProgress = false;
+                    map.clear();
+                    populateGroupsOnMap();
+                    placeCurrentLocationMarker();
+                    setButtonVisibility();
+                }
+            }, DELAY);
         }
     }
 
