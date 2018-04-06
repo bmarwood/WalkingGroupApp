@@ -354,6 +354,10 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     @Override
     public void onLocationChanged(Location location) {
         super.onLocationChanged(location);
+
+        UserLocation userLocation = new UserLocation(location);
+        Log.i("LocationUpdate", "Sent location Lat: " + location.getLatitude() + "Lng: " + userLocation.getTimestamp());
+
         if (walkInProgress) {
             ServerProxy proxy = ServerManager.getServerProxy();
             Call<UserLocation> call = proxy.setLastLocation(currentUser.getId(), new UserLocation(location));

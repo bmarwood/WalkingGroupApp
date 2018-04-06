@@ -26,6 +26,9 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.DashboardLocationRequest;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.time.Instant;
 import java.util.HashMap;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,6 +56,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     private Button msgButton;
     private MessageUpdater messageUpdater;
     private DashboardLocationRequest locationRequest;
+    private String markerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +84,10 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         };
 
         Timer timer = new Timer();
-        timer.schedule(task, new Date(), 6000);
+        timer.schedule(task, new Date(), 30000);
 
 
-//        placeCurrentLocationMarker();
+        placeCurrentLocationMarker();
 
         //First call to populate pins before timer starts
 //        DashboardLocationRequest initialLocationRequest = new DashboardLocationRequest(user, 0, this::error);
@@ -178,9 +182,10 @@ public class DashBoard extends AbstractMapActivity implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
-//        if(o == messageUpdater) {
-//            updateUnreadMsg((List<Message>) arg);
-//        } else {
+        if(o == messageUpdater) {
+            updateUnreadMsg((List<Message>) arg);
+        }
+//        else {
 //            addMarkersForUsers((List<User>) arg);
 //        }
     }
@@ -193,7 +198,6 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         }
     }
 
-    // Call this every 30 seconds
     private void checkLocation() {
         map.clear();
         ServerProxy proxy = ServerManager.getServerProxy();
@@ -203,6 +207,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
 
     private void monitors(List<User> users) {
         for(int i = 0; i < users.size(); i++) {
+            markerName = users.get(i).getName();
             ServerProxy proxy = ServerManager.getServerProxy();
             Call<UserLocation> call = proxy.getLastGpsLocation(users.get(i).getId());
             ServerManager.serverRequest(call, this::location, this::error);
@@ -210,10 +215,18 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     }
 
     private void location(UserLocation userLocation) {
-        Log.i("Matt", "Lat : " + userLocation.getLat() + " Lng: " + userLocation.getLng());
+
+        Log.i("LocationUpdate", " Received Lat : " + userLocation.getLat() + " Lng: " + userLocation.getLng() + " Time: " + userLocation.getTimestamp());
+
+        String time = "";
+        try {
+            time = generateTimeCode(userLocation.getTimestamp());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         LatLng location = new LatLng(userLocation.getLat(), userLocation.getLng());
-        MarkerOptions markerOptions = new MarkerOptions().position(location).title("Marker ");
+        MarkerOptions markerOptions = new MarkerOptions().position(location).title("Marker Last updated: " +  time);
         map.addMarker(markerOptions);
     }
 }
