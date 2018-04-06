@@ -60,6 +60,7 @@ import retrofit2.Call;
  */
 
 public class MapsActivity extends AbstractMapActivity implements Observer {
+    public static final int DELAY = 600000;
     private final HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
     private GroupManager groupManager;
     private static final int REQUEST_CHECK_SETTINGS = 2;
@@ -354,38 +355,41 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     @Override
     public void onLocationChanged(Location location) {
         super.onLocationChanged(location);
+        UserLocation userLocation = new UserLocation(location);
+        Log.i("LocationUpdate", "Sent location Lat: " + location.getLatitude() + "Lng: " + location.getLongitude() + " Time: " + userLocation.getTimestamp());
         if (walkInProgress) {
             ServerProxy proxy = ServerManager.getServerProxy();
             Call<UserLocation> call = proxy.setLastLocation(currentUser.getId(), new UserLocation(location));
-            ServerManager.serverRequest(call, null, this::error);
+            ServerManager.serverRequest(call, this::updateLocation, this::error);
+        }
+    }
 
+    private void updateLocation(UserLocation userLocation) {
+        // Source: https://stackoverflow.com/questions/30170271/android-google-map-how-to-check-if-the-gps-location-is-inside-the-circle
+        float[] distance = new float[2];
+        Location.distanceBetween(userLocation.getLat(), userLocation.getLng(),
+                circle.getCenter().latitude, circle.getCenter().longitude, distance);
 
-            // Source: https://stackoverflow.com/questions/30170271/android-google-map-how-to-check-if-the-gps-location-is-inside-the-circle
-            float[] distance = new float[2];
-            Location.distanceBetween(location.getLatitude(), location.getLongitude(),
-                    circle.getCenter().latitude, circle.getCenter().longitude, distance);
+        if (distance[0] > circle.getRadius()) {
+            Log.d("MapsActivity", "Outside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
+        } else {
+            Toast.makeText(MapsActivity.this, R.string.you_have_arrived, Toast.LENGTH_LONG).show();
+            Log.d("MapsActivity", "Inside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
 
-            if (distance[0] > circle.getRadius()) {
-                Log.d("MapsActivity", "Outside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
-            } else {
-                Toast.makeText(MapsActivity.this, R.string.you_have_arrived, Toast.LENGTH_LONG).show();
-                Log.d("MapsActivity", "Inside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
-
-                // Start timer 10 minutes
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            walkInProgress = false;
-                            map.clear();
-                            populateGroupsOnMap();
-                            placeCurrentLocationMarker();
-                            setButtonVisibility();
-                        });
-                    }
-                }, 600000);
-            }
+            // Start timer 10 minutes
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        walkInProgress = false;
+                        map.clear();
+                        populateGroupsOnMap();
+                        placeCurrentLocationMarker();
+                        setButtonVisibility();
+                    });
+                }
+            }, DELAY);
         }
     }
 
