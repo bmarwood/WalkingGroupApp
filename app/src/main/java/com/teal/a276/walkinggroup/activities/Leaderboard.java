@@ -17,7 +17,6 @@ import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,8 +29,8 @@ import retrofit2.Call;
 
 public class Leaderboard extends BaseActivity {
 
+    public static final int LEADERBOARD_MAX_USERS = 100;
     private ArrayAdapter<User> leaderboardAdapter;
-    List<User> testingUsers = new ArrayList<>();
     String firstName= "";
 
     @Override
@@ -48,7 +47,6 @@ public class Leaderboard extends BaseActivity {
         ServerManager.serverRequest(getUsersCall, this::initializeLeaderboardListView, this::error);
     }
 
-
     private void initializeLeaderboardListView(List<User> allUsers) {
 
         Log.d("listtesting", Arrays.deepToString(allUsers.toArray()));
@@ -64,8 +62,8 @@ public class Leaderboard extends BaseActivity {
                 .compareTo(o1.getTotalPointsEarned())));
 
         //shrink size of listArray to 100 (top 100 users)
-        if(allUsers.size()>100){
-            allUsers.subList(100, allUsers.size());
+        if(allUsers.size()> LEADERBOARD_MAX_USERS){
+            allUsers.subList(LEADERBOARD_MAX_USERS, allUsers.size());
         }
 
         leaderboardAdapter = new ListItemAdapter(this, allUsers);
@@ -92,9 +90,7 @@ public class Leaderboard extends BaseActivity {
                 itemView = inflater.inflate(R.layout.leaderboard_list, parent, false);
             }
             User selectedUser = listItems.get(position);
-
             TextView nameTextView = itemView.findViewById(R.id.userName);
-
             //First Name Extraction
             String currentName = selectedUser.getName();
 
@@ -103,7 +99,6 @@ public class Leaderboard extends BaseActivity {
             } else {
                 firstName = currentName;
             }
-
             //Last Name Extraction
             char lastInitial = '\0';
             for(int i=1;i<currentName.length();i++){
@@ -112,12 +107,9 @@ public class Leaderboard extends BaseActivity {
                     lastInitial = currentName.charAt(i+1);
                 }
             }
-
             String displayText =  firstName +  " " + lastInitial + "    -    " +
                     selectedUser.getTotalPointsEarned() + " Points";
-
             nameTextView.setText(displayText);
-
             return itemView;
         }
     }
