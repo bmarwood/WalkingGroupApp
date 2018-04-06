@@ -14,11 +14,15 @@ import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import retrofit2.Call;
 
 /**
  * Activity for displaying the top 100 users starting with the highest score
@@ -35,64 +39,36 @@ public class Leaderboard extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
-
-        initializeLeaderboardListView();
-        //getUsers();
+        getUsers();
     }
-    /*
+
     private void getUsers() {
         ServerProxy getUsersProxy = ServerManager.getServerProxy();
         Call<List<User>> getUsersCall = getUsersProxy.getUsers();
         ServerManager.serverRequest(getUsersCall, this::initializeLeaderboardListView, this::error);
     }
-    */
-
-    private void initializeLeaderboardListView() {
-        User bob1 = new User();
-        bob1.setName("Bob1");
-        bob1.setTotalPointsEarned(1);
-
-        User bob3 = new User();
-        bob3.setName("Bob3");
-        bob3.setTotalPointsEarned(3);
-
-        User bob4 = new User();
-        bob4.setName("Bob4");
-
-        User bob2 = new User();
-        bob2.setName("Bob2");
-        bob2.setTotalPointsEarned(2);
-
-        User lastNameTest = new User();
-        lastNameTest.setName("Jane Doe");
-        lastNameTest.setTotalPointsEarned(100);
-
-        testingUsers.add(bob1);
-        testingUsers.add(bob3);
-        testingUsers.add(bob4);
-        testingUsers.add(lastNameTest);
-        testingUsers.add(bob2);
 
 
-        Log.d("listtesting", Arrays.deepToString(testingUsers.toArray()));
+    private void initializeLeaderboardListView(List<User> allUsers) {
 
-        for(User user : testingUsers){
+        Log.d("listtesting", Arrays.deepToString(allUsers.toArray()));
+
+        for(User user : allUsers){
             if(user.getTotalPointsEarned() == null){
                 user.setTotalPointsEarned(0);
-                //testingUsers.remove(testingUsers.indexOf(user));
             }
         }
 
         //Sort users from max to min
-        Collections.sort(testingUsers, ((o1, o2) -> o2.getTotalPointsEarned()
+        Collections.sort(allUsers, ((o1, o2) -> o2.getTotalPointsEarned()
                 .compareTo(o1.getTotalPointsEarned())));
 
         //shrink size of listArray to 100 (top 100 users)
-        if(testingUsers.size()>100){
-            testingUsers.subList(100, testingUsers.size());
+        if(allUsers.size()>100){
+            allUsers.subList(100, allUsers.size());
         }
 
-        leaderboardAdapter = new ListItemAdapter(this, testingUsers);
+        leaderboardAdapter = new ListItemAdapter(this, allUsers);
         ListView leaderboardList = findViewById(R.id.leaderboardLv);
         leaderboardList.setAdapter(leaderboardAdapter);
     }
@@ -119,7 +95,6 @@ public class Leaderboard extends BaseActivity {
 
             TextView nameTextView = itemView.findViewById(R.id.userName);
 
-
             //First Name Extraction
             String currentName = selectedUser.getName();
 
@@ -142,7 +117,6 @@ public class Leaderboard extends BaseActivity {
                     selectedUser.getTotalPointsEarned() + " Points";
 
             nameTextView.setText(displayText);
-
 
             return itemView;
         }
