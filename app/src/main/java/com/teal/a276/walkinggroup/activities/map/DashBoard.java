@@ -45,7 +45,7 @@ import retrofit2.Call;
  */
 
 public class DashBoard extends AbstractMapActivity implements Observer{
-    private final long MAP_UPDATE_RATE = 5000;
+    private final long MAP_UPDATE_RATE = 30000;
     private User user;
     private String messageCount;
     private Button msgButton;
@@ -66,29 +66,14 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     public void onConnected(@Nullable Bundle bundle) {
         super.onConnected(bundle);
         setUpMsgButton();
-
-
-        TimerTask task = new TimerTask() {
-
-            @Override
-            public void run() {
-                new Handler(Looper.getMainLooper()).post(() -> checkLocation());
-                Log.i("Timer", "Timer has run");
-            }
-        };
-
-        Timer timer = new Timer();
-        timer.schedule(task, new Date(), 30000);
-
-
         placeCurrentLocationMarker();
 
-        //First call to populate pins before timer starts
-//        DashboardLocationRequest initialLocationRequest = new DashboardLocationRequest(user, 0, this::error);
-//        initialLocationRequest.addObserver(this);
-//
-//        locationRequest = new DashboardLocationRequest(user, MAP_UPDATE_RATE, this::error);
-//        locationRequest.addObserver(this);
+        // First call to populate pins before timer starts
+        DashboardLocationRequest initialLocationRequest = new DashboardLocationRequest(user, 0, this::error);
+        initialLocationRequest.addObserver(this);
+
+        locationRequest = new DashboardLocationRequest(user, MAP_UPDATE_RATE, this::error);
+        locationRequest.addObserver(this);
     }
 
     @Override
@@ -97,8 +82,8 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         messageUpdater.unsubscribeFromUpdates();
         messageUpdater.deleteObserver(this);
 
-//        locationRequest.unsubscribeFromUpdates();
-//        locationRequest.deleteObserver(this);
+        locationRequest.unsubscribeFromUpdates();
+        locationRequest.deleteObserver(this);
     }
 
     @Override
@@ -106,6 +91,9 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         super.onResume();
         messageUpdater = new MessageUpdater(user, this::error);
         messageUpdater.addObserver(this);
+
+        locationRequest = new DashboardLocationRequest(user, MAP_UPDATE_RATE, this::error);
+        locationRequest.addObserver(this);
     }
 
     private void setUpMsgButton() {
@@ -179,9 +167,9 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         if(o == messageUpdater) {
             updateUnreadMsg((List<Message>) arg);
         }
-//        else {
-//            addMarkersForUsers((List<User>) arg);
-//        }
+        else {
+            addMarkersForUsers((List<User>) arg);
+        }
     }
 
     private void addMarkersForUsers(List<User> users) {
@@ -190,37 +178,5 @@ public class DashBoard extends AbstractMapActivity implements Observer{
             placeDashBoardMarker(user.getLocation(), user.getName(),
                     user.isLeader() ? MarkerColor.VIOLET : MarkerColor.CYAN);
         }
-    }
-
-    private void checkLocation() {
-        map.clear();
-        ServerProxy proxy = ServerManager.getServerProxy();
-        Call<List<User>> call = proxy.getMonitors(user.getId(), 1L);
-        ServerManager.serverRequest(call, this::monitors, this::error);
-    }
-
-    private void monitors(List<User> users) {
-        for(int i = 0; i < users.size(); i++) {
-            String userName = users.get(i).getName();
-            ServerProxy proxy = ServerManager.getServerProxy();
-            Call<UserLocation> call = proxy.getLastGpsLocation(users.get(i).getId());
-            ServerManager.serverRequest(call, result -> location(result, userName), this::error);
-        }
-    }
-
-    private void location(UserLocation userLocation, String userName ) {
-
-        Log.i("LocationUpdate", " Received Lat : " + userLocation.getLat() + " Lng: " + userLocation.getLng() + " Time: " + userLocation.getTimestamp());
-
-        String time = "";
-        try {
-            time = generateTimeCode(userLocation.getTimestamp());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        LatLng location = new LatLng(userLocation.getLat(), userLocation.getLng());
-        MarkerOptions markerOptions = new MarkerOptions().position(location).title(userName + " - Last updated: " +  time);
-        map.addMarker(markerOptions);
     }
 }
