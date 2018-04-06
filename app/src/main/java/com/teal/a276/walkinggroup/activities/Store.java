@@ -37,7 +37,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private Button btnFive;
     private Button btnSix;
     List<ImageView> allItems = new ArrayList<>();
-    List<Button> allButtons = new ArrayList<>();
     String retrievedJson;
 
     @Override
@@ -87,13 +86,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
         btnFive = findViewById(R.id.button5);
         btnSix = findViewById(R.id.button6);
 
-        allButtons.add(btnOne);
-        allButtons.add(btnTwo);
-        allButtons.add(btnThree);
-        allButtons.add(btnFour);
-        allButtons.add(btnFive);
-        allButtons.add(btnSix);
-
     }
 
     private void updateAvailableItems(){
@@ -101,6 +93,8 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
         retrievedJson = user.getCustomJson();
 
+
+        //
         //one.setEnabled(true);
     }
 
@@ -116,20 +110,13 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private void updateRemainingPoints() {
         TextView tv = findViewById(R.id.storeRemainingPointsTv);
         remainingPoints = user.getCurrentPoints();
-        String remainingPointsString = "Remaining Points: " + remainingPoints;
+        String remainingPointsString = getString(R.string.store_remaining_points) + remainingPoints;
         tv.setText(remainingPointsString);
     }
 
     //If item is already bought, remove purchase button.
     public void setupItemClickListeners(){
-        /*
-        if(itemOne.isEnabled()) {
-            itemOne.setOnClickListener(this);
-        }
-        if(itemTwo.isEnabled()) {
-            itemTwo.setOnClickListener(this);
-        }
-*/
+
         for(ImageView imageView : allItems){
             if(imageView.isEnabled()){
                 imageView.setOnClickListener(this);
@@ -139,7 +126,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
     }
 
-    //ClickListner for Switching themes/backgrounds
+    //ClickListener for Switching themes/backgrounds
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -179,7 +166,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
         switch(id) {
             case 1:
                 if (remainingPoints >= 100) {
-                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
                     btnOne.setVisibility(View.GONE);
                     itemOne.setEnabled(true);
                     user.setCurrentPoints(user.getCurrentPoints() - 100);
@@ -190,13 +177,13 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
                     updateRemainingPoints();
                 } else {
-                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
             case 2:
                 if (remainingPoints >= 100) {
-                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
                     btnTwo.setVisibility(View.GONE);
                     itemTwo.setEnabled(true);
                     user.setCurrentPoints(user.getCurrentPoints() - 100);
@@ -208,13 +195,13 @@ public class Store extends BaseActivity implements View.OnClickListener {
                     updateRemainingPoints();
 
                 } else {
-                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
             case 3:
                 if (remainingPoints >= 100) {
-                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
                     btnThree.setVisibility(View.GONE);
                     itemThree.setEnabled(true);
                     user.setCurrentPoints(user.getCurrentPoints() - 100);
@@ -225,13 +212,13 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
                     updateRemainingPoints();
                 } else {
-                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
             case 4:
                 if (remainingPoints >= 100) {
-                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
                     btnFour.setVisibility(View.GONE);
                     itemFour.setEnabled(true);
                     user.setCurrentPoints(user.getCurrentPoints() - 100);
@@ -243,13 +230,13 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
                     updateRemainingPoints();
                 } else {
-                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
             case 5:
                 if (remainingPoints >= 100) {
-                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
                     btnFive.setVisibility(View.GONE);
                     itemFive.setEnabled(true);
                     user.setCurrentPoints(user.getCurrentPoints() - 100);
@@ -260,13 +247,13 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
                     updateRemainingPoints();
                 } else {
-                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
             case 6:
                 if (remainingPoints >= 100) {
-                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
                     btnSix.setVisibility(View.GONE);
                     itemSix.setEnabled(true);
                     user.setCurrentPoints(user.getCurrentPoints() - 100);
@@ -277,7 +264,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
                     updateRemainingPoints();
                 } else {
-                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
