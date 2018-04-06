@@ -12,14 +12,18 @@ import android.widget.Toast;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+
 public class Store extends BaseActivity implements View.OnClickListener {
 
     private User user;
-    private int remainingPoints = 1000;
+    private int remainingPoints = 100000;
     private ImageView itemOne;
     private ImageView itemTwo;
     private ImageView itemThree;
@@ -101,8 +105,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
     }
 
 
-
-
     private void setupDefaultBtn() {
         Button button = findViewById(R.id.storeDefaultBtn);
         button.setOnClickListener((View v) -> {
@@ -113,10 +115,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
     private void updateRemainingPoints() {
         TextView tv = findViewById(R.id.storeRemainingPointsTv);
-        //TODO: Get remaining points from server.
         remainingPoints = user.getCurrentPoints();
-
-
         String remainingPointsString = "Remaining Points: " + remainingPoints;
         tv.setText(remainingPointsString);
     }
@@ -130,7 +129,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
         if(itemTwo.isEnabled()) {
             itemTwo.setOnClickListener(this);
         }
-
 */
         for(ImageView imageView : allItems){
             if(imageView.isEnabled()){
@@ -181,12 +179,15 @@ public class Store extends BaseActivity implements View.OnClickListener {
         switch(id) {
             case 1:
                 if (remainingPoints >= 100) {
-                    //TODO: unlock items, push customJson to server
                     Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
                     btnOne.setVisibility(View.GONE);
                     itemOne.setEnabled(true);
-                    //TODO: push remaining points to server after subtraction of 100
-                    remainingPoints -= 100;
+                    user.setCurrentPoints(user.getCurrentPoints() - 100);
+
+                    ServerProxy proxy = ServerManager.getServerProxy();
+                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
+                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
+
                     updateRemainingPoints();
                 } else {
                     Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
@@ -195,12 +196,85 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
             case 2:
                 if (remainingPoints >= 100) {
-                    //TODO: unlock items, push customJson to server
                     Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
                     btnTwo.setVisibility(View.GONE);
                     itemTwo.setEnabled(true);
-                    //TODO: push remaining points to server after subtraction of 100
-                    remainingPoints -= 100;
+                    user.setCurrentPoints(user.getCurrentPoints() - 100);
+
+                    ServerProxy proxy = ServerManager.getServerProxy();
+                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
+                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
+
+                    updateRemainingPoints();
+
+                } else {
+                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case 3:
+                if (remainingPoints >= 100) {
+                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                    btnThree.setVisibility(View.GONE);
+                    itemThree.setEnabled(true);
+                    user.setCurrentPoints(user.getCurrentPoints() - 100);
+
+                    ServerProxy proxy = ServerManager.getServerProxy();
+                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
+                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
+
+                    updateRemainingPoints();
+                } else {
+                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case 4:
+                if (remainingPoints >= 100) {
+                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                    btnFour.setVisibility(View.GONE);
+                    itemFour.setEnabled(true);
+                    user.setCurrentPoints(user.getCurrentPoints() - 100);
+
+
+                    ServerProxy proxy = ServerManager.getServerProxy();
+                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
+                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
+
+                    updateRemainingPoints();
+                } else {
+                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case 5:
+                if (remainingPoints >= 100) {
+                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                    btnFive.setVisibility(View.GONE);
+                    itemFive.setEnabled(true);
+                    user.setCurrentPoints(user.getCurrentPoints() - 100);
+
+                    ServerProxy proxy = ServerManager.getServerProxy();
+                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
+                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
+
+                    updateRemainingPoints();
+                } else {
+                    Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case 6:
+                if (remainingPoints >= 100) {
+                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                    btnSix.setVisibility(View.GONE);
+                    itemSix.setEnabled(true);
+                    user.setCurrentPoints(user.getCurrentPoints() - 100);
+
+                    ServerProxy proxy = ServerManager.getServerProxy();
+                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
+                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
+
                     updateRemainingPoints();
                 } else {
                     Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
@@ -209,5 +283,8 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
         }
 
+    }
+    public void updatePoints(User user){
+        ModelFacade.getInstance().setCurrentUser(user);
     }
 }
