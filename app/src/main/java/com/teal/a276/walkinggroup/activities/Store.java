@@ -16,7 +16,12 @@ import com.teal.a276.walkinggroup.model.dataobjects.User;
 public class Store extends BaseActivity implements View.OnClickListener {
 
     private User user;
-    private int remainingPoints;
+    private int remainingPoints = 1000;
+    private ImageView itemOne;
+    private ImageView itemTwo;
+    private ImageView itemThree;
+    private Button btn1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +30,35 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
         user = ModelFacade.getInstance().getCurrentUser();
 
-        setupRemainingPoints();
+        itemOne = findViewById(R.id.one);
+        itemOne.setEnabled(false);
+        itemTwo = findViewById(R.id.two);
+        itemTwo.setEnabled(true);
+        itemThree = findViewById(R.id.three);
+        itemThree.setEnabled(false);
+
+        btn1 = findViewById(R.id.button1);
+
+
+        updateRemainingPoints();
+        updateAvailableItems();
         setupItemClickListeners();
         setupPurchaseButtonClickListener();
         setupDefaultBtn();
     }
+
+    private void updateAvailableItems(){
+        //TODO: server check to see which items are already unlocked and then enable the unlocked items
+
+
+
+
+
+        //one.setEnabled(true);
+    }
+
+
+
 
     private void setupDefaultBtn() {
         Button button = findViewById(R.id.storeDefaultBtn);
@@ -39,29 +68,24 @@ public class Store extends BaseActivity implements View.OnClickListener {
         });
     }
 
-    private void setupRemainingPoints() {
+    private void updateRemainingPoints() {
         TextView tv = findViewById(R.id.storeRemainingPointsTv);
 
         //TODO: Get remaining points from server.
 
-        int points = 1000;
-        String remainingPoints = "Remaining Points: " + points;
-        tv.setText(remainingPoints);
+        //fake the points first
+
+        String remainingPointsString = "Remaining Points: " + remainingPoints;
+
+        tv.setText(remainingPointsString);
     }
 
+    //If item is already bought, remove purchase button.
     public void setupItemClickListeners(){
-        ImageView one = findViewById(R.id.one);
-        one.setOnClickListener(this);
-        ImageView two = findViewById(R.id.two);
-        two.setOnClickListener(this);
-        ImageView three = findViewById(R.id.three);
-        three.setOnClickListener(this);
-        ImageView four = findViewById(R.id.four);
-        four.setOnClickListener(this);
-        ImageView five = findViewById(R.id.five);
-        five.setOnClickListener(this);
-        ImageView six = findViewById(R.id.six);
-        six.setOnClickListener(this);
+        if(itemOne.isEnabled()) {
+            itemOne.setOnClickListener(this);
+            btn1.setVisibility(View.GONE);
+        }
     }
     @Override
     public void onClick(View v) {
@@ -84,7 +108,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
             case R.id.six:
                 switchToItem(6);
                 break;
-
         }
     }
     public void switchToItem(int id){
@@ -101,34 +124,8 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
 
     public void setupPurchaseButtonClickListener(){
-        Button one = findViewById(R.id.button1);
-        one.setOnClickListener((View v) ->{
+        btn1.setOnClickListener((View v) ->{
             purchaseItem(1);
-        });
-
-        Button two = findViewById(R.id.button2);
-        one.setOnClickListener((View v) ->{
-            purchaseItem(2);
-        });
-
-        Button three = findViewById(R.id.button3);
-        one.setOnClickListener((View v) ->{
-            purchaseItem(3);
-        });
-
-        Button four = findViewById(R.id.button4);
-        one.setOnClickListener((View v) ->{
-            purchaseItem(4);
-        });
-
-        Button five = findViewById(R.id.button5);
-        one.setOnClickListener((View v) ->{
-            purchaseItem(5);
-        });
-
-        Button six = findViewById(R.id.button6);
-        one.setOnClickListener((View v) ->{
-            purchaseItem(6);
         });
 
     }
@@ -143,45 +140,25 @@ public class Store extends BaseActivity implements View.OnClickListener {
         switch(id) {
             case 1:
                 if (remainingPoints >= 100) {
-                    //TODO: unlock items
+                    //TODO: unlock items, push customJson to server
+                    Toast.makeText(this, "Purchase successful!", Toast.LENGTH_SHORT).show();
 
+
+                    btn1.setVisibility(View.GONE);
+                    itemOne.setEnabled(true);
 
                     //TODO: push remaining points to server after subtraction of 100
+                    remainingPoints -= 100;
+                    updateRemainingPoints();
+
+
+
                 } else {
                     Toast.makeText(this, "Not Enough Points!", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
-
-
-
         }
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

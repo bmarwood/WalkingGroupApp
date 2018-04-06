@@ -142,5 +142,6 @@
     <string name="backgrounds_100_points">Backgrounds</string>
     <string name="colour_palette_100_points">Colour Palette</string>
     <string name="default_string">Default</string>
+    <string name="store_cost_100_pts">100 Pts</string>
 
 </resources>
