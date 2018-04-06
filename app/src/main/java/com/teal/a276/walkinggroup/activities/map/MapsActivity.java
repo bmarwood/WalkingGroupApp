@@ -125,7 +125,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         memberAndLeaderGroups.addAll(user.getMemberOfGroups());
         memberAndLeaderGroups.addAll(user.getLeadsGroups());
 
-        for(Group group: memberAndLeaderGroups) {
+        for (Group group : memberAndLeaderGroups) {
             groupNames.add(group.getGroupDescription());
         }
 
@@ -149,19 +149,19 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             }
         });
 
-            alertDialogBuilder.setView(dialogView);
-            alertDialogBuilder.setTitle(R.string.choose_group);
-            alertDialogBuilder.setPositiveButton(R.string.start, (dialog, which) -> {
-                map.clear();
-                addStartEndMarkers(groupSelected);
-                walkInProgress = true;
-                setButtonVisibility();
-            });
-            alertDialogBuilder.setNegativeButton(R.string.cancel, null);
-            alertDialogBuilder.show();
+        alertDialogBuilder.setView(dialogView);
+        alertDialogBuilder.setTitle(R.string.choose_group);
+        alertDialogBuilder.setPositiveButton(R.string.start, (dialog, which) -> {
+            map.clear();
+            addStartEndMarkers(groupSelected);
+            walkInProgress = true;
+            setButtonVisibility();
+        });
+        alertDialogBuilder.setNegativeButton(R.string.cancel, null);
+        alertDialogBuilder.show();
 
-            // Set map refresh for 30 seconds
-            createLocationRequest(30000L, 30000L);
+        // Set map refresh for 30 seconds
+        createLocationRequest(30000L, 30000L);
     }
 
     private void setMsgButton() {
@@ -189,7 +189,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         String messageString = msg.getText().toString();
 
         String resourceString = "";
-        if(resourceId != null) {
+        if (resourceId != null) {
             resourceString = getString(resourceId);
         }
 
@@ -377,16 +377,46 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                     @Override
                     public void run() {
                         new Handler(Looper.getMainLooper()).post(() -> {
-                            walkInProgress = false;
-                            map.clear();
-                            populateGroupsOnMap();
-                            placeCurrentLocationMarker();
-                            setButtonVisibility();
+
+                            // Get user from server
+                            ServerProxy proxy = ServerManager.getServerProxy();
+                            Call<User> caller = proxy.getUserById(currentUser.getId(), 1L);
+                            ServerManager.serverRequest(caller, this::getUser, MapsActivity.this::error);
+
                         });
                     }
-                }, 600000);
+
+                    private void getUser(User user) {
+                        // Add points
+                        user.setCurrentPoints(user.getCurrentPoints() + 100);
+                        user.setTotalPointsEarned(user.getTotalPointsEarned() + 100);
+
+                        // Update user in server
+                        ServerProxy proxy = ServerManager.getServerProxy();
+                        Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
+                        ServerManager.serverRequest(caller, this::updatePoints, MapsActivity.this::error);
+                    }
+
+                    private void updatePoints(User user) {
+                        Toast.makeText(MapsActivity.this, "Congratulations you earned 100 Pts!", Toast.LENGTH_SHORT).show();
+                        // Update current user and user in Model facade
+                        ModelFacade.getInstance().setCurrentUser(user);
+                        currentUser = ModelFacade.getInstance().getCurrentUser();
+
+                        walkInProgress = false;
+                        map.clear();
+                        populateGroupsOnMap();
+                        placeCurrentLocationMarker();
+                        setButtonVisibility();
+                    }
+                    // TODO: Change this back to 600000
+                }, 6000);
             }
         }
+    }
+
+    protected void error(String userError) {
+        super.error(userError);
     }
 
     private void setButtonVisibility() {
