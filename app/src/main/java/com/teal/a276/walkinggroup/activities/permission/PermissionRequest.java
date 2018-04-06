@@ -1,16 +1,23 @@
 package com.teal.a276.walkinggroup.activities.permission;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
+import com.teal.a276.walkinggroup.model.dataobjects.Permission;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
 
 //General idea taken from here https://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
 public class PermissionRequest extends BaseActivity {
@@ -31,5 +38,16 @@ public class PermissionRequest extends BaseActivity {
 
         permissionAdapter = new PermissionAdapter(this, fakeHeaderData, fakeChildData);
         permissionView.setAdapter(permissionAdapter);
+
+        ServerProxy proxy = ServerManager.getServerProxy();
+        Map<String, Object> map = new HashMap<>();
+        Call<List<Permission>> call = proxy.getPermissions(map);
+        ServerManager.serverRequest(call, this::test, this::error);
+    }
+
+    private void test(List<Permission> permissions) {
+        for(Permission p : permissions) {
+            Log.d("permission", p.toString());
+        }
     }
 }

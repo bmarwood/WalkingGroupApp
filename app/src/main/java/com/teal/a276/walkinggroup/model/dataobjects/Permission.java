@@ -1,5 +1,6 @@
 package com.teal.a276.walkinggroup.model.dataobjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,8 +15,9 @@ public class Permission {
     private User userB;
     private Group groupG;
     private User requestingUser;
-    private List<List<User>> authorizors;
+    private List<Object> authorizors = new ArrayList<>();
     private String message;
+    private String href;
 
     public int getId() {
         return id;
@@ -73,11 +75,11 @@ public class Permission {
         this.requestingUser = requestingUser;
     }
 
-    public List<List<User>> getAuthorizors() {
+    public List<Object> getAuthorizors() {
         return authorizors;
     }
 
-    public void setAuthorizors(List<List<User>> authorizors) {
+    public void setAuthorizors(List<Object> authorizors) {
         this.authorizors = authorizors;
     }
 
@@ -87,5 +89,13 @@ public class Permission {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
     }
 }

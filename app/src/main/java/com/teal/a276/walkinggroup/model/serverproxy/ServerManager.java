@@ -128,7 +128,7 @@ public class ServerManager {
                 builder.header("Authorization", token);
             }
 
-            builder.header("permission-header", "true");
+            builder.header("permissions-enabled", "true");
             okhttp3.Request modifiedRequest = builder.build();
 
             return chain.proceed(modifiedRequest);

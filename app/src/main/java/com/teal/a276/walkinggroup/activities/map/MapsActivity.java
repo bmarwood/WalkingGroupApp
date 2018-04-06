@@ -90,7 +90,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
     private void setGroups() {
         ServerProxy getGroupsProxy = ServerManager.getServerProxy();
-        Call<List<Group>> getGroupsCall = getGroupsProxy.getGroups();
+        Call<List<Group>> getGroupsCall = getGroupsProxy.getGroups(1L);
         ServerManager.serverRequest(getGroupsCall, this::groupsResult, this::error);
     }
 
@@ -252,6 +252,11 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             Log.e("Array lengths error ", String.format("Expected matching lengths. " +
                             "Got latArrayLength %d, lngArrayLength %d",
                     routeLatArray.size(), routeLngArray.size()));
+            return;
+        }
+
+        //Don't display groups without leaders
+        if(group.getLeader() == null) {
             return;
         }
 
