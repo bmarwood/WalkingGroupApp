@@ -2,7 +2,6 @@ package com.teal.a276.walkinggroup.activities.map;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Button;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -26,9 +24,6 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.DashboardLocationRequest;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.time.Instant;
 import java.util.HashMap;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,7 +51,6 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     private Button msgButton;
     private MessageUpdater messageUpdater;
     private DashboardLocationRequest locationRequest;
-    private String markerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +86,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         //First call to populate pins before timer starts
 //        DashboardLocationRequest initialLocationRequest = new DashboardLocationRequest(user, 0, this::error);
 //        initialLocationRequest.addObserver(this);
-
+//
 //        locationRequest = new DashboardLocationRequest(user, MAP_UPDATE_RATE, this::error);
 //        locationRequest.addObserver(this);
     }
@@ -207,14 +201,14 @@ public class DashBoard extends AbstractMapActivity implements Observer{
 
     private void monitors(List<User> users) {
         for(int i = 0; i < users.size(); i++) {
-            markerName = users.get(i).getName();
+            String userName = users.get(i).getName();
             ServerProxy proxy = ServerManager.getServerProxy();
             Call<UserLocation> call = proxy.getLastGpsLocation(users.get(i).getId());
-            ServerManager.serverRequest(call, this::location, this::error);
+            ServerManager.serverRequest(call, result -> location(result, userName), this::error);
         }
     }
 
-    private void location(UserLocation userLocation) {
+    private void location(UserLocation userLocation, String userName ) {
 
         Log.i("LocationUpdate", " Received Lat : " + userLocation.getLat() + " Lng: " + userLocation.getLng() + " Time: " + userLocation.getTimestamp());
 
@@ -226,7 +220,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         }
 
         LatLng location = new LatLng(userLocation.getLat(), userLocation.getLng());
-        MarkerOptions markerOptions = new MarkerOptions().position(location).title("Marker Last updated: " +  time);
+        MarkerOptions markerOptions = new MarkerOptions().position(location).title(userName + " - Last updated: " +  time);
         map.addMarker(markerOptions);
     }
 }
