@@ -23,7 +23,7 @@ import retrofit2.Call;
 public class Store extends BaseActivity implements View.OnClickListener {
 
     private User user;
-    private int remainingPoints = 100000;
+    private Integer remainingPoints;
     private ImageView itemOne;
     private ImageView itemTwo;
     private ImageView itemThree;
@@ -45,9 +45,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_store);
 
         user = ModelFacade.getInstance().getCurrentUser();
-
-
-        btnOne = findViewById(R.id.button1);
 
         setupAllElements();
         updateRemainingPoints();
@@ -93,8 +90,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
         retrievedJson = user.getCustomJson();
 
-
-        //
         //one.setEnabled(true);
     }
 
@@ -116,17 +111,14 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
     //If item is already bought, remove purchase button.
     public void setupItemClickListeners(){
-
         for(ImageView imageView : allItems){
             if(imageView.isEnabled()){
                 imageView.setOnClickListener(this);
             }
         }
-
-
     }
 
-    //ClickListener for Switching themes/backgrounds
+    //ClickListner for Switching themes/backgrounds
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -236,7 +228,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
             case 5:
                 if (remainingPoints >= 100) {
-                    Toast.makeText(this,R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
                     btnFive.setVisibility(View.GONE);
                     itemFive.setEnabled(true);
                     user.setCurrentPoints(user.getCurrentPoints() - 100);
@@ -267,7 +259,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
                     Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
                 }
                 break;
-
         }
 
     }

@@ -146,8 +146,8 @@
     <string name="colour_palette_100_points">Colour Palette</string>
     <string name="default_string">Default</string>
     <string name="store_cost_100_pts">100 Pts</string>
+    <string name="store_remaining_points">Remaining Points:</string>
     <string name="store_purchase_successful">Purchase successful!</string>
     <string name="store_not_enough_points">Not Enough Points!</string>
-    <string name="store_remaining_points">Remaining Points:</string>
 
 </resources>
