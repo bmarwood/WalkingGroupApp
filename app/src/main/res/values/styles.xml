@@ -3,10 +3,45 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@drawable/backgroundblueboxlighter</item>
+        <item name="android:windowBackground">@drawable/background_default</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="BlueBox" parent="AppTheme" >
+        <item name="android:windowBackground">@drawable/background_blue_box</item>
+    </style>
+
+    <style name="PurpleBox" parent="Theme.AppCompat.NoActionBar" />
+
+    <style name="GreenBox" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="android:windowBackground">@drawable/background_green_box</item>
+    </style>
+
+    <style name="BlueWave" parent="PurpleBox" >
+        <item name="android:windowBackground">@drawable/background_blue_wave</item>
+    </style>
+
+    <style name="PurpleWave" parent="BlueWave" />
+
+    <style name="GreenWave" parent="PurpleWave" />
+
+    <style name="BlueCircle" parent="GreenWave" >
+        <item name="android:windowBackground">@drawable/background_blue_circle</item>
+    </style>
+
+    <style name="PurpleCircle" parent="BlueCircle" />
+
+    <style name="GreenCircle" parent="greenVar" />
+
+    <style name="BlueBox" parent="AppTheme" >
+        <item name="android:windowBackground">@drawable/background_blue_box</item>
+        <item name="android:colorForeground">@color/foreground_material_light</item>
+    </style>
+
+    <style name="greenVar" parent="GreenCircle" >
+        <item name="colorAccent">@color/accent_material_light_1</item>
     </style>
 
 </resources>
