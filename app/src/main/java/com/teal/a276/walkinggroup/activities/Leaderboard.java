@@ -107,8 +107,8 @@ public class Leaderboard extends BaseActivity {
                     lastInitial = currentName.charAt(i+1);
                 }
             }
-            String displayText =  firstName +  " " + lastInitial + "    -    " +
-                    selectedUser.getTotalPointsEarned() + " Points";
+            String displayText =  String.format(getString(R.string.leaderboard_display_points),
+                    firstName, lastInitial, selectedUser.getTotalPointsEarned());
             nameTextView.setText(displayText);
             return itemView;
         }

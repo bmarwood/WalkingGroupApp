@@ -138,6 +138,7 @@
 
     <!-- Leaderboard Activity String -->
     <string name="leaderboard">Leaderboard</string>
+    <string name="leaderboard_display_points">%1$s  %2$s     -     %3$d Points</string>
 
 
 </resources>
