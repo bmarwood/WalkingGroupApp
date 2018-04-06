@@ -3,10 +3,15 @@ package com.teal.a276.walkinggroup.activities.map;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Button;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.message.Messages;
 import com.teal.a276.walkinggroup.model.ModelFacade;
@@ -27,6 +32,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -38,7 +45,7 @@ import retrofit2.Call;
  */
 
 public class DashBoard extends AbstractMapActivity implements Observer{
-    private final long MAP_UPDATE_RATE = 5000;
+    private final long MAP_UPDATE_RATE = 30000;
     private User user;
     private String messageCount;
     private Button msgButton;
@@ -61,7 +68,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         setUpMsgButton();
         placeCurrentLocationMarker();
 
-        //First call to populate pins before timer starts
+        // First call to populate pins before timer starts
         DashboardLocationRequest initialLocationRequest = new DashboardLocationRequest(user, 0, this::error);
         initialLocationRequest.addObserver(this);
 
@@ -84,6 +91,9 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         super.onResume();
         messageUpdater = new MessageUpdater(user, this::error);
         messageUpdater.addObserver(this);
+
+        locationRequest = new DashboardLocationRequest(user, MAP_UPDATE_RATE, this::error);
+        locationRequest.addObserver(this);
     }
 
     private void setUpMsgButton() {
@@ -156,7 +166,8 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     public void update(Observable o, Object arg) {
         if(o == messageUpdater) {
             updateUnreadMsg((List<Message>) arg);
-        } else {
+        }
+        else {
             addMarkersForUsers((List<User>) arg);
         }
     }
