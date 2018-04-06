@@ -137,5 +137,6 @@
     <string name="added_to_group">Added %s to group</string>
     <string name="removed_from_group">Removed %s from group</string>
     <string name="send_message">Send a message</string>
+    <string name="earned_points">Congratulations you earned points!</string>
 
 </resources>

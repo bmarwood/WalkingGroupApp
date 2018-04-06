@@ -398,7 +398,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 }
 
                 private void updatePoints(User user) {
-                    Toast.makeText(MapsActivity.this, "Congratulations you earned 100 Pts!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, R.string.earned_points, Toast.LENGTH_SHORT).show();
                     ModelFacade.getInstance().setCurrentUser(user);
                     currentUser = ModelFacade.getInstance().getCurrentUser();
                     walkInProgress = false;
