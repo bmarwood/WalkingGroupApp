@@ -291,9 +291,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));
                 break;
-            case R.id.addNewGroup:
-                startActivity(EmbeddedCreateGroup.makeIntent(this));
-                break;
             case R.id.myGroups:
                 startActivity(MyGroups.makeIntent(this));
                 break;
