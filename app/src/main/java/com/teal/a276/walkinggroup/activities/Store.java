@@ -19,7 +19,16 @@ import com.teal.a276.walkinggroup.model.dataobjects.User;
 public class Store extends BaseActivity implements View.OnClickListener {
 
     private static final String PREFS_NAME = "prefs";
+    private static final String DEFAULT = "default";
     private static final String GREEN_BOX_THEME = "green_box_theme";
+    private static final String GREEN_WAVE_THEME = "green_wave_theme";
+    private static final String GREEN_CIRCLE_THEME = "green_circle_theme";
+    private static final String BLUE_BOX_THEME = "blue_box_theme";
+    private static final String BLUE_WAVE_THEME = "blue_wave_theme";
+    private static final String BLUE_CIRCLE_THEME = "blue_circle_theme";
+    private static final String PURPLE_BOX_THEME = "purple_box_theme";
+    private static final String PURPLE_WAVE_THEME = "purple_wave_theme";
+    private static final String PURPLE_CIRCLE_THEME = "purple_circle_theme";
 
 
     private User user;
@@ -29,10 +38,13 @@ public class Store extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
 
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        boolean useDarkTheme = preferences.getBoolean(GREEN_BOX_THEME, false);
+        boolean useBlueBoxTheme = preferences.getBoolean(GREEN_BOX_THEME, false);
+        boolean useGreenBoxTheme = preferences.getBoolean(GREEN_BOX_THEME, false);
 
-        if(useDarkTheme) {
-            setTheme(R.style.AppTheme_Dark);
+        if(useBlueBoxTheme) {
+            setTheme(R.style.BlueBox_NoActionBar);
+        }else if(useGreenBoxTheme){
+            setTheme(R.style.BlueBox_NoActionBar);
         }
 
         super.onCreate(savedInstanceState);
@@ -44,14 +56,9 @@ public class Store extends BaseActivity implements View.OnClickListener {
         setupItemClickListeners();
         setupPurchaseButtonClickListener();
         setupDefaultBtn();
-        Switch toggle = (Switch) findViewById(R.id.switch1);
-        toggle.setChecked(useDarkTheme);
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton view, boolean isChecked) {
-                toggleTheme(isChecked);
-            }
-        });
+        Switch toggle = findViewById(R.id.switch1);
+        toggle.setChecked(useBlueBoxTheme);
+        toggle.setOnCheckedChangeListener((view, isChecked) -> toggleTheme(isChecked));
     }
 
     private void toggleTheme(boolean darkTheme) {

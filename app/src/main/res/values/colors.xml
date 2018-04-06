@@ -17,4 +17,10 @@
     <color name="darkColorPrimary">#1e2756</color>
     <color name="darkColorPrimaryDark">#141831</color>
     <color name="darkColorAccent">#2aac4b</color>
+
+
+    <color name="blueColorPrimary">#FFFDFDFE</color>
+    <color name="blueColorPrimaryDark">#FF4E5257</color>
+    <color name="blueColorAccent">#FF69DAE6</color>
+    <color name="blueColorForeground">#FF659238</color>
 </resources>
