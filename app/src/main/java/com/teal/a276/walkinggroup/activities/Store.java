@@ -34,7 +34,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private Button btnSix;
     List<ImageView> allItems = new ArrayList<>();
     List<Button> allButtons = new ArrayList<>();
-
+    String retrievedJson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +95,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private void updateAvailableItems(){
         //TODO: server check to see which items are already unlocked and then enable the unlocked items
 
-
-
-
+        retrievedJson = user.getCustomJson();
 
         //one.setEnabled(true);
     }
@@ -116,8 +114,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private void updateRemainingPoints() {
         TextView tv = findViewById(R.id.storeRemainingPointsTv);
         //TODO: Get remaining points from server.
-
-
+        remainingPoints = user.getCurrentPoints();
 
 
         String remainingPointsString = "Remaining Points: " + remainingPoints;
@@ -165,13 +162,12 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
 
     public void setupPurchaseButtonClickListener(){
-
-        btnOne.setOnClickListener((View v) ->{
-            purchaseItem(1);
-        });
-        btnTwo.setOnClickListener((View v) -> {
-            purchaseItem(2);
-        });
+        btnOne.setOnClickListener((View v) -> purchaseItem(1));
+        btnTwo.setOnClickListener((View v) -> purchaseItem(2));
+        btnThree.setOnClickListener((View v) -> purchaseItem(3));
+        btnFour.setOnClickListener((View v) -> purchaseItem(4));
+        btnFive.setOnClickListener((View v) -> purchaseItem(5));
+        btnSix.setOnClickListener((View v) -> purchaseItem(6));
 
     }
 

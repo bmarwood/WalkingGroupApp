@@ -29,6 +29,10 @@ public class User {
     private String grade;
     private String teacherName;
     private String emergencyContactInfo;
+    private Integer currentPoints;
+    private Integer totalPointsEarned;
+    private String customJson;
+
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Group> memberOfGroups = new ArrayList<>();
@@ -199,6 +203,31 @@ public class User {
         isLeader = leader;
     }
 
+    public Integer getCurrentPoints(){
+        return currentPoints;
+    }
+
+    public void setCurrentPoints(Integer currentPoints){
+        this.currentPoints = currentPoints;
+    }
+
+    public Integer getTotalPointsEarned(){
+        return totalPointsEarned;
+    }
+
+    public void setTotalPointsEarned(Integer totalPointsEarned){
+        this.totalPointsEarned = totalPointsEarned;
+    }
+
+    public String getCustomJson(){
+        return customJson;
+    }
+
+    public void setCustomJson(String customJson){
+        this.customJson = customJson;
+    }
+
+
     public void updateExistingGroup(@NonNull Group newGroup) {
         boolean updatedGroup = false;
 
@@ -234,6 +263,9 @@ public class User {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", currentPoints='" + currentPoints +
+                ", totalPointsEarned='" + totalPointsEarned +
+                ", customJson='" + customJson + '\'' +
                 ", monitoredByUsers=" + monitoredByUsers + '\'' +
                 ", monitorsUsers=" + monitorsUsers + '\'' +
                 ", leadsGroups=" + leadsGroups + '\'' +
@@ -268,6 +300,10 @@ public class User {
         setLeadsGroups(user.getLeadsGroups());
         setMonitoredByUsers(user.getMonitoredByUsers());
         setMonitorsUsers(user.getMonitorsUsers());
+        setCurrentPoints(user.getCurrentPoints());
+        setTotalPointsEarned(user.getTotalPointsEarned());
+        setCustomJson(user.getCustomJson());
+
         setHref(user.getHref());
     }
 
