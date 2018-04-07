@@ -57,11 +57,9 @@ public class Leaderboard extends BaseActivity {
             }
         }
 
-        //Sort users from max to min
         Collections.sort(allUsers, ((o1, o2) -> o2.getTotalPointsEarned()
                 .compareTo(o1.getTotalPointsEarned())));
 
-        //shrink size of listArray to 100 (top 100 users)
         if(allUsers.size()> LEADERBOARD_MAX_USERS){
             allUsers.subList(LEADERBOARD_MAX_USERS, allUsers.size());
         }
