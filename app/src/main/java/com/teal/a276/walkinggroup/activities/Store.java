@@ -3,18 +3,23 @@ package com.teal.a276.walkinggroup.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.model.ModelFacade;
+import com.teal.a276.walkinggroup.model.dataobjects.UnlockedRewards;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +94,31 @@ public class Store extends BaseActivity implements View.OnClickListener {
         //TODO: server check to see which items are already unlocked and then enable the unlocked items
 
         retrievedJson = user.getCustomJson();
+        UnlockedRewards retrievedRewards = new UnlockedRewards();
+
+        if(retrievedJson != null) {
+
+            try {
+                retrievedRewards =
+                        new ObjectMapper().readValue(
+                                retrievedJson,
+                                UnlockedRewards.class);
+                Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedRewards);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        List<Integer> retrieved = retrievedRewards.getUnlockedItems();
+
+        if(retrieved.contains(1)){
+            itemOne.setEnabled(true);
+            btnOne.setVisibility(View.GONE);
+        }
+        if(retrieved.contains(2)){
+            itemTwo.setEnabled(true);
+            btnTwo.setVisibility(View.GONE);
+        }
+
 
         //one.setEnabled(true);
     }
@@ -167,7 +197,46 @@ public class Store extends BaseActivity implements View.OnClickListener {
                     Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
                     ServerManager.serverRequest(caller, this::updatePoints, this::error);
 
+
+                    retrievedJson = user.getCustomJson();
+
+                    UnlockedRewards retrievedRewards = new UnlockedRewards();
+
+                    if(retrievedJson != null) {
+
+                        try {
+                            retrievedRewards =
+                                    new ObjectMapper().readValue(
+                                            retrievedJson,
+                                            UnlockedRewards.class);
+                            Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedRewards);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    List<Integer> retrieved = retrievedRewards.getUnlockedItems();
+                    retrieved.add(1);
+                    UnlockedRewards reward = new UnlockedRewards();
+                    reward.setUnlockedItems(retrieved);
+
+                    String customJson = null;
+                    try {
+                        // Convert custom object to a JSON string:
+                        customJson = new ObjectMapper().writeValueAsString(reward);
+                        // Store JSON string into the user object, which will be sent to server.
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (customJson != null) {
+                        user.setCustomJson(customJson);
+                        Call<User> result = proxy.updateUser(user.getId(), user, 1L);
+                        ServerManager.serverRequest(result, null, this::error);
+                    }
+
                     updateRemainingPoints();
+
                 } else {
                     Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
                 }
@@ -184,6 +253,44 @@ public class Store extends BaseActivity implements View.OnClickListener {
                     Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
                     ServerManager.serverRequest(caller, this::updatePoints, this::error);
 
+
+                    retrievedJson = user.getCustomJson();
+
+                    UnlockedRewards retrievedRewards = new UnlockedRewards();
+
+                    if(retrievedJson != null) {
+
+                        try {
+                            retrievedRewards =
+                                    new ObjectMapper().readValue(
+                                            retrievedJson,
+                                            UnlockedRewards.class);
+                            Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedRewards);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    List<Integer> retrieved = retrievedRewards.getUnlockedItems();
+                    retrieved.add(2);
+                    UnlockedRewards reward = new UnlockedRewards();
+                    reward.setUnlockedItems(retrieved);
+
+                    String customJson = null;
+                    try {
+                        // Convert custom object to a JSON string:
+                        customJson = new ObjectMapper().writeValueAsString(reward);
+                        // Store JSON string into the user object, which will be sent to server.
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (customJson != null) {
+                        user.setCustomJson(customJson);
+                        Call<User> result = proxy.updateUser(user.getId(), user, 1L);
+                        ServerManager.serverRequest(result, null, this::error);
+                    }
+
                     updateRemainingPoints();
 
                 } else {
@@ -192,73 +299,16 @@ public class Store extends BaseActivity implements View.OnClickListener {
                 break;
 
             case 3:
-                if (remainingPoints >= 100) {
-                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-                    btnThree.setVisibility(View.GONE);
-                    itemThree.setEnabled(true);
-                    user.setCurrentPoints(user.getCurrentPoints() - 100);
 
-                    ServerProxy proxy = ServerManager.getServerProxy();
-                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
-
-                    updateRemainingPoints();
-                } else {
-                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
-                }
-                break;
 
             case 4:
-                if (remainingPoints >= 100) {
-                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-                    btnFour.setVisibility(View.GONE);
-                    itemFour.setEnabled(true);
-                    user.setCurrentPoints(user.getCurrentPoints() - 100);
 
-
-                    ServerProxy proxy = ServerManager.getServerProxy();
-                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
-
-                    updateRemainingPoints();
-                } else {
-                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
-                }
-                break;
 
             case 5:
-                if (remainingPoints >= 100) {
-                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-                    btnFive.setVisibility(View.GONE);
-                    itemFive.setEnabled(true);
-                    user.setCurrentPoints(user.getCurrentPoints() - 100);
 
-                    ServerProxy proxy = ServerManager.getServerProxy();
-                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
-
-                    updateRemainingPoints();
-                } else {
-                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
-                }
-                break;
 
             case 6:
-                if (remainingPoints >= 100) {
-                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-                    btnSix.setVisibility(View.GONE);
-                    itemSix.setEnabled(true);
-                    user.setCurrentPoints(user.getCurrentPoints() - 100);
 
-                    ServerProxy proxy = ServerManager.getServerProxy();
-                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
-
-                    updateRemainingPoints();
-                } else {
-                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
-                }
-                break;
         }
 
     }
