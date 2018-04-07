@@ -61,6 +61,7 @@ import retrofit2.Call;
  */
 
 public class MapsActivity extends AbstractMapActivity implements Observer {
+    public static final int DELAY = 600000;
     private final HashMap<Marker, Group> markerGroupHashMap = new HashMap<>();
     private GroupManager groupManager;
     private static final int REQUEST_CHECK_SETTINGS = 2;
@@ -71,7 +72,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     private Button startButton;
     private Button msgButton;
     private Group groupSelected = new Group();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +126,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         memberAndLeaderGroups.addAll(user.getMemberOfGroups());
         memberAndLeaderGroups.addAll(user.getLeadsGroups());
 
-        for(Group group: memberAndLeaderGroups) {
+        for (Group group : memberAndLeaderGroups) {
             groupNames.add(group.getGroupDescription());
         }
 
@@ -150,19 +150,19 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             }
         });
 
-            alertDialogBuilder.setView(dialogView);
-            alertDialogBuilder.setTitle(R.string.choose_group);
-            alertDialogBuilder.setPositiveButton(R.string.start, (dialog, which) -> {
-                map.clear();
-                addStartEndMarkers(groupSelected);
-                walkInProgress = true;
-                setButtonVisibility();
-            });
-            alertDialogBuilder.setNegativeButton(R.string.cancel, null);
-            alertDialogBuilder.show();
+        alertDialogBuilder.setView(dialogView);
+        alertDialogBuilder.setTitle(R.string.choose_group);
+        alertDialogBuilder.setPositiveButton(R.string.start, (dialog, which) -> {
+            map.clear();
+            addStartEndMarkers(groupSelected);
+            walkInProgress = true;
+            setButtonVisibility();
+        });
+        alertDialogBuilder.setNegativeButton(R.string.cancel, null);
+        alertDialogBuilder.show();
 
-            // Set map refresh for 30 seconds
-            createLocationRequest(30000L, 30000L);
+        // Set map refresh for 30 seconds
+        createLocationRequest(30000L, 30000L);
     }
 
     private void setMsgButton() {
@@ -190,7 +190,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         String messageString = msg.getText().toString();
 
         String resourceString = "";
-        if(resourceId != null) {
+        if (resourceId != null) {
             resourceString = getString(resourceId);
         }
 
@@ -363,39 +363,65 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     @Override
     public void onLocationChanged(Location location) {
         super.onLocationChanged(location);
+        UserLocation userLocation = new UserLocation(location);
+        Log.i("LocationUpdate", "Sent location Lat: " + location.getLatitude() + "Lng: " + location.getLongitude() + " Time: " + userLocation.getTimestamp());
         if (walkInProgress) {
             ServerProxy proxy = ServerManager.getServerProxy();
             Call<UserLocation> call = proxy.setLastLocation(currentUser.getId(), new UserLocation(location));
-            ServerManager.serverRequest(call, null, this::error);
-
-
-            // Source: https://stackoverflow.com/questions/30170271/android-google-map-how-to-check-if-the-gps-location-is-inside-the-circle
-            float[] distance = new float[2];
-            Location.distanceBetween(location.getLatitude(), location.getLongitude(),
-                    circle.getCenter().latitude, circle.getCenter().longitude, distance);
-
-            if (distance[0] > circle.getRadius()) {
-                Log.d("MapsActivity", "Outside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
-            } else {
-                Toast.makeText(MapsActivity.this, R.string.you_have_arrived, Toast.LENGTH_LONG).show();
-                Log.d("MapsActivity", "Inside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
-
-                // Start timer 10 minutes
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            walkInProgress = false;
-                            map.clear();
-                            populateGroupsOnMap();
-                            placeCurrentLocationMarker();
-                            setButtonVisibility();
-                        });
-                    }
-                }, 600000);
-            }
+            ServerManager.serverRequest(call, this::updateLocation, this::error);
         }
+    }
+
+    private void updateLocation(UserLocation userLocation) {
+        // Source: https://stackoverflow.com/questions/30170271/android-google-map-how-to-check-if-the-gps-location-is-inside-the-circle
+        float[] distance = new float[2];
+        Location.distanceBetween(userLocation.getLat(), userLocation.getLng(),
+                circle.getCenter().latitude, circle.getCenter().longitude, distance);
+
+        if (distance[0] > circle.getRadius()) {
+            Log.d("MapsActivity", "Outside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
+        } else {
+            Toast.makeText(MapsActivity.this, R.string.you_have_arrived, Toast.LENGTH_LONG).show();
+            Log.d("MapsActivity", "Inside, distance from center: " + distance[0] + " radius: " + circle.getRadius());
+
+            // Start timer 10 minutes
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        ServerProxy proxy = ServerManager.getServerProxy();
+                        Call<User> caller = proxy.getUserById(currentUser.getId(), 1L);
+                        ServerManager.serverRequest(caller, this::getUser, MapsActivity.this::error);
+                    });
+                }
+
+                private void getUser(User user) {
+                    // TODO: Change points to match
+                    user.setCurrentPoints(user.getCurrentPoints() + 100);
+                    user.setTotalPointsEarned(user.getTotalPointsEarned() + 100);
+
+                    ServerProxy proxy = ServerManager.getServerProxy();
+                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
+                    ServerManager.serverRequest(caller, this::updatePoints, MapsActivity.this::error);
+                }
+
+                private void updatePoints(User user) {
+                    Toast.makeText(MapsActivity.this, R.string.earned_points, Toast.LENGTH_SHORT).show();
+                    ModelFacade.getInstance().setCurrentUser(user);
+                    currentUser = ModelFacade.getInstance().getCurrentUser();
+                    walkInProgress = false;
+                    map.clear();
+                    populateGroupsOnMap();
+                    placeCurrentLocationMarker();
+                    setButtonVisibility();
+                }
+            }, DELAY);
+        }
+    }
+
+    protected void error(String userError) {
+        super.error(userError);
     }
 
     private void setButtonVisibility() {
