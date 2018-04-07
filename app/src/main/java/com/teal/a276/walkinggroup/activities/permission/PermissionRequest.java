@@ -21,35 +21,59 @@ import retrofit2.Call;
 
 //General idea taken from here https://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
 public class PermissionRequest extends BaseActivity {
-    ExpandableListAdapter permissionAdapter;
-    ExpandableListView permissionView;
+    ExpandableListAdapter activePermissionAdapter;
+    ExpandableListAdapter previousPermissionAdapter;
+
+    ExpandableListView activePermissionView;
+    ExpandableListView previousPermissionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permission_request);
 
-        permissionView = findViewById(R.id.permissions);
+        //TODO fix list item paddings
+        activePermissionView = findViewById(R.id.activePermissions);
+        previousPermissionView = findViewById(R.id.previousPermissions);
+        requestPermission();
+    }
 
+    private void requestPermission() {
         ServerProxy proxy = ServerManager.getServerProxy();
         Map<String, Object> map = new HashMap<>();
         map.put("userId", ModelFacade.getInstance().getCurrentUser().getId());
-        map.put("statusForUser", PermissionStatus.PENDING);
-        Call<List<Permission>> call = proxy.getPermissions(map, 1L);
-        ServerManager.serverRequest(call, this::test, this::error);
+        Call<List<Permission>> previousPermissionsRequest = proxy.getPermissions(map, 1L);
+        ServerManager.serverRequest(previousPermissionsRequest, this::previousPermissionsResult, this::error);
+
+        map.put("status", PermissionStatus.PENDING);
+        Call<List<Permission>> activePermissionsRequest = proxy.getPermissions(map, 1L);
+        ServerManager.serverRequest(activePermissionsRequest, this::activePermissionsResult, this::error);
     }
 
-    private void test(List<Permission> permissions) {
+    private void activePermissionsResult(List<Permission> permissions) {
+        activePermissionAdapter = new PermissionAdapter(this, permissions, getAuthorizors(permissions),  this::error);
+        activePermissionView.setAdapter(activePermissionAdapter);
+
+       for (int i = 0; i < activePermissionAdapter.getGroupCount(); i++) {
+           activePermissionView.expandGroup(i);
+       }
+    }
+
+    private void previousPermissionsResult(List<Permission> permissions) {
+        previousPermissionAdapter = new PermissionAdapter(this, permissions, getAuthorizors(permissions),  this::error);
+        previousPermissionView.setAdapter(previousPermissionAdapter);
+
+        for (int i = 0; i < previousPermissionAdapter.getGroupCount(); i++) {
+            previousPermissionView.expandGroup(i);
+        }
+    }
+
+    private Map<Permission, List<Authorizor>> getAuthorizors(List<Permission> permissions) {
         HashMap<Permission, List<Authorizor>> authorizors = new HashMap<>();
         for(Permission p : permissions) {
             authorizors.put(p, p.getAuthorizors());
         }
 
-        permissionAdapter = new PermissionAdapter(this, permissions, authorizors,  this::error);
-        permissionView.setAdapter(permissionAdapter);
-
-       for (int i = 0; i < permissionAdapter.getGroupCount(); i++) {
-           permissionView.expandGroup(i);
-       }
+        return authorizors;
     }
 }

@@ -19,8 +19,11 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 
@@ -31,12 +34,12 @@ import retrofit2.Call;
 public class PermissionAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<Permission> headerData;
-    private HashMap<Permission, List<Authorizor>> childData;
+    private Map<Permission, List<Authorizor>> childData;
     private ServerError errorCallback;
 
 
     PermissionAdapter(Context context,
-                      List<Permission> headerData, HashMap<Permission, List<Authorizor>> childData,
+                      List<Permission> headerData, Map<Permission, List<Authorizor>> childData,
                       ServerError errorCallback) {
         this.context = context;
         this.headerData = headerData;
@@ -107,6 +110,7 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
         User currentUser = ModelFacade.getInstance().getCurrentUser();
         TextView status = view.findViewById(R.id.permissionStatus);
 
+        //TODO check that the current users authStatus is pending
         if(authUser.equals(currentUser) &&
                 permission.getStatus().equals(PermissionStatus.PENDING.getValue())) {
             ImageView accept = view.findViewById(R.id.acceptPermission);
@@ -131,7 +135,13 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
     private void setPermissionStatus(Long id, PermissionStatus status) {
         ServerProxy proxy = ServerManager.getServerProxy();
         Call<Permission> call = proxy.setPermissionStatus(id, status.getValue());
-        ServerManager.serverRequest(call, null, errorCallback);
+        ServerManager.serverRequest(call, this::updateListItem, errorCallback);
+    }
+
+    private void updateListItem(Permission result) {
+       headerData.remove(result);
+       childData.remove(result);
+       notifyDataSetChanged();
     }
 
     @Override
