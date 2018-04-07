@@ -33,6 +33,11 @@
         android:title="@string/messages"
         app:showAsAction="never" />
 
+    <item android:id="@+id/leaderboard"
+        android:title="@string/leaderboard"
+        app:showAsAction="never" />
+
+
     <item android:id="@+id/logoutItem"
         android:title="@string/logout"
         app:showAsAction="never" />
