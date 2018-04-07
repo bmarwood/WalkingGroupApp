@@ -1,9 +1,11 @@
 package com.teal.a276.walkinggroup.activities;
 
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.auth.Login;
+import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 
@@ -36,17 +40,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        boolean useBlueBoxTheme = preferences.getBoolean(GREEN_BOX_THEME, false);
-        boolean useGreenBoxTheme = preferences.getBoolean(GREEN_BOX_THEME, false);
-
-        if(useBlueBoxTheme) {
-            setTheme(R.style.BlueBox_NoActionBar);
-        }else if(useGreenBoxTheme){
-            setTheme(R.style.BlueBox_NoActionBar);
-        }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store);
 
@@ -56,27 +49,15 @@ public class Store extends BaseActivity implements View.OnClickListener {
         setupItemClickListeners();
         setupPurchaseButtonClickListener();
         setupDefaultBtn();
-        Switch toggle = findViewById(R.id.switch1);
-        toggle.setChecked(useBlueBoxTheme);
-        toggle.setOnCheckedChangeListener((view, isChecked) -> toggleTheme(isChecked));
-    }
-
-    private void toggleTheme(boolean darkTheme) {
-        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
-        editor.putBoolean(GREEN_BOX_THEME, darkTheme);
-        editor.apply();
-
-        Intent intent = getIntent();
-        finish();
-
-        startActivity(intent);
     }
 
     private void setupDefaultBtn() {
         Button button = findViewById(R.id.storeDefaultBtn);
         button.setOnClickListener((View v) -> {
-            //TODO: setup background/color palette to default
-
+            Intent intent = new Intent(this, MapsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         });
     }
 
@@ -104,17 +85,35 @@ public class Store extends BaseActivity implements View.OnClickListener {
         ImageView six = findViewById(R.id.six);
         six.setOnClickListener(this);
     }
+
+
+
+//    boolean flipOne = false;
+    boolean flipTwo = false;
+    boolean flipThree = false;
+    boolean flipFour = false;
+    boolean flipFive = false;
+    boolean flipSix = false;
+
     @Override
     public void onClick(View v) {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
         switch(v.getId()){
             case R.id.one:
                 switchToItem(1);
+                editor.putInt("currTheme", R.style.AppTheme_Dark_Purple_Wave);
+                editor.apply();
                 break;
             case R.id.two:
                 switchToItem(2);
+                editor.putInt("currTheme", R.style.AppTheme_Dark_Purple_Circle);
+                editor.apply();
                 break;
             case R.id.three:
                 switchToItem(3);
+                editor.putInt("currTheme", R.style.AppTheme_Light_Blue_Box);
+                editor.apply();
                 break;
             case R.id.four:
                 switchToItem(4);
@@ -131,7 +130,11 @@ public class Store extends BaseActivity implements View.OnClickListener {
     public void switchToItem(int id){
         Toast.makeText(this, "The Item you clicked is: " + id, Toast.LENGTH_SHORT).show();
 
-        //TODO: switch background/colour palette based on item
+
+
+
+
+
         /*
         switch(id){
             case 1:
