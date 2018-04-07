@@ -5,9 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.model.ModelFacade;
+import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.Authorizor;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.Permission;
 
@@ -88,8 +91,22 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.permission_list_item, null);
         }
 
-        TextView textView = view.findViewById(R.id.name);
         Authorizor authorizor = getChild(headerIndex, childIndex);
+        User authUser = authorizor.getUsers().get(0);
+        User currentUser = ModelFacade.getInstance().getCurrentUser();
+        TextView status = view.findViewById(R.id.permissionStatus);
+
+        if(authUser.equals(currentUser)) {
+            ImageButton accept = view.findViewById(R.id.acceptPermission);
+            ImageButton decline = view.findViewById(R.id.declinePermission);
+            accept.setVisibility(View.VISIBLE);
+            decline.setVisibility(View.VISIBLE);
+            status.setVisibility(View.INVISIBLE);
+        } else {
+            status.setText(authorizor.getStatus());
+        }
+
+        TextView textView = view.findViewById(R.id.name);
         textView.setText(authorizor.getUsers().get(0).getName());
 
         return view;
