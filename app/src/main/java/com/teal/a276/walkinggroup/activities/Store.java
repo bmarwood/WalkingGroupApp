@@ -49,10 +49,26 @@ public class Store extends BaseActivity implements View.OnClickListener {
         setupItemClickListeners();
         setupPurchaseButtonClickListener();
         setupDefaultBtn();
+        setupApplyBtn();
     }
 
     private void setupDefaultBtn() {
+
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putInt("currTheme", R.style.AppTheme);
+        editor.apply();
+
         Button button = findViewById(R.id.storeDefaultBtn);
+        button.setOnClickListener((View v) -> {
+            Intent intent = new Intent(this, MapsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
+    }
+    private void setupApplyBtn() {
+        Button button = findViewById(R.id.storeApplyBtn);
         button.setOnClickListener((View v) -> {
             Intent intent = new Intent(this, MapsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -87,14 +103,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
     }
 
 
-
-//    boolean flipOne = false;
-    boolean flipTwo = false;
-    boolean flipThree = false;
-    boolean flipFour = false;
-    boolean flipFive = false;
-    boolean flipSix = false;
-
     @Override
     public void onClick(View v) {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -117,12 +125,18 @@ public class Store extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.four:
                 switchToItem(4);
+                editor.putInt("currTheme", R.style.AppTheme_Dark_Green_Circle);
+                editor.apply();
                 break;
             case R.id.five:
                 switchToItem(5);
+                editor.putInt("currTheme", R.style.AppTheme_Dark_Green_Wave);
+                editor.apply();
                 break;
             case R.id.six:
                 switchToItem(6);
+                editor.putInt("currTheme", R.style.AppTheme_Light_Blue_Circle);
+                editor.apply();
                 break;
 
         }
