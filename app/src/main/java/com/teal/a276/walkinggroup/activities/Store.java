@@ -182,10 +182,9 @@ public class Store extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    //ClickListner for Switching themes/backgrounds
+    //ClickListener for Switching themes/backgrounds
     @Override
     public void onClick(View v) {
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
         switch(v.getId()){
             case R.id.one:
@@ -228,7 +227,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
         String type = "default";
         String color = "default";
 
-        if (currTheme == R.style.AppTheme || currTheme == R.style.AppTheme_Dark_Green_Box ||
+        if (currTheme == R.style.AppTheme || currTheme == R.style.AppTheme_box || currTheme == R.style.AppTheme_Dark_Green_Box ||
                 currTheme == R.style.AppTheme_Dark_Purple_Box || currTheme == R.style.AppTheme_Light_Blue_Box) {
             type = "boxes";
         } else if (currTheme == R.style.AppTheme_circle || currTheme == R.style.AppTheme_Dark_Green_Circle ||
@@ -252,82 +251,100 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
         //dealing with new background
         if (newColor == null) {
-            if (newBackground.equals("boxes")) {
-                if (color.equals("blue")) {
-                    return R.style.AppTheme_Light_Blue_Box;
-                } else if (color.equals("purple")) {
-                    return R.style.AppTheme_Dark_Purple_Box;
+            switch (newBackground) {
+                case "boxes":
+                    switch (color) {
+                        case "blue":
+                            return R.style.AppTheme_Light_Blue_Box;
+                        case "purple":
+                            return R.style.AppTheme_Dark_Purple_Box;
 
-                } else if (color.equals("green")) {
-                    return R.style.AppTheme_Dark_Green_Box;
+                        case "green":
+                            return R.style.AppTheme_Dark_Green_Box;
 
-                } else {
-                    return R.style.AppTheme;
-                }
-            } else if (newBackground.equals("circle")) {
-                if (color.equals("blue")) {
-                    return R.style.AppTheme_Light_Blue_Circle;
-                } else if (color.equals("purple")) {
-                    return R.style.AppTheme_Dark_Purple_Circle;
+                        default:
+                            return R.style.AppTheme_box;
+                    }
+                case "circle":
+                    switch (color) {
+                        case "blue":
+                            return R.style.AppTheme_Light_Blue_Circle;
+                        case "purple":
+                            return R.style.AppTheme_Dark_Purple_Circle;
 
-                } else if (color.equals("green")) {
-                    return R.style.AppTheme_Dark_Green_Circle;
+                        case "green":
+                            return R.style.AppTheme_Dark_Green_Circle;
 
-                } else {
-                    return R.style.AppTheme_circle;
-                }
-            } else if (newBackground.equals("wave")) {
-                if (color.equals("blue")) {
-                    return R.style.AppTheme_Light_Blue_Wave;
-                } else if (color.equals("purple")) {
-                    return R.style.AppTheme_Dark_Purple_Wave;
-                } else if (color.equals("green")) {
-                    return R.style.AppTheme_Dark_Green_Wave;
+                        default:
+                            return R.style.AppTheme_circle;
+                    }
+                case "wave":
+                    switch (color) {
+                        case "blue":
+                            return R.style.AppTheme_Light_Blue_Wave;
+                        case "purple":
+                            return R.style.AppTheme_Dark_Purple_Wave;
+                        case "green":
+                            return R.style.AppTheme_Dark_Green_Wave;
 
-                } else {
-                    return R.style.AppTheme_wave;
-                }
+                        default:
+                            return R.style.AppTheme_wave;
+                    }
+
             }
         }
 
 
         //dealing with new color
         if (newBackground == null) {
-            if (newColor.equals("blue")) {
-                if (type.equals("boxes")) {
-                    return R.style.AppTheme_Light_Blue_Box;
-                } else if (type.equals("wave")) {
-                    return R.style.AppTheme_Light_Blue_Wave;
+            switch (newColor) {
+                case "blue":
+                    switch (type) {
+                        case "boxes":
+                            return R.style.AppTheme_Light_Blue_Box;
+                        case "wave":
+                            return R.style.AppTheme_Light_Blue_Wave;
 
-                } else if (type.equals("circle")) {
-                    return R.style.AppTheme_Light_Blue_Circle;
+                        case "circle":
+                            return R.style.AppTheme_Light_Blue_Circle;
 
-                } else {
-                    return R.style.AppTheme;
-                }
-            } else if (newColor.equals("purple")) {
-                if (type.equals("boxes")) {
-                    return R.style.AppTheme_Dark_Purple_Box;
-                } else if (type.equals("wave")) {
-                    return R.style.AppTheme_Dark_Purple_Wave;
+                        default:
+                            return R.style.AppTheme;
+                    }
+                case "purple":
+                    switch (type) {
+                        case "boxes":
+                            return R.style.AppTheme_Dark_Purple_Box;
+                        case "wave":
+                            return R.style.AppTheme_Dark_Purple_Wave;
 
-                } else if (type.equals("circle")) {
-                    return R.style.AppTheme_Dark_Purple_Circle;
+                        case "circle":
+                            return R.style.AppTheme_Dark_Purple_Circle;
 
-                } else {
-                    return R.style.AppTheme_circle;
-                }
-            } else if (newColor.equals("green")) {
-                if (type.equals("boxes")) {
-                    return R.style.AppTheme_Dark_Green_Box;
-                } else if (type.equals("wave")) {
-                    return R.style.AppTheme_Dark_Green_Wave;
-                } else if (type.equals("circle")) {
-                    return R.style.AppTheme_Dark_Green_Circle;
+                        default:
+                            return R.style.AppTheme_circle;
+                    }
+                case "green":
+                    switch (type) {
+                        case "boxes":
+                            return R.style.AppTheme_Dark_Green_Box;
+                        case "wave":
+                            return R.style.AppTheme_Dark_Green_Wave;
+                        case "circle":
+                            return R.style.AppTheme_Dark_Green_Circle;
 
-                } else {
-                    return R.style.AppTheme_wave;
-                }
+                        default:
+                            return R.style.AppTheme_wave;
+                    }
+                case "default":
+                    switch(type) {
+                        case "boxes":
+                            return R.style.AppTheme;
+                        case "wave":
+                            return R.style.AppTheme_wave;
+                        case "circle":
+                            return R.style.AppTheme_circle;
+                    }
             }
         }
         return -1;

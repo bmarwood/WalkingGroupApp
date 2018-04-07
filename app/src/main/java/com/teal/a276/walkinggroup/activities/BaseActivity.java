@@ -29,7 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         int currTheme = preferences.getInt("currTheme", -1);
 
         if(currTheme == -1){
-            setTheme(R.style.AppTheme);
+            setTheme(R.style.AppTheme_box);
         }else {
             setTheme(currTheme);
         }

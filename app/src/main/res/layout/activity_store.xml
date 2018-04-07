@@ -41,8 +41,10 @@
         android:id="@+id/one"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="36dp"
         android:layout_marginTop="140dp"
+        app:layout_constraintEnd_toStartOf="@+id/two"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/box_capture"
@@ -53,14 +55,13 @@
         android:id="@+id/storeColourTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="264dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="204dp"
         android:text="@string/colour_palette_100_points"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.592" />
+        app:layout_constraintVertical_bias="0.587" />
 
     <ImageView
         android:id="@+id/two"
@@ -79,8 +80,10 @@
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginEnd="36dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="140dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/two"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/wave_capture"
         tools:ignore="ContentDescription" />

@@ -9,6 +9,14 @@
         <item name="colorAccent">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="AppTheme_box" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@drawable/background_default_box</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+    </style>
+
     <style name="AppTheme_circle" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@drawable/background_default_circle</item>
@@ -26,7 +34,7 @@
     </style>
 
     <!-- Blue Box -->
-    <style name="AppTheme.Light.Blue.Box" parent="AppTheme" >
+    <style name="AppTheme.Light.Blue.Box" parent="AppTheme_box" >
         <item name="android:windowBackground">@drawable/background_blue_box</item>
         <item name="colorPrimary">@color/blueColorPrimaryDark</item>
         <item name="colorAccent">@color/blueColorPrimary</item>
@@ -42,7 +50,7 @@
     <style name="AppTheme.Light.Blue.Box.popupOverlay" parent="ThemeOverlay.AppCompat" />
 
     <!-- Blue Wave -->
-    <style name="AppTheme.Light.Blue.Wave" parent="AppTheme" >
+    <style name="AppTheme.Light.Blue.Wave" parent="AppTheme_box" >
         <item name="android:windowBackground">@drawable/background_blue_wave</item>
         <item name="colorPrimary">@color/blueColorPrimaryDark</item>
         <item name="colorAccent">@color/blueColorPrimary</item>
@@ -58,7 +66,7 @@
     <style name="AppTheme.Light.Blue.Wave.popupOverlay" parent="ThemeOverlay.AppCompat" />
 
     <!-- Blue Circle -->
-    <style name="AppTheme.Light.Blue.Circle" parent="AppTheme" >
+    <style name="AppTheme.Light.Blue.Circle" parent="AppTheme_box" >
         <item name="android:windowBackground">@drawable/background_blue_circle</item>
         <item name="colorPrimary">@color/blueColorPrimaryDark</item>
         <item name="colorAccent">@color/blueColorPrimary</item>
