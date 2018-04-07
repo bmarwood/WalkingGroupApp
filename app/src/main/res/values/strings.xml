@@ -140,8 +140,8 @@
     <string name="earned_points">Congratulations you earned points!</string>
 
     <!-- Permissions string -->
-    <string name="permissionRequest">Requested Permissions</string>
-    <string name="activePermission">Pending Permission Requests</string>
-    <string name="previousPermission">Previous Permission Requests</string>
-    <string name="leadGroupRequest">%1$s wants to lead group %2$s</string>
+    <string name="permission_request">Requested Permissions</string>
+    <string name="active_permissions">Pending Permission Requests</string>
+    <string name="previous_permissions">Previous Permission Requests</string>
+    <string name="lead_group_request">%1$s wants to lead group %2$s</string>
 </resources>

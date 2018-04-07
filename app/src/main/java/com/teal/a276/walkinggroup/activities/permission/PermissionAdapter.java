@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,9 +18,6 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +88,7 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
 
         TextView textView = view.findViewById(R.id.headerTitle);
         Permission permission = getGroup(headerIndex);
-        textView.setText(String.format(context.getString(R.string.leadGroupRequest),
+        textView.setText(String.format(context.getString(R.string.lead_group_request),
                 permission.getUserA().getName(), permission.getGroupG().getGroupDescription()));
 
         return view;

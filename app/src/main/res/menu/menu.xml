@@ -15,7 +15,7 @@
         app:showAsAction="never" />
 
     <item android:id="@+id/permissions"
-        android:title="@string/permissionRequest"
+        android:title="@string/permission_request"
         app:showAsAction="never" />
 
     <item
