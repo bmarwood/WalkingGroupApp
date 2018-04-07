@@ -136,7 +136,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
         }
         if(retrieved.contains(6)){
             itemSix.setEnabled(true);
-            btnFive.setVisibility(View.GONE);
+            btnSix.setVisibility(View.GONE);
         }
 
     }
