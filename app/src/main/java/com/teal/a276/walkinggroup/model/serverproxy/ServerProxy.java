@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
+import com.teal.a276.walkinggroup.model.dataobjects.permissions.Permission;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 
@@ -118,7 +119,7 @@ public interface ServerProxy {
      * @return All Groups
      */
     @GET("/groups")
-    Call<List<Group>> getGroups();
+    Call<List<Group>> getGroups(@Header("JSON-DEPTH") Long depth);
 
     /**
      * Creates a new group. The group must have at least a leader and a description
@@ -197,4 +198,11 @@ public interface ServerProxy {
 
     @POST("/users/{id}/lastGpsLocation")
     Call<UserLocation> setLastLocation(@Path("id") Long userId, @Body UserLocation userLocation);
+
+    @GET("/permissions")
+    Call<List<Permission>> getPermissions(@Nullable @QueryMap Map<String, Object> options, @Header("JSON-DEPTH") Long depth);
+
+    @POST("/permissions/{id}")
+    Call<Permission> setPermissionStatus(@Path("id") Long id, @Body String status);
+
 }

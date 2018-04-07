@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.GroupMembersInfo;
 import com.teal.a276.walkinggroup.activities.Monitor;
+import com.teal.a276.walkinggroup.activities.permission.PermissionRequest;
 import com.teal.a276.walkinggroup.activities.profile.UserProfile;
 import com.teal.a276.walkinggroup.activities.MyGroups;
 import com.teal.a276.walkinggroup.activities.auth.Login;
@@ -89,7 +90,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
 
     private void setGroups() {
         ServerProxy getGroupsProxy = ServerManager.getServerProxy();
-        Call<List<Group>> getGroupsCall = getGroupsProxy.getGroups();
+        Call<List<Group>> getGroupsCall = getGroupsProxy.getGroups(1L);
         ServerManager.serverRequest(getGroupsCall, this::groupsResult, this::error);
     }
 
@@ -254,6 +255,11 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             return;
         }
 
+        //Don't display groups without leaders
+        if(group.getLeader() == null) {
+            return;
+        }
+
         //after dest has been implemented, there will be 2 elements in the array
         if (!routeLatArray.isEmpty()) {
             LatLng markerLocation = new LatLng(routeLatArray.get(0), routeLngArray.get(0));
@@ -287,6 +293,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 ServerProxy proxy = ServerManager.getServerProxy();
                 Call<User> call = proxy.getUserById(currentUser.getId(), null);
                 ServerManager.serverRequest(call, MapsActivity.this::getUser, this::error);
+                break;
+            case R.id.permissions:
+                startActivity(new Intent(this, PermissionRequest.class));
                 break;
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));

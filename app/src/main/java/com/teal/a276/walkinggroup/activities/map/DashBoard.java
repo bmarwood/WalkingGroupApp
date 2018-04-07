@@ -14,7 +14,7 @@ import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.MessageUpdater;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
-import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
+import com.teal.a276.walkinggroup.model.serverproxy.RequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.DashboardLocationRequest;
@@ -97,8 +97,8 @@ public class DashBoard extends AbstractMapActivity implements Observer{
 
     private void getServerMessageCount(){
         HashMap<String, Object> requestParameters = new HashMap<>();
-        requestParameters.put(MessageRequestConstant.STATUS, MessageRequestConstant.UNREAD);
-        requestParameters.put(MessageRequestConstant.FOR_USER, user.getId());
+        requestParameters.put(RequestConstant.STATUS, RequestConstant.UNREAD);
+        requestParameters.put(RequestConstant.FOR_USER, user.getId());
         ServerProxy proxy = ServerManager.getServerProxy();
         Call<List<Message>> call = proxy.getMessages(requestParameters);
 
