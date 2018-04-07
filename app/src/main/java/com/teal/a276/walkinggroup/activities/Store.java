@@ -58,7 +58,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
         setupAllElements();
         updateRemainingPoints();
         updateAvailableItems();
-        setupItemClickListeners();
+        updateItemClickListeners();
         setupPurchaseButtonClickListener();
         setupDefaultBtn();
         setupApplyBtn();
@@ -101,7 +101,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
         UnlockedRewards retrievedRewards = new UnlockedRewards();
 
         if(retrievedJson != null) {
-
             try {
                 retrievedRewards =
                         new ObjectMapper().readValue(
@@ -174,7 +173,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
     }
 
     //If item is already bought, remove purchase button.
-    public void setupItemClickListeners(){
+    public void updateItemClickListeners(){
         for(ImageView imageView : allItems){
             if(imageView.isEnabled()){
                 imageView.setOnClickListener(this);
@@ -182,7 +181,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    //ClickListener for Switching themes/backgrounds
     @Override
     public void onClick(View v) {
         SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
@@ -217,7 +215,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
                 editor.putInt("currTheme", getNewTheme(null, "purple"));
                 editor.apply();
                 break;
-
         }
     }
 
@@ -290,7 +287,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
                         default:
                             return R.style.AppTheme_wave;
                     }
-
             }
         }
 
@@ -350,85 +346,52 @@ public class Store extends BaseActivity implements View.OnClickListener {
         return -1;
     }
 
-
-
     public void switchToItem(int id){
         Toast.makeText(this, "The Item you clicked is: " + id, Toast.LENGTH_SHORT).show();
-        /*
-        switch(id){
-            case 1:
-
-        }
-*/
     }
-
 
     public void setupPurchaseButtonClickListener(){
-        btnOne.setOnClickListener((View v) -> purchaseItem(1));
-        btnTwo.setOnClickListener((View v) -> purchaseItem(2));
-        btnThree.setOnClickListener((View v) -> purchaseItem(3));
-        btnFour.setOnClickListener((View v) -> purchaseItem(4));
-        btnFive.setOnClickListener((View v) -> purchaseItem(5));
-        btnSix.setOnClickListener((View v) -> purchaseItem(6));
-
+        btnOne.setOnClickListener((View v) -> purchaseItem(1, btnOne, itemOne));
+        btnTwo.setOnClickListener((View v) -> purchaseItem(2, btnTwo, itemTwo));
+        btnThree.setOnClickListener((View v) -> purchaseItem(3, btnThree, itemThree));
+        btnFour.setOnClickListener((View v) -> purchaseItem(4, btnFour, itemFour));
+        btnFive.setOnClickListener((View v) -> purchaseItem(5, btnFive, itemFive));
+        btnSix.setOnClickListener((View v) -> purchaseItem(6, btnSix, itemSix));
     }
 
-
-    public static Intent makeIntent(Context context) {
-        return new Intent(context, Store.class);
-    }
-
-
-    public void purchaseItem(int id) {
-        switch (id) {
-            case 1:
-                if (remainingPoints >= 100) {
-
-                    UnlockedRewards retrievedRewards = getRetrievedRewards();
-                    List<Integer> retrieved = retrievedRewards.getUnlockedItems();
-
-                    //testing
-                    if(retrieved == null){
-                        Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
-                    }
-
-                    retrieved.add(1);
-                    UnlockedRewards reward = new UnlockedRewards();
-                    reward.setUnlockedItems(retrieved);
-
-                    sendJsonToServer(reward);
-                    updateRemainingPoints();
-                    purchaseSuccessful();
-
-                } else {
-                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-
+    public void purchaseItem(int id, Button button, ImageView imageView) {
+        if (remainingPoints >= 100) {
+            UnlockedRewards retrievedRewards = getRetrievedRewards();
+            List<Integer> retrieved = retrievedRewards.getUnlockedItems();
+            retrieved.add(id);
+            sendJsonToServer(retrieved);
+            purchaseSuccessful(button, imageView);
+        } else {
+            Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
         }
     }
 
-//  added
     public UnlockedRewards getRetrievedRewards() {
         retrievedJson = user.getCustomJson();
         UnlockedRewards retrievedRewards = new UnlockedRewards();
-
         if (retrievedJson != null) {
-
             try {
                 retrievedRewards =
                         new ObjectMapper().readValue(
                                 retrievedJson,
                                 UnlockedRewards.class);
-                Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedRewards);
+                Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedJson);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return retrievedRewards;
     }
-    public void sendJsonToServer(UnlockedRewards reward){
+
+
+    public void sendJsonToServer(List<Integer> retrieved){
+        UnlockedRewards reward = new UnlockedRewards();
+        reward.setUnlockedItems(retrieved);
         String customJson = null;
         try {
             // Convert custom object to a JSON string:
@@ -445,285 +408,23 @@ public class Store extends BaseActivity implements View.OnClickListener {
             ServerManager.serverRequest(result, null, this::error);
         }
     }
-    public void purchaseSuccessful(){
+    public void purchaseSuccessful(Button button, ImageView imageView){
         Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-        btnOne.setVisibility(View.GONE);
-        itemOne.setEnabled(true);
+        button.setVisibility(View.GONE);
+        imageView.setEnabled(true);
         user.setCurrentPoints(user.getCurrentPoints() - 100);
         ServerProxy proxy = ServerManager.getServerProxy();
         Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
         ServerManager.serverRequest(caller, this::updatePoints, this::error);
+        updateRemainingPoints();
+        updateItemClickListeners();
     }
-    /*
-            case 2:
-                if (remainingPoints >= 100) {
-                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-                    btnTwo.setVisibility(View.GONE);
-                    itemTwo.setEnabled(true);
-                    user.setCurrentPoints(user.getCurrentPoints() - 100);
 
-                    ServerProxy proxy = ServerManager.getServerProxy();
-                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
-
-                    retrievedJson = user.getCustomJson();
-                    UnlockedRewards retrievedRewards = new UnlockedRewards();
-
-                    if(retrievedJson != null) {
-                        try {
-                            retrievedRewards =
-                                    new ObjectMapper().readValue(
-                                            retrievedJson,
-                                            UnlockedRewards.class);
-                            Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedRewards);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    List<Integer> retrieved = retrievedRewards.getUnlockedItems();
-                    retrieved.add(2);
-                    UnlockedRewards reward = new UnlockedRewards();
-                    reward.setUnlockedItems(retrieved);
-
-                    String customJson = null;
-                    try {
-                        // Convert custom object to a JSON string:
-                        customJson = new ObjectMapper().writeValueAsString(reward);
-                        // Store JSON string into the user object, which will be sent to server.
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
-                    if (customJson != null) {
-                        user.setCustomJson(customJson);
-                        Call<User> result = proxy.updateUser(user.getId(), user, 1L);
-                        ServerManager.serverRequest(result, null, this::error);
-                    }
-
-                    updateRemainingPoints();
-
-                } else {
-                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-            case 3:
-                if (remainingPoints >= 100) {
-                Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-                btnThree.setVisibility(View.GONE);
-                itemThree.setEnabled(true);
-                user.setCurrentPoints(user.getCurrentPoints() - 100);
-
-                ServerProxy proxy = ServerManager.getServerProxy();
-                Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-                ServerManager.serverRequest(caller, this::updatePoints, this::error);
-
-                retrievedJson = user.getCustomJson();
-                UnlockedRewards retrievedRewards = new UnlockedRewards();
-
-                if(retrievedJson != null) {
-                    try {
-                        retrievedRewards =
-                                new ObjectMapper().readValue(
-                                        retrievedJson,
-                                        UnlockedRewards.class);
-                        Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedRewards);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                List<Integer> retrieved = retrievedRewards.getUnlockedItems();
-                retrieved.add(3);
-                UnlockedRewards reward = new UnlockedRewards();
-                reward.setUnlockedItems(retrieved);
-
-                String customJson = null;
-                try {
-                    // Convert custom object to a JSON string:
-                    customJson = new ObjectMapper().writeValueAsString(reward);
-                    // Store JSON string into the user object, which will be sent to server.
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-                if (customJson != null) {
-                    user.setCustomJson(customJson);
-                    Call<User> result = proxy.updateUser(user.getId(), user, 1L);
-                    ServerManager.serverRequest(result, null, this::error);
-                }
-
-                updateRemainingPoints();
-
-                } else {
-                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-            case 4:
-                if (remainingPoints >= 100) {
-                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-                    btnFour.setVisibility(View.GONE);
-                    itemFour.setEnabled(true);
-                    user.setCurrentPoints(user.getCurrentPoints() - 100);
-
-                    ServerProxy proxy = ServerManager.getServerProxy();
-                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
-
-                    retrievedJson = user.getCustomJson();
-                    UnlockedRewards retrievedRewards = new UnlockedRewards();
-
-                    if(retrievedJson != null) {
-                        try {
-                            retrievedRewards =
-                                    new ObjectMapper().readValue(
-                                            retrievedJson,
-                                            UnlockedRewards.class);
-                            Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedRewards);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    List<Integer> retrieved = retrievedRewards.getUnlockedItems();
-                    retrieved.add(4);
-                    UnlockedRewards reward = new UnlockedRewards();
-                    reward.setUnlockedItems(retrieved);
-
-                    String customJson = null;
-                    try {
-                        // Convert custom object to a JSON string:
-                        customJson = new ObjectMapper().writeValueAsString(reward);
-                        // Store JSON string into the user object, which will be sent to server.
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
-                    if (customJson != null) {
-                        user.setCustomJson(customJson);
-                        Call<User> result = proxy.updateUser(user.getId(), user, 1L);
-                        ServerManager.serverRequest(result, null, this::error);
-                    }
-
-                    updateRemainingPoints();
-
-                } else {
-                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-
-            case 5:
-                if (remainingPoints >= 100) {
-                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-                    btnFive.setVisibility(View.GONE);
-                    itemFive.setEnabled(true);
-                    user.setCurrentPoints(user.getCurrentPoints() - 100);
-
-                    ServerProxy proxy = ServerManager.getServerProxy();
-                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
-
-                    retrievedJson = user.getCustomJson();
-                    UnlockedRewards retrievedRewards = new UnlockedRewards();
-
-                    if(retrievedJson != null) {
-                        try {
-                            retrievedRewards =
-                                    new ObjectMapper().readValue(
-                                            retrievedJson,
-                                            UnlockedRewards.class);
-                            Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedRewards);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    List<Integer> retrieved = retrievedRewards.getUnlockedItems();
-                    retrieved.add(5);
-                    UnlockedRewards reward = new UnlockedRewards();
-                    reward.setUnlockedItems(retrieved);
-
-                    String customJson = null;
-                    try {
-                        // Convert custom object to a JSON string:
-                        customJson = new ObjectMapper().writeValueAsString(reward);
-                        // Store JSON string into the user object, which will be sent to server.
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
-                    if (customJson != null) {
-                        user.setCustomJson(customJson);
-                        Call<User> result = proxy.updateUser(user.getId(), user, 1L);
-                        ServerManager.serverRequest(result, null, this::error);
-                    }
-
-                    updateRemainingPoints();
-
-                } else {
-                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-
-            case 6:
-                if (remainingPoints >= 100) {
-                    Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-                    btnSix.setVisibility(View.GONE);
-                    itemSix.setEnabled(true);
-                    user.setCurrentPoints(user.getCurrentPoints() - 100);
-
-                    ServerProxy proxy = ServerManager.getServerProxy();
-                    Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-                    ServerManager.serverRequest(caller, this::updatePoints, this::error);
-
-                    retrievedJson = user.getCustomJson();
-                    UnlockedRewards retrievedRewards = new UnlockedRewards();
-
-                    if(retrievedJson != null) {
-                        try {
-                            retrievedRewards =
-                                    new ObjectMapper().readValue(
-                                            retrievedJson,
-                                            UnlockedRewards.class);
-                            Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedRewards);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    List<Integer> retrieved = retrievedRewards.getUnlockedItems();
-                    retrieved.add(6);
-                    UnlockedRewards reward = new UnlockedRewards();
-                    reward.setUnlockedItems(retrieved);
-
-                    String customJson = null;
-                    try {
-                        // Convert custom object to a JSON string:
-                        customJson = new ObjectMapper().writeValueAsString(reward);
-                        // Store JSON string into the user object, which will be sent to server.
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
-                    if (customJson != null) {
-                        user.setCustomJson(customJson);
-                        Call<User> result = proxy.updateUser(user.getId(), user, 1L);
-                        ServerManager.serverRequest(result, null, this::error);
-                    }
-
-                    updateRemainingPoints();
-
-                } else {
-                    Toast.makeText(this, R.string.store_not_enough_points, Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-        }
-
-
-    }
-            */
-
-public void updatePoints(User user){
+    public void updatePoints(User user){
         ModelFacade.getInstance().setCurrentUser(user);
+    }
+
+    public static Intent makeIntent(Context context) {
+        return new Intent(context, Store.class);
     }
 }

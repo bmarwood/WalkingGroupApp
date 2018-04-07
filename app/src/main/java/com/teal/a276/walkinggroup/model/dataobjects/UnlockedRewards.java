@@ -17,7 +17,7 @@ public class UnlockedRewards {
 
     @Override
     public String toString() {
-        return "MyAwesomeRewardsTrackingClassThatYouShouldRename{" +
+        return "UnlockedRewards{" +
                 '}';
     }
 
