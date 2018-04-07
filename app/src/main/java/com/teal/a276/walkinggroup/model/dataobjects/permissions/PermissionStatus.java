@@ -1,7 +1,7 @@
 package com.teal.a276.walkinggroup.model.dataobjects.permissions;
 
 /**
- * Created by scott on 06/04/18.
+ * Different status of a permission request
  */
 
 public enum PermissionStatus {

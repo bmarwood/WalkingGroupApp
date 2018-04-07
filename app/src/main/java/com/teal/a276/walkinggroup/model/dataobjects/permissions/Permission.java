@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by scott on 06/04/18.
+ * Simple Permission class to store the data the server expects and returns.
  */
 
 public class Permission {

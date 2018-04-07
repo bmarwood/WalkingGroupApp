@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by scott on 06/04/18.
+ * Simple Authorizor class to store the data the server expects and returns.
+ * An authorizor is a nested object in the permissions json
  */
 
 public class Authorizor {

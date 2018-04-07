@@ -10,6 +10,7 @@ import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.Authorizor;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.Permission;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.PermissionStatus;
+import com.teal.a276.walkinggroup.model.serverproxy.RequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
@@ -43,11 +44,11 @@ public class PermissionRequest extends BaseActivity {
     private void requestPermission() {
         ServerProxy proxy = ServerManager.getServerProxy();
         Map<String, Object> map = new HashMap<>();
-        map.put("userId", ModelFacade.getInstance().getCurrentUser().getId());
+        map.put(RequestConstant.USER_ID, ModelFacade.getInstance().getCurrentUser().getId());
         Call<List<Permission>> previousPermissionsRequest = proxy.getPermissions(map, 1L);
         ServerManager.serverRequest(previousPermissionsRequest, this::previousPermissionsResult, this::error);
 
-        map.put("status", PermissionStatus.PENDING);
+        map.put(RequestConstant.STATUS, PermissionStatus.PENDING);
         Call<List<Permission>> activePermissionsRequest = proxy.getPermissions(map, 1L);
         ServerManager.serverRequest(activePermissionsRequest, this::activePermissionsResult, this::error);
     }

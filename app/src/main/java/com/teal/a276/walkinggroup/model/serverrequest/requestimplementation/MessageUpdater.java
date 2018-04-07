@@ -2,7 +2,7 @@ package com.teal.a276.walkinggroup.model.serverrequest.requestimplementation;
 
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
-import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
+import com.teal.a276.walkinggroup.model.serverproxy.RequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
@@ -38,8 +38,8 @@ public class MessageUpdater extends Observable {
 
     private void getMessages(User user, ServerError errorCallback) {
         HashMap<String, Object> requestParameters = new HashMap<>();
-        requestParameters.put(MessageRequestConstant.FOR_USER, user.getId());
-        requestParameters.put(MessageRequestConstant.STATUS, MessageRequestConstant.UNREAD);
+        requestParameters.put(RequestConstant.FOR_USER, user.getId());
+        requestParameters.put(RequestConstant.STATUS, RequestConstant.UNREAD);
         ServerProxy proxy = ServerManager.getServerProxy();
 
         Call<List<Message>> call = proxy.getMessages(requestParameters);
