@@ -28,7 +28,8 @@ import java.util.Map;
 import retrofit2.Call;
 
 /**
- * Created by scott on 02/04/18.
+ * 2d list the contains display text for a permission request as a header
+ * and all users who need to respond to the request as children
  */
 
 public class PermissionAdapter extends BaseExpandableListAdapter {
@@ -91,8 +92,8 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
 
         TextView textView = view.findViewById(R.id.headerTitle);
         Permission permission = getGroup(headerIndex);
-        textView.setText(String.format("%s Wants to lead group %s", permission.getUserA().getName(),
-                permission.getGroupG().getGroupDescription()));
+        textView.setText(String.format(context.getString(R.string.leadGroupRequest),
+                permission.getUserA().getName(), permission.getGroupG().getGroupDescription()));
 
         return view;
     }
@@ -106,13 +107,10 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
 
         Permission permission = getGroup(headerIndex);
         Authorizor authorizor = getChild(headerIndex, childIndex);
-        User authUser = authorizor.getUsers().get(0);
         User currentUser = ModelFacade.getInstance().getCurrentUser();
         TextView status = view.findViewById(R.id.permissionStatus);
 
-        //TODO check that the current users authStatus is pending
-        if(authUser.equals(currentUser) &&
-                permission.getStatus().equals(PermissionStatus.PENDING.getValue())) {
+        if(isPendingAuthorizor(authorizor, currentUser, permission)) {
             ImageView accept = view.findViewById(R.id.acceptPermission);
             accept.setVisibility(View.VISIBLE);
             accept.setOnClickListener(view1 -> setPermissionStatus(permission.getId(), PermissionStatus.APPROVED));
@@ -130,6 +128,13 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
         textView.setText(authorizor.getUsers().get(0).getName());
 
         return view;
+    }
+
+    private boolean isPendingAuthorizor(Authorizor authorizor, User currentUser, Permission permission) {
+        User authUser = authorizor.getUsers().get(0);
+        String pending = PermissionStatus.PENDING.getValue();
+        return permission.getStatus().equals(pending) &&
+                authUser.equals(currentUser) && authorizor.getStatus().equals(pending);
     }
 
     private void setPermissionStatus(Long id, PermissionStatus status) {

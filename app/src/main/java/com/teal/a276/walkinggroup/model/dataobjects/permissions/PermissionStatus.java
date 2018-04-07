@@ -7,7 +7,7 @@ package com.teal.a276.walkinggroup.model.dataobjects.permissions;
 public enum PermissionStatus {
     PENDING("PENDING"),
     APPROVED("APPROVED"),
-    DECLINED("DECLINED");
+    DECLINED("DENIED");
 
     final String value;
 

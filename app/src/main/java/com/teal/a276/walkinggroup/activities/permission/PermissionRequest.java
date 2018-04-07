@@ -19,7 +19,10 @@ import java.util.Map;
 
 import retrofit2.Call;
 
-//General idea taken from here https://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
+/**
+ * General idea taken from here https://www.androidhive.info/2013/07/android-expandable-list-view-tutorial
+ * Activity that displays currently active permission request relevant to the user, and all previously processed requests
+ */
 public class PermissionRequest extends BaseActivity {
     ExpandableListAdapter activePermissionAdapter;
     ExpandableListAdapter previousPermissionAdapter;
@@ -32,7 +35,6 @@ public class PermissionRequest extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permission_request);
 
-        //TODO fix list item paddings
         activePermissionView = findViewById(R.id.activePermissions);
         previousPermissionView = findViewById(R.id.previousPermissions);
         requestPermission();
