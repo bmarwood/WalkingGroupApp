@@ -89,27 +89,36 @@ public class Leaderboard extends BaseActivity {
             }
             User selectedUser = listItems.get(position);
             TextView nameTextView = itemView.findViewById(R.id.userName);
-            //First Name Extraction
             String currentName = selectedUser.getName();
 
-            if(currentName.split("\\w+").length>1){
-                firstName = currentName.substring(0, currentName.lastIndexOf(' '));
-            } else {
-                firstName = currentName;
-            }
-            //Last Name Extraction
-            char lastInitial = '\0';
-            for(int i=1;i<currentName.length();i++){
-                char c = currentName.charAt(i);
-                if(c == ' '){
-                    lastInitial = currentName.charAt(i+1);
-                }
-            }
+            firstName = getFirstName(currentName);
+            char lastInitial = getLastInitial(currentName);
+
             String displayText =  String.format(getString(R.string.leaderboard_display_points),
                     firstName, lastInitial, selectedUser.getTotalPointsEarned());
             nameTextView.setText(displayText);
             return itemView;
         }
+    }
+
+    public String getFirstName(String currentName){
+        if(currentName.split("\\w+").length>1){
+            firstName = currentName.substring(0, currentName.lastIndexOf(' '));
+        } else {
+            firstName = currentName;
+        }
+        return firstName;
+    }
+
+    public char getLastInitial(String currentName){
+        char lastInitial = '\0';
+        for(int i=1;i<currentName.length();i++){
+            char c = currentName.charAt(i);
+            if(c == ' '){
+                lastInitial = currentName.charAt(i+1);
+            }
+        }
+        return lastInitial;
     }
 
     public static Intent makeIntent(Context context){
