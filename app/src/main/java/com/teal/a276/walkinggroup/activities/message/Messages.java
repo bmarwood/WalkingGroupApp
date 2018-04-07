@@ -13,7 +13,7 @@ import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
 import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.MessageUpdater;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
-import com.teal.a276.walkinggroup.model.serverproxy.MessageRequestConstant;
+import com.teal.a276.walkinggroup.model.serverproxy.RequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
@@ -61,17 +61,17 @@ public class Messages extends BaseActivity implements Observer {
         ItemTouchHelper helper = new ItemTouchHelper(messageTouchHelper);
         helper.attachToRecyclerView(unreadMessagesView);
 
-        Call<List<Message>> call = requestMessages(user.getId(), MessageRequestConstant.UNREAD);
+        Call<List<Message>> call = requestMessages(user.getId(), RequestConstant.UNREAD);
         ServerManager.serverRequest(call, this::unreadMessagesResult, this::error);
 
-        call = requestMessages(user.getId(), MessageRequestConstant.READ);
+        call = requestMessages(user.getId(), RequestConstant.READ);
         ServerManager.serverRequest(call, this::readMessagesResult, this::error);
     }
 
     private Call<List<Message>> requestMessages(Long userId, String status) {
         HashMap<String, Object> requestParameters = new HashMap<>();
-        requestParameters.put(MessageRequestConstant.FOR_USER, userId);
-        requestParameters.put(MessageRequestConstant.STATUS, status);
+        requestParameters.put(RequestConstant.FOR_USER, userId);
+        requestParameters.put(RequestConstant.STATUS, status);
         ServerProxy proxy = ServerManager.getServerProxy();
 
         return proxy.getMessages(requestParameters);

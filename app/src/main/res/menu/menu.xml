@@ -14,6 +14,10 @@
         android:title="@string/monitor"
         app:showAsAction="never" />
 
+    <item android:id="@+id/permissions"
+        android:title="@string/permission_request"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/addNewGroup"
         android:title="@string/add_new_group"
@@ -32,6 +36,9 @@
         android:title="Store"
         app:showAsAction="never" />
 
+    <item android:id="@+id/leaderboard"
+        android:title="@string/leaderboard"
+        app:showAsAction="never" />
 
     <item android:id="@+id/logoutItem"
         android:title="@string/logout"
