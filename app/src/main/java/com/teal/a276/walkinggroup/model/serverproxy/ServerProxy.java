@@ -201,4 +201,8 @@ public interface ServerProxy {
 
     @GET("/permissions")
     Call<List<Permission>> getPermissions(@Nullable @QueryMap Map<String, Object> options, @Header("JSON-DEPTH") Long depth);
+
+    @POST("/permissions/{id}")
+    Call<Permission> setPermissionStatus(@Path("id") Long id, @Body String status);
+
 }

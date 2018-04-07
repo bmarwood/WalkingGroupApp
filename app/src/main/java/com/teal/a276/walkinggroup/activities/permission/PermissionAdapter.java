@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
@@ -13,9 +14,15 @@ import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.Authorizor;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.Permission;
+import com.teal.a276.walkinggroup.model.dataobjects.permissions.PermissionStatus;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
+import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
 
 /**
  * Created by scott on 02/04/18.
@@ -25,13 +32,16 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<Permission> headerData;
     private HashMap<Permission, List<Authorizor>> childData;
+    private ServerError errorCallback;
 
 
-    PermissionAdapter(Context context, List<Permission> headerData,
-                             HashMap<Permission, List<Authorizor>> childData) {
+    PermissionAdapter(Context context,
+                      List<Permission> headerData, HashMap<Permission, List<Authorizor>> childData,
+                      ServerError errorCallback) {
         this.context = context;
         this.headerData = headerData;
         this.childData = childData;
+        this.errorCallback = errorCallback;
     }
 
     @Override
@@ -91,15 +101,21 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.permission_list_item, null);
         }
 
+        Permission permission = getGroup(headerIndex);
         Authorizor authorizor = getChild(headerIndex, childIndex);
         User authUser = authorizor.getUsers().get(0);
         User currentUser = ModelFacade.getInstance().getCurrentUser();
         TextView status = view.findViewById(R.id.permissionStatus);
 
-        if(authUser.equals(currentUser)) {
-            ImageButton accept = view.findViewById(R.id.acceptPermission);
-            ImageButton decline = view.findViewById(R.id.declinePermission);
+        if(authUser.equals(currentUser) &&
+                permission.getStatus().equals(PermissionStatus.PENDING.getValue())) {
+            ImageView accept = view.findViewById(R.id.acceptPermission);
             accept.setVisibility(View.VISIBLE);
+            accept.setOnClickListener(view1 -> setPermissionStatus(permission.getId(), PermissionStatus.APPROVED));
+
+            ImageView decline = view.findViewById(R.id.declinePermission);
+            decline.setOnClickListener(view1 -> setPermissionStatus(permission.getId(), PermissionStatus.DECLINED));
+
             decline.setVisibility(View.VISIBLE);
             status.setVisibility(View.INVISIBLE);
         } else {
@@ -110,6 +126,12 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
         textView.setText(authorizor.getUsers().get(0).getName());
 
         return view;
+    }
+
+    private void setPermissionStatus(Long id, PermissionStatus status) {
+        ServerProxy proxy = ServerManager.getServerProxy();
+        Call<Permission> call = proxy.setPermissionStatus(id, status.getValue());
+        ServerManager.serverRequest(call, null, errorCallback);
     }
 
     @Override

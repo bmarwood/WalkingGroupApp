@@ -9,13 +9,15 @@ public enum PermissionStatus {
     APPROVED("APPROVED"),
     DECLINED("DECLINED");
 
-    final String status;
+    final String value;
 
     PermissionStatus(String status) {
-        this.status = status;
+        this.value = status;
     }
 
-    public String getStatus() {
-        return status;
+    public String getValue() {
+        return value;
     }
+
+
 }

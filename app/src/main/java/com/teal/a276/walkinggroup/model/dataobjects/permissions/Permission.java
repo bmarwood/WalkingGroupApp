@@ -11,7 +11,7 @@ import java.util.List;
  */
 
 public class Permission {
-    private int id;
+    private Long id;
     private String action;
     private String status;
     private User userA;
@@ -22,11 +22,11 @@ public class Permission {
     private String message;
     private String href;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

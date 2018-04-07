@@ -6,8 +6,10 @@ import android.widget.ExpandableListView;
 
 import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.BaseActivity;
+import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.Authorizor;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.Permission;
+import com.teal.a276.walkinggroup.model.dataobjects.permissions.PermissionStatus;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
@@ -31,6 +33,8 @@ public class PermissionRequest extends BaseActivity {
 
         ServerProxy proxy = ServerManager.getServerProxy();
         Map<String, Object> map = new HashMap<>();
+        map.put("userId", ModelFacade.getInstance().getCurrentUser().getId());
+        map.put("statusForUser", PermissionStatus.PENDING);
         Call<List<Permission>> call = proxy.getPermissions(map, 1L);
         ServerManager.serverRequest(call, this::test, this::error);
     }
@@ -41,7 +45,7 @@ public class PermissionRequest extends BaseActivity {
             authorizors.put(p, p.getAuthorizors());
         }
 
-        permissionAdapter = new PermissionAdapter(this, permissions, authorizors);
+        permissionAdapter = new PermissionAdapter(this, permissions, authorizors,  this::error);
         permissionView.setAdapter(permissionAdapter);
 
        for (int i = 0; i < permissionAdapter.getGroupCount(); i++) {
