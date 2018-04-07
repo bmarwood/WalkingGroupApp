@@ -38,7 +38,7 @@ import retrofit2.Call;
  */
 
 public class DashBoard extends AbstractMapActivity implements Observer{
-    private final long MAP_UPDATE_RATE = 5000;
+    private final long MAP_UPDATE_RATE = 30000;
     private User user;
     private String messageCount;
     private Button msgButton;
@@ -61,7 +61,7 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         setUpMsgButton();
         placeCurrentLocationMarker();
 
-        //First call to populate pins before timer starts
+        // First call to populate pins before timer starts
         DashboardLocationRequest initialLocationRequest = new DashboardLocationRequest(user, 0, this::error);
         initialLocationRequest.addObserver(this);
 
@@ -84,6 +84,9 @@ public class DashBoard extends AbstractMapActivity implements Observer{
         super.onResume();
         messageUpdater = new MessageUpdater(user, this::error);
         messageUpdater.addObserver(this);
+
+        locationRequest = new DashboardLocationRequest(user, MAP_UPDATE_RATE, this::error);
+        locationRequest.addObserver(this);
     }
 
     private void setUpMsgButton() {
@@ -156,7 +159,8 @@ public class DashBoard extends AbstractMapActivity implements Observer{
     public void update(Observable o, Object arg) {
         if(o == messageUpdater) {
             updateUnreadMsg((List<Message>) arg);
-        } else {
+        }
+        else {
             addMarkersForUsers((List<User>) arg);
         }
     }
