@@ -338,6 +338,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     public void onResume() {
         super.onResume();
         groupManager.addObserver(this);
+        setGroups();
         setButtonVisibility();
     }
 
