@@ -287,4 +287,18 @@ public class UserTest extends BaseTest {
         userTwo.setId(1L);
         assertTrue(user.equals(userTwo));
     }
+
+    @Test
+    public void getAndSetCurrentPoints() throws Exception{
+        Integer points = 4000;
+        user.setCurrentPoints(points);
+        assertEquals(points, user.getCurrentPoints());
+    }
+
+    @Test
+    public void getAndSetTotalPointsEarned() throws Exception{
+        Integer totalPoints = 100000;
+        user.setTotalPointsEarned(totalPoints);
+        assertEquals(totalPoints, user.getTotalPointsEarned());
+    }
 }
