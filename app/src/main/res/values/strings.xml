@@ -6,12 +6,12 @@
     <string name="user_profile">Profile</string>
     <string name="monitor">Monitor</string>
     <string name="add_new_group">Add New Group</string>
-    <string name="my_groups">My Groups</string>
+    <string name="my_groups">My Groups / Create Group</string>
     <string name="messages">Messages</string>
     <string name="logout">Logout</string>
 
     <!-- Strings related to login -->
-    <string name="login">Login</string>
+    <string name="login">Login:</string>
     <string name="password">Password:</string>
     <string name="sign_in">Sign In</string>
     <string name="not_a_member_sign_up_here">Not a Member? Sign Up Here</string>
@@ -68,7 +68,7 @@
     <string name="Emergency">Emergency</string>
     <string name="msg_group">Message Group: %1$s</string>
     <string name="enter_message">Enter Message</string>
-
+    <string name="create_group">Create Group</string>
 
     <!-- Strings related to EmbeddedCreateGroup-->
     <string name="embedded_set_meeting">Set Meeting</string>
@@ -81,7 +81,6 @@
     <string name="destination">Destination</string>
     <string name="embedded_location_not_set">UserLocation not set</string>
     <string name="embedded_destination">Destination</string>
-
 
     <!-- Strings related to Dashboard-->
     <string name="dashboard_unread_message">UNREAD MSG:</string>
@@ -105,7 +104,6 @@
     <string name="updated_profile">Profile has been updated</string>
     <string name="parent_name">Parent Name:</string>
 
-
     <!-- profile errors -->
     <string name="message">Message</string>
     <string name="email_invalid">Email address is invalid</string>
@@ -116,13 +114,11 @@
     <string name="empty_address">address is empty</string>
     <string name="empty_name">name is empty</string>
 
-
     <!-- Messages activity string -->
     <string name="unread_messages">Unread Messages</string>
     <string name="read_messages">Read Messages</string>
     <string name="panic_txt">Panic:</string>
     <string name="emerg_txt">Emergency:</string>
-
 
     <!-- Map activity string -->
     <string name="start_walk">Start walk</string>
@@ -156,8 +152,8 @@
 
 
     <!-- Permissions string -->
-    <string name="permission_request">Requested Permissions</string>
-    <string name="active_permissions">Pending Permission Requests</string>
-    <string name="previous_permissions">Previous Permission Requests</string>
-    <string name="lead_group_request">%1$s wants to lead group %2$s</string>
+    <string name="permission_request">Permissions</string>
+    <string name="active_permissions">Pending Requests</string>
+    <string name="previous_permissions">Previous Requests</string>
+    <string name="lead_group_request">%1$s wants to lead group: %2$s</string>
 </resources>

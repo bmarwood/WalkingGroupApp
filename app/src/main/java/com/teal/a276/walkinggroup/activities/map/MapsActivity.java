@@ -84,7 +84,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         currentUser = ModelFacade.getInstance().getCurrentUser();
         groupManager = ModelFacade.getInstance().getGroupManager();
 
-        setGroups();
         setUsers();
         setStartEndButton();
         setMsgButton();
@@ -302,9 +301,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             case R.id.monitorItem:
                 startActivity(Monitor.makeIntent(this));
                 break;
-            case R.id.addNewGroup:
-                startActivity(EmbeddedCreateGroup.makeIntent(this));
-                break;
             case R.id.myGroups:
                 startActivity(MyGroups.makeIntent(this));
                 break;
@@ -358,6 +354,7 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     public void onResume() {
         super.onResume();
         groupManager.addObserver(this);
+        setGroups();
         setButtonVisibility();
     }
 
