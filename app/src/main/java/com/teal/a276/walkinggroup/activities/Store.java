@@ -55,6 +55,10 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
         user = ModelFacade.getInstance().getCurrentUser();
 
+        ServerProxy proxy = ServerManager.getServerProxy();
+        Call<User> result = proxy.getUserById(user.getId(), 1L);
+        ServerManager.serverRequest(result, this::updateUser, this::error);
+
         setupAllElements();
         updateRemainingPoints();
         updateAvailableItems();
@@ -64,6 +68,10 @@ public class Store extends BaseActivity implements View.OnClickListener {
         setupApplyBtn();
     }
 
+    public void updateUser(User updatedUser){
+        user = updatedUser;
+        updateRemainingPoints();
+    }
 
     private void setupAllElements() {
         itemOne = findViewById(R.id.one);
@@ -92,7 +100,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
         btnFour= findViewById(R.id.button4);
         btnFive = findViewById(R.id.button5);
         btnSix = findViewById(R.id.button6);
-
     }
 
     private void updateAvailableItems(){
