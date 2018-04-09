@@ -7,7 +7,7 @@
     tools:context="com.teal.a276.walkinggroup.activities.MyGroups">
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/leaderTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/memberTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
