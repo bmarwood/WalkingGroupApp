@@ -137,7 +137,7 @@
     <style name="AppTheme.Dark.Green.Wave" parent="Theme.AppCompat">
         <!-- Dark theme base colours -->
         <item name="android:windowBackground">@drawable/background_green_wave</item>
-        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimary">@color/darkColorPrimary2</item>
         <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
         <item name="colorAccent">@color/darkColorAccent</item>
     </style>
@@ -154,7 +154,7 @@
     <style name="AppTheme.Dark.Green.Circle" parent="Theme.AppCompat">
         <!-- Dark theme base colours -->
         <item name="android:windowBackground">@drawable/background_green_circle</item>
-        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimary">@color/darkColorPrimary2</item>
         <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
         <item name="colorAccent">@color/darkColorAccent</item>
     </style>
@@ -171,7 +171,7 @@
     <style name="AppTheme.Dark.Green.Box" parent="Theme.AppCompat">
         <!-- Dark theme base colours -->
         <item name="android:windowBackground">@drawable/background_green_box</item>
-        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimary">@color/darkColorPrimary2</item>
         <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
         <item name="colorAccent">@color/darkColorAccent</item>
     </style>

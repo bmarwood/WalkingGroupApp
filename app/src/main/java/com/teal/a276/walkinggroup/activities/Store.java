@@ -46,6 +46,8 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private Button btnFour;
     private Button btnFive;
     private Button btnSix;
+    private boolean backgroundClicked = false;
+    private boolean colorClicked = false;
     List<ImageView> allItems = new ArrayList<>();
     String retrievedJson;
 
@@ -153,10 +155,20 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private void setupApplyBtn() {
         Button button = findViewById(R.id.storeApplyBtn);
         button.setOnClickListener((View v) -> {
-            Intent intent = new Intent(this, MapsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+            if(!backgroundClicked && !colorClicked){
+                Toast.makeText(this, "Error: You must choose a Background and Color", Toast.LENGTH_SHORT).show();
+            } else if(!backgroundClicked){
+                Toast.makeText(this, "Error: You must choose a Background", Toast.LENGTH_SHORT).show();
+
+            } else if(!colorClicked){
+                Toast.makeText(this, "Error: You must choose a Color", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Intent intent = new Intent(this, MapsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
         });
     }
 
@@ -180,34 +192,39 @@ public class Store extends BaseActivity implements View.OnClickListener {
         SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
         switch(v.getId()){
             case R.id.one:
-                switchToItem(1);
                 editor.putInt("currTheme", getNewTheme("boxes", null));
                 editor.apply();
+                backgroundClicked = true;
                 break;
             case R.id.two:
-                switchToItem(2);
+
                 editor.putInt("currTheme", getNewTheme("circle", null));
                 editor.apply();
+                backgroundClicked = true;
                 break;
             case R.id.three:
-                switchToItem(3);
+
                 editor.putInt("currTheme", getNewTheme("wave", null));
                 editor.apply();
+                backgroundClicked = true;
                 break;
             case R.id.four:
-                switchToItem(4);
+
                 editor.putInt("currTheme", getNewTheme(null, "blue"));
                 editor.apply();
+                colorClicked = true;
                 break;
             case R.id.five:
-                switchToItem(5);
+
                 editor.putInt("currTheme", getNewTheme(null, "green"));
                 editor.apply();
+                colorClicked = true;
                 break;
             case R.id.six:
-                switchToItem(6);
+
                 editor.putInt("currTheme", getNewTheme(null, "purple"));
                 editor.apply();
+                colorClicked = true;
                 break;
         }
     }
@@ -240,7 +257,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
             color = "green";
         }
 
-        //dealing with new background
+       //dealing with new background
         if (newColor == null) {
             switch (newBackground) {
                 case "boxes":
@@ -323,8 +340,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
                             return R.style.AppTheme_Dark_Green_Circle;
 
                         default:
-                            return R.style.AppTheme_wave;
-                    }
+                            return R.style.AppTheme_wave;}
                 case "default":
                     switch(type) {
                         case "boxes":
@@ -337,11 +353,9 @@ public class Store extends BaseActivity implements View.OnClickListener {
             }
         }
         return -1;
+
     }
 
-    public void switchToItem(int id){
-        Toast.makeText(this, "The Item you clicked is: " + id, Toast.LENGTH_SHORT).show();
-    }
 
     public void setupPurchaseButtonClickListener(){
         btnOne.setOnClickListener((View v) -> purchaseItem(1, btnOne, itemOne));
