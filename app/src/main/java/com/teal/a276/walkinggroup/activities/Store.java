@@ -403,7 +403,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
         }
     }
     public void purchaseSuccessful(Button button, ImageView imageView){
-        Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
         button.setVisibility(View.GONE);
         imageView.setEnabled(true);
         user.setCurrentPoints(user.getCurrentPoints() - 100);
@@ -412,6 +411,8 @@ public class Store extends BaseActivity implements View.OnClickListener {
         ServerManager.serverRequest(caller, this::updatePoints, this::error);
         updateRemainingPoints();
         updateItemClickListeners();
+        Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
+
     }
 
     public void updatePoints(User user){
