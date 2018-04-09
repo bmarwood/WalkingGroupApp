@@ -96,7 +96,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
     }
 
     private void updateAvailableItems(){
-
         retrievedJson = user.getCustomJson();
         UnlockedRewards retrievedRewards = new UnlockedRewards();
 
@@ -111,6 +110,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
                 e.printStackTrace();
             }
         }
+
         List<Integer> retrieved = retrievedRewards.getUnlockedItems();
 
         if(retrieved.contains(1)){
@@ -142,7 +142,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
 
     private void setupDefaultBtn() {
-
         SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
         editor.putInt("currTheme", R.style.AppTheme);
         editor.apply();
@@ -172,7 +171,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
         tv.setText(remainingPointsString);
     }
 
-    //If item is already bought, remove purchase button.
     public void updateItemClickListeners(){
         for(ImageView imageView : allItems){
             if(imageView.isEnabled()){
@@ -290,7 +288,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
             }
         }
 
-
         //dealing with new color
         if (newBackground == null) {
             switch (newColor) {
@@ -388,15 +385,12 @@ public class Store extends BaseActivity implements View.OnClickListener {
         return retrievedRewards;
     }
 
-
     public void sendJsonToServer(List<Integer> retrieved){
         UnlockedRewards reward = new UnlockedRewards();
         reward.setUnlockedItems(retrieved);
         String customJson = null;
         try {
-            // Convert custom object to a JSON string:
             customJson = new ObjectMapper().writeValueAsString(reward);
-            // Store JSON string into the user object, which will be sent to server.
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
