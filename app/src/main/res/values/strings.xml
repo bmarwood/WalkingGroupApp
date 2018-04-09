@@ -156,4 +156,5 @@
     <string name="active_permissions">Pending Requests</string>
     <string name="previous_permissions">Previous Requests</string>
     <string name="lead_group_request">%1$s wants to lead group: %2$s</string>
+    <string name="apply">Apply</string>
 </resources>

@@ -1,5 +1,0 @@
-To mark a message as read swipe on the list item
-
-To send a message to a group go to my groups and select the group
-
-To view group members click on the group info (i) icon

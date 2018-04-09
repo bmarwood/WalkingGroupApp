@@ -28,7 +28,7 @@
         app:showAsAction="never" />
 
     <item android:id="@+id/store"
-        android:title="Store"
+        android:title="@string/store"
         app:showAsAction="never" />
 
     <item android:id="@+id/leaderboard"

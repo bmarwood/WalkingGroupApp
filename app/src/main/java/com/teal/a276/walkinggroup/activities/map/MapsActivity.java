@@ -402,9 +402,8 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 }
 
                 private void getUser(User user) {
-                    // TODO: Change points to match
-                    user.setCurrentPoints(user.getCurrentPoints() + 100);
-                    user.setTotalPointsEarned(user.getTotalPointsEarned() + 100);
+                    user.setCurrentPoints(user.getCurrentPoints() + 10);
+                    user.setTotalPointsEarned(user.getTotalPointsEarned() + 10);
 
                     ServerProxy proxy = ServerManager.getServerProxy();
                     Call<User> caller = proxy.updateUser(user.getId(), user, 1L);

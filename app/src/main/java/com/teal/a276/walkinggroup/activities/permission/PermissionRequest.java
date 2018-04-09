@@ -1,8 +1,6 @@
 package com.teal.a276.walkinggroup.activities.permission;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import com.teal.a276.walkinggroup.R;

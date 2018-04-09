@@ -27,6 +27,9 @@ import java.util.List;
 
 import retrofit2.Call;
 
+/**
+ *  Displays Store interface for user to apply themes and backgrounds
+ */
 public class Store extends BaseActivity implements View.OnClickListener {
     public static final int ITEM_PRICE = 100;
 

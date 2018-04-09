@@ -14,14 +14,9 @@ import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.Authorizor;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.Permission;
 import com.teal.a276.walkinggroup.model.dataobjects.permissions.PermissionStatus;
-import com.teal.a276.walkinggroup.model.serverproxy.ServerError;
-import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
-import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.util.List;
 import java.util.Map;
-
-import retrofit2.Call;
 
 /**
  * 2d list the contains display text for a permission request as a header
