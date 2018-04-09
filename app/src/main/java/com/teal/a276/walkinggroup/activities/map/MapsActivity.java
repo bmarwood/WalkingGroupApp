@@ -104,11 +104,13 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
     private void setStartEndButton() {
         endButton = findViewById(R.id.endBtn);
         endButton.setOnClickListener(v -> {
-            map.clear();
-            populateGroupsOnMap();
-            placeCurrentLocationMarker();
-            walkInProgress = false;
-            setButtonVisibility();
+
+            currentUser.setCurrentPoints(currentUser.getCurrentPoints() + 10);
+            currentUser.setTotalPointsEarned(currentUser.getTotalPointsEarned() + 10);
+
+            ServerProxy proxy = ServerManager.getServerProxy();
+            Call<User> caller = proxy.updateUser(currentUser.getId(), currentUser, 1L);
+            ServerManager.serverRequest(caller, this::addPoints, MapsActivity.this::error);
         });
 
         startButton = findViewById(R.id.startBtn);
@@ -118,6 +120,17 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
             Call<User> call = proxy.getUserByEmail(currentUser.getEmail(), 1L);
             ServerManager.serverRequest(call, this::updateInfo, this::error);
         });
+    }
+
+    private void addPoints(User user) {
+        Toast.makeText(MapsActivity.this, R.string.earned_points, Toast.LENGTH_SHORT).show();
+        ModelFacade.getInstance().setCurrentUser(user);
+        currentUser = ModelFacade.getInstance().getCurrentUser();
+        walkInProgress = false;
+        map.clear();
+        populateGroupsOnMap();
+        placeCurrentLocationMarker();
+        setButtonVisibility();
     }
 
     private void updateInfo(User user) {
