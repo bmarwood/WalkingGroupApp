@@ -32,16 +32,22 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<Permission> headerData;
     private Map<Permission, List<Authorizor>> childData;
-    private ServerError errorCallback;
+    private SetPermission acceptPermission;
+    private SetPermission declinePermission;
+
+    interface SetPermission {
+        void setPermissionStatus(Long id, PermissionStatus status);
+    }
 
 
     PermissionAdapter(Context context,
                       List<Permission> headerData, Map<Permission, List<Authorizor>> childData,
-                      ServerError errorCallback) {
+                      SetPermission acceptPermission, SetPermission declinePermission) {
         this.context = context;
         this.headerData = headerData;
         this.childData = childData;
-        this.errorCallback = errorCallback;
+        this.acceptPermission = acceptPermission;
+        this.declinePermission = declinePermission;
     }
 
     @Override
@@ -109,12 +115,20 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
         if(isPendingAuthorizor(authorizor, currentUser, permission)) {
             ImageView accept = view.findViewById(R.id.acceptPermission);
             accept.setVisibility(View.VISIBLE);
-            accept.setOnClickListener(view1 -> setPermissionStatus(permission.getId(), PermissionStatus.APPROVED));
+            if (acceptPermission != null) {
+                accept.setOnClickListener(view1 ->
+                        acceptPermission.setPermissionStatus(permission.getId(), PermissionStatus.APPROVED)
+                );
+            }
 
             ImageView decline = view.findViewById(R.id.declinePermission);
-            decline.setOnClickListener(view1 -> setPermissionStatus(permission.getId(), PermissionStatus.DECLINED));
-
             decline.setVisibility(View.VISIBLE);
+            if (declinePermission != null) {
+                decline.setOnClickListener(view1 ->
+                        declinePermission.setPermissionStatus(permission.getId(), PermissionStatus.DECLINED)
+                );
+            }
+
             status.setVisibility(View.INVISIBLE);
         } else {
             status.setText(authorizor.getStatus());
@@ -133,16 +147,16 @@ public class PermissionAdapter extends BaseExpandableListAdapter {
                 authUser.equals(currentUser) && authorizor.getStatus().equals(pending);
     }
 
-    private void setPermissionStatus(Long id, PermissionStatus status) {
-        ServerProxy proxy = ServerManager.getServerProxy();
-        Call<Permission> call = proxy.setPermissionStatus(id, status.getValue());
-        ServerManager.serverRequest(call, this::updateListItem, errorCallback);
-    }
-
-    private void updateListItem(Permission result) {
+    void removePermission(Permission result) {
        headerData.remove(result);
        childData.remove(result);
        notifyDataSetChanged();
+    }
+
+    void addPermission(Permission permission) {
+        headerData.add(permission);
+        childData.put(permission, permission.getAuthorizors());
+        notifyDataSetChanged();
     }
 
     @Override
