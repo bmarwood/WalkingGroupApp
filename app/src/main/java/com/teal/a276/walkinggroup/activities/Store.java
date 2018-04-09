@@ -28,8 +28,6 @@ import java.util.List;
 import retrofit2.Call;
 
 public class Store extends BaseActivity implements View.OnClickListener {
-
-    private static final String PREFS_NAME = "prefs";
     public static final int ITEM_PRICE = 100;
 
     private User user;
@@ -46,8 +44,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private Button btnFour;
     private Button btnFive;
     private Button btnSix;
-    private boolean backgroundClicked = false;
-    private boolean colorClicked = false;
     List<ImageView> allItems = new ArrayList<>();
     String retrievedJson;
 
@@ -140,12 +136,12 @@ public class Store extends BaseActivity implements View.OnClickListener {
 
 
     private void setupDefaultBtn() {
-        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
-        editor.putInt("currTheme", R.style.AppTheme);
-        editor.apply();
-
         Button button = findViewById(R.id.storeDefaultBtn);
         button.setOnClickListener((View v) -> {
+            SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+            editor.putInt(CURRENT_THEME, R.style.AppTheme);
+            editor.apply();
+
             Intent intent = new Intent(this, MapsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -155,20 +151,10 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private void setupApplyBtn() {
         Button button = findViewById(R.id.storeApplyBtn);
         button.setOnClickListener((View v) -> {
-            if(!backgroundClicked && !colorClicked){
-                Toast.makeText(this, "Error: You must choose a Background and Color", Toast.LENGTH_SHORT).show();
-            } else if(!backgroundClicked){
-                Toast.makeText(this, "Error: You must choose a Background", Toast.LENGTH_SHORT).show();
-
-            } else if(!colorClicked){
-                Toast.makeText(this, "Error: You must choose a Color", Toast.LENGTH_SHORT).show();
-
-            } else {
-                Intent intent = new Intent(this, MapsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
+            Intent intent = new Intent(this, MapsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         });
     }
 
@@ -192,48 +178,38 @@ public class Store extends BaseActivity implements View.OnClickListener {
         SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
         switch(v.getId()){
             case R.id.one:
-                editor.putInt("currTheme", getNewTheme("boxes", null));
+                editor.putInt(CURRENT_THEME, getNewTheme("boxes", null));
                 editor.apply();
-                backgroundClicked = true;
                 break;
             case R.id.two:
-
-                editor.putInt("currTheme", getNewTheme("circle", null));
+                editor.putInt(CURRENT_THEME, getNewTheme("circle", null));
                 editor.apply();
-                backgroundClicked = true;
                 break;
             case R.id.three:
-
-                editor.putInt("currTheme", getNewTheme("wave", null));
+                editor.putInt(CURRENT_THEME, getNewTheme("wave", null));
                 editor.apply();
-                backgroundClicked = true;
                 break;
             case R.id.four:
-
-                editor.putInt("currTheme", getNewTheme(null, "blue"));
+                editor.putInt(CURRENT_THEME, getNewTheme(null, "blue"));
                 editor.apply();
-                colorClicked = true;
                 break;
             case R.id.five:
-
-                editor.putInt("currTheme", getNewTheme(null, "green"));
+                editor.putInt(CURRENT_THEME, getNewTheme(null, "green"));
                 editor.apply();
-                colorClicked = true;
                 break;
             case R.id.six:
-
-                editor.putInt("currTheme", getNewTheme(null, "purple"));
+                editor.putInt(CURRENT_THEME, getNewTheme(null, "purple"));
                 editor.apply();
-                colorClicked = true;
                 break;
         }
     }
 
     private int getNewTheme(String newBackground, String newColor) {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        int currTheme = preferences.getInt("currTheme", -1);
+        int currTheme = preferences.getInt(CURRENT_THEME, -1);
         String type = "default";
         String color = "default";
+        int tmp = R.style.AppTheme;
 
         if (currTheme == R.style.AppTheme || currTheme == R.style.AppTheme_box || currTheme == R.style.AppTheme_Dark_Green_Box ||
                 currTheme == R.style.AppTheme_Dark_Purple_Box || currTheme == R.style.AppTheme_Light_Blue_Box) {

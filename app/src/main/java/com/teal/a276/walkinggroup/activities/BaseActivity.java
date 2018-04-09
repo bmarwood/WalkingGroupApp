@@ -20,13 +20,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final String SHARED_PREF_USERNAME = "userName";
     protected final String SHARED_PREF_PASSWORD = "password";
 
-    protected static final String PREFS_NAME = "prefs";
+    protected final String PREFS_NAME = "prefs";
+    protected final String CURRENT_THEME = "currentTheme";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        int currTheme = preferences.getInt("currTheme", -1);
+        int currTheme = preferences.getInt(CURRENT_THEME, -1);
 
         if(currTheme == -1){
             setTheme(R.style.AppTheme_box);
