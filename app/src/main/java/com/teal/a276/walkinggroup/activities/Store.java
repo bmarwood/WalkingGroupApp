@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.activities.store;
+package com.teal.a276.walkinggroup.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teal.a276.walkinggroup.R;
-import com.teal.a276.walkinggroup.activities.BaseActivity;
 import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.UnlockedRewards;
@@ -24,7 +23,6 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,9 +45,10 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private Button btnFour;
     private Button btnFive;
     private Button btnSix;
+    private boolean backgroundClicked = false;
+    private boolean colorClicked = false;
     List<ImageView> allItems = new ArrayList<>();
     String retrievedJson;
-    HashMap<String, HashMap<String, Integer>> theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,22 +64,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
         setupPurchaseButtonClickListener();
         setupDefaultBtn();
         setupApplyBtn();
-
-        theme = new HashMap<>();
-        theme.put("boxes", new HashMap<>());
-        theme.get("boxes").put("blue", R.style.AppTheme_Light_Blue_Box);
-        theme.get("boxes").put("green", R.style.AppTheme_Dark_Green_Box);
-        theme.get("boxes").put("purple", R.style.AppTheme_Dark_Purple_Box);
-
-        theme.put("circle", new HashMap<>());
-        theme.get("circle").put("blue", R.style.AppTheme_Light_Blue_Circle);
-        theme.get("circle").put("green", R.style.AppTheme_Dark_Green_Circle);
-        theme.get("circle").put("purple", R.style.AppTheme_Dark_Purple_Circle);
-
-        theme.put("wave", new HashMap<>());
-        theme.get("wave").put("blue", R.style.AppTheme_Light_Blue_Wave);
-        theme.get("wave").put("green", R.style.AppTheme_Dark_Green_Wave);
-        theme.get("wave").put("purple", R.style.AppTheme_Dark_Purple_Wave);
     }
 
 
@@ -176,10 +159,20 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private void setupApplyBtn() {
         Button button = findViewById(R.id.storeApplyBtn);
         button.setOnClickListener((View v) -> {
-            Intent intent = new Intent(this, MapsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+            if(!backgroundClicked && !colorClicked){
+                Toast.makeText(this, "Error: You must choose a Background and Color", Toast.LENGTH_SHORT).show();
+            } else if(!backgroundClicked){
+                Toast.makeText(this, "Error: You must choose a Background", Toast.LENGTH_SHORT).show();
+
+            } else if(!colorClicked){
+                Toast.makeText(this, "Error: You must choose a Color", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Intent intent = new Intent(this, MapsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
         });
     }
 
@@ -203,34 +196,39 @@ public class Store extends BaseActivity implements View.OnClickListener {
         SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
         switch(v.getId()){
             case R.id.one:
-                switchToItem(1);
                 editor.putInt("currTheme", getNewTheme("boxes", null));
                 editor.apply();
+                backgroundClicked = true;
                 break;
             case R.id.two:
-                switchToItem(2);
+
                 editor.putInt("currTheme", getNewTheme("circle", null));
                 editor.apply();
+                backgroundClicked = true;
                 break;
             case R.id.three:
-                switchToItem(3);
+
                 editor.putInt("currTheme", getNewTheme("wave", null));
                 editor.apply();
+                backgroundClicked = true;
                 break;
             case R.id.four:
-                switchToItem(4);
+
                 editor.putInt("currTheme", getNewTheme(null, "blue"));
                 editor.apply();
+                colorClicked = true;
                 break;
             case R.id.five:
-                switchToItem(5);
+
                 editor.putInt("currTheme", getNewTheme(null, "green"));
                 editor.apply();
+                colorClicked = true;
                 break;
             case R.id.six:
-                switchToItem(6);
+
                 editor.putInt("currTheme", getNewTheme(null, "purple"));
                 editor.apply();
+                colorClicked = true;
                 break;
         }
     }
@@ -263,17 +261,105 @@ public class Store extends BaseActivity implements View.OnClickListener {
             color = "green";
         }
 
-        HashMap<String, Integer> themeType = theme.get(type);
-        if(themeType != null) {
-            return themeType.get(color) == null ? -1 : themeType.get(color);
+       //dealing with new background
+        if (newColor == null) {
+            switch (newBackground) {
+                case "boxes":
+                    switch (color) {
+                        case "blue":
+                            return R.style.AppTheme_Light_Blue_Box;
+                        case "purple":
+                            return R.style.AppTheme_Dark_Purple_Box;
+
+                        case "green":
+                            return R.style.AppTheme_Dark_Green_Box;
+
+                        default:
+                            return R.style.AppTheme_box;
+                    }
+                case "circle":
+                    switch (color) {
+                        case "blue":
+                            return R.style.AppTheme_Light_Blue_Circle;
+                        case "purple":
+                            return R.style.AppTheme_Dark_Purple_Circle;
+
+                        case "green":
+                            return R.style.AppTheme_Dark_Green_Circle;
+
+                        default:
+                            return R.style.AppTheme_circle;
+                    }
+                case "wave":
+                    switch (color) {
+                        case "blue":
+                            return R.style.AppTheme_Light_Blue_Wave;
+                        case "purple":
+                            return R.style.AppTheme_Dark_Purple_Wave;
+                        case "green":
+                            return R.style.AppTheme_Dark_Green_Wave;
+
+                        default:
+                            return R.style.AppTheme_wave;
+                    }
+            }
         }
 
+        //dealing with new color
+        if (newBackground == null) {
+            switch (newColor) {
+                case "blue":
+                    switch (type) {
+                        case "boxes":
+                            return R.style.AppTheme_Light_Blue_Box;
+                        case "wave":
+                            return R.style.AppTheme_Light_Blue_Wave;
+
+                        case "circle":
+                            return R.style.AppTheme_Light_Blue_Circle;
+
+                        default:
+                            return R.style.AppTheme;
+                    }
+                case "purple":
+                    switch (type) {
+                        case "boxes":
+                            return R.style.AppTheme_Dark_Purple_Box;
+                        case "wave":
+                            return R.style.AppTheme_Dark_Purple_Wave;
+
+                        case "circle":
+                            return R.style.AppTheme_Dark_Purple_Circle;
+
+                        default:
+                            return R.style.AppTheme_circle;
+                    }
+                case "green":
+                    switch (type) {
+                        case "boxes":
+                            return R.style.AppTheme_Dark_Green_Box;
+                        case "wave":
+                            return R.style.AppTheme_Dark_Green_Wave;
+                        case "circle":
+                            return R.style.AppTheme_Dark_Green_Circle;
+
+                        default:
+                            return R.style.AppTheme_wave;}
+                case "default":
+                    switch(type) {
+                        case "boxes":
+                            return R.style.AppTheme;
+                        case "wave":
+                            return R.style.AppTheme_wave;
+                        case "circle":
+                            return R.style.AppTheme_circle;
+                    }
+            }
+        }
         return -1;
+
     }
 
-    public void switchToItem(int id){
-        Toast.makeText(this, "The Item you clicked is: " + id, Toast.LENGTH_SHORT).show();
-    }
 
     public void setupPurchaseButtonClickListener(){
         btnOne.setOnClickListener((View v) -> purchaseItem(1, btnOne, itemOne));

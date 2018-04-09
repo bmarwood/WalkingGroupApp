@@ -49,7 +49,7 @@
         <activity android:name=".activities.profile.UserInfo" />
         <activity android:name=".activities.permission.PermissionRequest"/>
         <activity android:name=".activities.Leaderboard"/>
-        <activity android:name=".activities.store.Store"></activity>
+        <activity android:name=".activities.Store"></activity>
     </application>
 
 </manifest>
