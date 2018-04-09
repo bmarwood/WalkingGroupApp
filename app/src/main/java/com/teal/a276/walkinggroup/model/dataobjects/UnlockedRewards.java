@@ -9,7 +9,6 @@ import java.util.List;
  */
 
 public class UnlockedRewards {
-    private Integer id;
     private List<Integer> unlockedItems = new ArrayList<>();
     public UnlockedRewards(){
 
@@ -27,13 +26,5 @@ public class UnlockedRewards {
 
     public void setUnlockedItems(List<Integer> unlockedItems) {
         this.unlockedItems = unlockedItems;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 }
