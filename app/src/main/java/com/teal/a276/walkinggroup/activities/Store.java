@@ -73,6 +73,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
     public void updateUser(User updatedUser){
         user = updatedUser;
         updateRemainingPoints();
+        updateAvailableItems();
     }
 
     private void setupAllElements() {
@@ -399,19 +400,19 @@ public class Store extends BaseActivity implements View.OnClickListener {
         }
     }
     public void purchaseSuccessful(Button button, ImageView imageView){
-        button.setVisibility(View.GONE);
-        imageView.setEnabled(true);
         user.setCurrentPoints(user.getCurrentPoints() - ITEM_PRICE);
         ServerProxy proxy = ServerManager.getServerProxy();
         Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
-        ServerManager.serverRequest(caller, this::updatePoints, this::error);
+        ServerManager.serverRequest(caller, result -> updatePoints(user, button, imageView), this::error);
+    }
+
+    public void updatePoints(User user, Button button, ImageView imageView){
+        ModelFacade.getInstance().setCurrentUser(user);
         updateRemainingPoints();
         updateItemClickListeners();
         Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-    }
-
-    public void updatePoints(User user){
-        ModelFacade.getInstance().setCurrentUser(user);
+        button.setVisibility(View.GONE);
+        imageView.setEnabled(true);
     }
 
     public static Intent makeIntent(Context context) {
