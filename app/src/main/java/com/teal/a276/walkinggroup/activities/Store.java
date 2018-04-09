@@ -183,29 +183,39 @@ public class Store extends BaseActivity implements View.OnClickListener {
         switch(v.getId()){
             case R.id.one:
                 editor.putInt(CURRENT_THEME, getNewTheme("boxes", null));
+                displayToast("Boxes");
                 editor.apply();
                 break;
             case R.id.two:
                 editor.putInt(CURRENT_THEME, getNewTheme("circle", null));
+                displayToast("Circle");
                 editor.apply();
                 break;
             case R.id.three:
                 editor.putInt(CURRENT_THEME, getNewTheme("wave", null));
+                displayToast("Wave");
                 editor.apply();
                 break;
             case R.id.four:
                 editor.putInt(CURRENT_THEME, getNewTheme(null, "blue"));
+                displayToast("Blue");
                 editor.apply();
                 break;
             case R.id.five:
                 editor.putInt(CURRENT_THEME, getNewTheme(null, "green"));
+                displayToast("Green");
                 editor.apply();
                 break;
             case R.id.six:
                 editor.putInt(CURRENT_THEME, getNewTheme(null, "purple"));
+                displayToast("Purple");
                 editor.apply();
                 break;
         }
+    }
+
+    public void displayToast(String text){
+        Toast.makeText(this, "You have selected: " + text, Toast.LENGTH_SHORT).show();
     }
 
     private int getNewTheme(String newBackground, String newColor) {
