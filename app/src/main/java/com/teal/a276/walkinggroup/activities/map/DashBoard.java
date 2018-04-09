@@ -11,22 +11,22 @@ import com.teal.a276.walkinggroup.R;
 import com.teal.a276.walkinggroup.activities.message.Messages;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Message;
-import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.MessageUpdater;
 import com.teal.a276.walkinggroup.model.dataobjects.User;
 import com.teal.a276.walkinggroup.model.dataobjects.UserLocation;
 import com.teal.a276.walkinggroup.model.serverproxy.RequestConstant;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerManager;
 import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.DashboardLocationRequest;
+import com.teal.a276.walkinggroup.model.serverrequest.requestimplementation.MessageUpdater;
 
-import java.util.HashMap;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;

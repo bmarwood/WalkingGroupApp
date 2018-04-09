@@ -23,15 +23,17 @@
         android:title="@string/my_groups"
         app:showAsAction="never" />
 
-
     <item android:id="@+id/messages"
         android:title="@string/messages"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/store"
+        android:title="Store"
         app:showAsAction="never" />
 
     <item android:id="@+id/leaderboard"
         android:title="@string/leaderboard"
         app:showAsAction="never" />
-
 
     <item android:id="@+id/logoutItem"
         android:title="@string/logout"

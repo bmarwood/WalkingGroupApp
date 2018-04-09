@@ -135,6 +135,17 @@
     <string name="send_message">Send a message</string>
     <string name="earned_points">Congratulations you earned points!</string>
 
+    <!-- Store activity -->
+    <string name="store">Store</string>
+    <string name="remaining_points">Remaining Points:</string>
+    <string name="backgrounds_100_points">Backgrounds</string>
+    <string name="colour_palette_100_points">Colour Palette</string>
+    <string name="default_string">Default</string>
+    <string name="store_cost_100_pts">100 Pts</string>
+    <string name="store_remaining_points">Remaining Points:</string>
+    <string name="store_purchase_successful">Purchase successful!</string>
+    <string name="store_not_enough_points">Not Enough Points!</string>
+
     <!-- Leaderboard Activity String -->
     <string name="leaderboard">Leaderboard</string>
     <string name="leaderboard_display_points">%1$s  %2$s     -     %3$d Points</string>

@@ -34,6 +34,7 @@ import com.teal.a276.walkinggroup.activities.GroupMembersInfo;
 import com.teal.a276.walkinggroup.activities.Leaderboard;
 import com.teal.a276.walkinggroup.activities.Monitor;
 import com.teal.a276.walkinggroup.activities.permission.PermissionRequest;
+import com.teal.a276.walkinggroup.activities.Store;
 import com.teal.a276.walkinggroup.activities.profile.UserProfile;
 import com.teal.a276.walkinggroup.activities.MyGroups;
 import com.teal.a276.walkinggroup.activities.auth.Login;
@@ -305,6 +306,9 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
                 break;
             case R.id.messages:
                 startActivity(new Intent(this, Messages.class));
+                break;
+            case R.id.store:
+                startActivity(Store.makeIntent(this));
                 break;
             case R.id.leaderboard:
                 startActivity(Leaderboard.makeIntent(this));

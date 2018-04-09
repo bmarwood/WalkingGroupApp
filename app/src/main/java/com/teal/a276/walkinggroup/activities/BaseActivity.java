@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextThemeWrapper;
 
 import com.teal.a276.walkinggroup.R;
 
@@ -19,8 +20,20 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final String SHARED_PREF_USERNAME = "userName";
     protected final String SHARED_PREF_PASSWORD = "password";
 
+    protected static final String PREFS_NAME = "prefs";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        int currTheme = preferences.getInt("currTheme", -1);
+
+        if(currTheme == -1){
+            setTheme(R.style.AppTheme_box);
+        }else {
+            setTheme(currTheme);
+        }
+
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
