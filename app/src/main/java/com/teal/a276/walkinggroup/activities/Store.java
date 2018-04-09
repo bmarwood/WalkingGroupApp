@@ -30,6 +30,7 @@ import retrofit2.Call;
 public class Store extends BaseActivity implements View.OnClickListener {
 
     private static final String PREFS_NAME = "prefs";
+    public static final int ITEM_PRICE = 100;
 
     private User user;
     private Integer remainingPoints;
@@ -105,19 +106,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private void updateAvailableItems(){
         retrievedJson = user.getCustomJson();
         UnlockedRewards retrievedRewards = new UnlockedRewards();
-
-        if(retrievedJson != null) {
-            try {
-                retrievedRewards =
-                        new ObjectMapper().readValue(
-                                retrievedJson,
-                                UnlockedRewards.class);
-                Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedRewards);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+        retrievedRewards = retrievedJsonCheck(retrievedRewards);
         List<Integer> retrieved = retrievedRewards.getUnlockedItems();
 
         if(retrieved.contains(1)){
@@ -364,7 +353,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
     }
 
     public void purchaseItem(int id, Button button, ImageView imageView) {
-        if (remainingPoints >= 100) {
+        if (remainingPoints >= ITEM_PRICE) {
             UnlockedRewards retrievedRewards = getRetrievedRewards();
             List<Integer> retrieved = retrievedRewards.getUnlockedItems();
             retrieved.add(id);
@@ -378,6 +367,11 @@ public class Store extends BaseActivity implements View.OnClickListener {
     public UnlockedRewards getRetrievedRewards() {
         retrievedJson = user.getCustomJson();
         UnlockedRewards retrievedRewards = new UnlockedRewards();
+        retrievedRewards = retrievedJsonCheck(retrievedRewards);
+        return retrievedRewards;
+    }
+
+    public UnlockedRewards retrievedJsonCheck(UnlockedRewards retrievedRewards){
         if (retrievedJson != null) {
             try {
                 retrievedRewards =
@@ -385,6 +379,8 @@ public class Store extends BaseActivity implements View.OnClickListener {
                                 retrievedJson,
                                 UnlockedRewards.class);
                 Log.w("deserialize", "De-serialized embedded rewards object: " + retrievedJson);
+                return retrievedRewards;
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -412,14 +408,13 @@ public class Store extends BaseActivity implements View.OnClickListener {
     public void purchaseSuccessful(Button button, ImageView imageView){
         button.setVisibility(View.GONE);
         imageView.setEnabled(true);
-        user.setCurrentPoints(user.getCurrentPoints() - 100);
+        user.setCurrentPoints(user.getCurrentPoints() - ITEM_PRICE);
         ServerProxy proxy = ServerManager.getServerProxy();
         Call<User> caller = proxy.updateUser(user.getId(), user, 1L);
         ServerManager.serverRequest(caller, this::updatePoints, this::error);
         updateRemainingPoints();
         updateItemClickListeners();
         Toast.makeText(this, R.string.store_purchase_successful, Toast.LENGTH_SHORT).show();
-
     }
 
     public void updatePoints(User user){
