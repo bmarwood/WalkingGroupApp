@@ -83,7 +83,6 @@ public class MapsActivity extends AbstractMapActivity implements Observer {
         currentUser = ModelFacade.getInstance().getCurrentUser();
         groupManager = ModelFacade.getInstance().getGroupManager();
 
-        setGroups();
         setUsers();
         setStartEndButton();
         setMsgButton();
