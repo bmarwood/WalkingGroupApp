@@ -1,4 +1,4 @@
-package com.teal.a276.walkinggroup.activities;
+package com.teal.a276.walkinggroup.activities.store;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.BaseActivity;
 import com.teal.a276.walkinggroup.activities.map.MapsActivity;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.UnlockedRewards;
@@ -23,6 +24,7 @@ import com.teal.a276.walkinggroup.model.serverproxy.ServerProxy;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,6 +49,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
     private Button btnSix;
     List<ImageView> allItems = new ArrayList<>();
     String retrievedJson;
+    HashMap<String, HashMap<String, Integer>> theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,22 @@ public class Store extends BaseActivity implements View.OnClickListener {
         setupPurchaseButtonClickListener();
         setupDefaultBtn();
         setupApplyBtn();
+
+        theme = new HashMap<>();
+        theme.put("boxes", new HashMap<>());
+        theme.get("boxes").put("blue", R.style.AppTheme_Light_Blue_Box);
+        theme.get("boxes").put("green", R.style.AppTheme_Dark_Green_Box);
+        theme.get("boxes").put("purple", R.style.AppTheme_Dark_Purple_Box);
+
+        theme.put("circle", new HashMap<>());
+        theme.get("circle").put("blue", R.style.AppTheme_Light_Blue_Circle);
+        theme.get("circle").put("green", R.style.AppTheme_Dark_Green_Circle);
+        theme.get("circle").put("purple", R.style.AppTheme_Dark_Purple_Circle);
+
+        theme.put("wave", new HashMap<>());
+        theme.get("wave").put("blue", R.style.AppTheme_Light_Blue_Wave);
+        theme.get("wave").put("green", R.style.AppTheme_Dark_Green_Wave);
+        theme.get("wave").put("purple", R.style.AppTheme_Dark_Purple_Wave);
     }
 
 
@@ -244,102 +263,11 @@ public class Store extends BaseActivity implements View.OnClickListener {
             color = "green";
         }
 
-        //dealing with new background
-        if (newColor == null) {
-            switch (newBackground) {
-                case "boxes":
-                    switch (color) {
-                        case "blue":
-                            return R.style.AppTheme_Light_Blue_Box;
-                        case "purple":
-                            return R.style.AppTheme_Dark_Purple_Box;
-
-                        case "green":
-                            return R.style.AppTheme_Dark_Green_Box;
-
-                        default:
-                            return R.style.AppTheme_box;
-                    }
-                case "circle":
-                    switch (color) {
-                        case "blue":
-                            return R.style.AppTheme_Light_Blue_Circle;
-                        case "purple":
-                            return R.style.AppTheme_Dark_Purple_Circle;
-
-                        case "green":
-                            return R.style.AppTheme_Dark_Green_Circle;
-
-                        default:
-                            return R.style.AppTheme_circle;
-                    }
-                case "wave":
-                    switch (color) {
-                        case "blue":
-                            return R.style.AppTheme_Light_Blue_Wave;
-                        case "purple":
-                            return R.style.AppTheme_Dark_Purple_Wave;
-                        case "green":
-                            return R.style.AppTheme_Dark_Green_Wave;
-
-                        default:
-                            return R.style.AppTheme_wave;
-                    }
-            }
+        HashMap<String, Integer> themeType = theme.get(type);
+        if(themeType != null) {
+            return themeType.get(color) == null ? -1 : themeType.get(color);
         }
 
-        //dealing with new color
-        if (newBackground == null) {
-            switch (newColor) {
-                case "blue":
-                    switch (type) {
-                        case "boxes":
-                            return R.style.AppTheme_Light_Blue_Box;
-                        case "wave":
-                            return R.style.AppTheme_Light_Blue_Wave;
-
-                        case "circle":
-                            return R.style.AppTheme_Light_Blue_Circle;
-
-                        default:
-                            return R.style.AppTheme;
-                    }
-                case "purple":
-                    switch (type) {
-                        case "boxes":
-                            return R.style.AppTheme_Dark_Purple_Box;
-                        case "wave":
-                            return R.style.AppTheme_Dark_Purple_Wave;
-
-                        case "circle":
-                            return R.style.AppTheme_Dark_Purple_Circle;
-
-                        default:
-                            return R.style.AppTheme_circle;
-                    }
-                case "green":
-                    switch (type) {
-                        case "boxes":
-                            return R.style.AppTheme_Dark_Green_Box;
-                        case "wave":
-                            return R.style.AppTheme_Dark_Green_Wave;
-                        case "circle":
-                            return R.style.AppTheme_Dark_Green_Circle;
-
-                        default:
-                            return R.style.AppTheme_wave;
-                    }
-                case "default":
-                    switch(type) {
-                        case "boxes":
-                            return R.style.AppTheme;
-                        case "wave":
-                            return R.style.AppTheme_wave;
-                        case "circle":
-                            return R.style.AppTheme_circle;
-                    }
-            }
-        }
         return -1;
     }
 
