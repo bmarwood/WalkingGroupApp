@@ -10,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.teal.a276.walkinggroup.R;
+import com.teal.a276.walkinggroup.activities.map.EmbeddedCreateGroup;
 import com.teal.a276.walkinggroup.model.ModelFacade;
 import com.teal.a276.walkinggroup.model.dataobjects.Group;
 import com.teal.a276.walkinggroup.model.dataobjects.GroupManager;
@@ -41,15 +43,27 @@ public class MyGroups extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_groups);
-
         user = ModelFacade.getInstance().getCurrentUser();
+
         callServerForUserList();
+        setupCreateGroupButton();
     }
 
     private void callServerForUserList() {
         ServerProxy proxy = ServerManager.getServerProxy();
         Call<User> call = proxy.getUserById(user.getId(), 1L);
         ServerManager.serverRequest(call, this::setInfo, this::error);
+    }
+
+    private void setupCreateGroupButton() {
+        Button btn = findViewById(R.id.createGroupBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(EmbeddedCreateGroup.makeIntent(MyGroups.this));
+                MyGroups.this.finish();
+            }
+        });
     }
 
     private void setInfo(User user) {

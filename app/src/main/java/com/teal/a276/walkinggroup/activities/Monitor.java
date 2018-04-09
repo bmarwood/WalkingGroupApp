@@ -149,7 +149,7 @@ public class Monitor extends BaseActivity {
         strategy.makeServerRequest();
         strategy.addObserver((observable, o) -> {
             List<User> users = (List<User>) o;
-            user.setMonitorsUsers(users);
+            user.setMonitoredByUsers(users);
             updateAdapter(monitoredByAdapter, users);
         });
     }
