@@ -223,7 +223,6 @@ public class Store extends BaseActivity implements View.OnClickListener {
         int currTheme = preferences.getInt(CURRENT_THEME, -1);
         String type = "default";
         String color = "default";
-        int tmp = R.style.AppTheme;
 
         if (currTheme == R.style.AppTheme || currTheme == R.style.AppTheme_box || currTheme == R.style.AppTheme_Dark_Green_Box ||
                 currTheme == R.style.AppTheme_Dark_Purple_Box || currTheme == R.style.AppTheme_Light_Blue_Box) {
@@ -305,7 +304,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
                             return R.style.AppTheme_Light_Blue_Circle;
 
                         default:
-                            return R.style.AppTheme;
+                            return R.style.AppTheme_Light_Blue_Box;
                     }
                 case "purple":
                     switch (type) {
@@ -318,7 +317,7 @@ public class Store extends BaseActivity implements View.OnClickListener {
                             return R.style.AppTheme_Dark_Purple_Circle;
 
                         default:
-                            return R.style.AppTheme_circle;
+                            return R.style.AppTheme_Dark_Purple_Box;
                     }
                 case "green":
                     switch (type) {
@@ -330,7 +329,8 @@ public class Store extends BaseActivity implements View.OnClickListener {
                             return R.style.AppTheme_Dark_Green_Circle;
 
                         default:
-                            return R.style.AppTheme_wave;}
+                            return R.style.AppTheme_Dark_Green_Box;
+                    }
                 case "default":
                     switch(type) {
                         case "boxes":
